@@ -99,7 +99,7 @@ public class SalvoApplication {
             salvoSet6.add(new Salvo(2, new ArrayList<>(Arrays.asList("C10","A10"))));
 
             Set<Salvo> salvoSet7 = new HashSet<>();
-            salvoSet7.add(new Salvo(1, new ArrayList<>(Arrays.asList("H1", "H1"))));
+            salvoSet7.add(new Salvo(1, new ArrayList<>(Arrays.asList("H1", "J6"))));
             salvoSet7.add(new Salvo(2, new ArrayList<>(Arrays.asList("C7","B4"))));
 
             Set<Salvo> salvoSet8 = new HashSet<>();
