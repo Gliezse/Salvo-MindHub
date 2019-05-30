@@ -57,7 +57,7 @@ function init(datos){
     createGrid(11, $(".grid-ships"), 1)
     createGrid(11, $(".enemy-grid"), 2)  
 
-    loadSalvoes(salvoes, grid, enemyGrid)
+    loadSalvoes(salvoes, ships)
 
 }
 
@@ -120,15 +120,26 @@ const loadShips = function(ships,grid){
             h = yLast - y + 1       //La altura es la diferencia entre la primera y la ultima Y
         }
 
-        grid.addWidget($(`<div id="${ship.type}"><div class="grid-stack-item-content ${ship.type}Horizontal"></div><div/>`),
-        x, y, w, h); //element,x,y,width,height
+        var orientacion = ""
 
-        $(`#${ship.type}`).css('background-color','darkslateblue');
+        if(h == 1){
+            orientacion = "Horizontal"
+        }else{
+            orientacion = "Vertical"
+        }
+
+        grid.addWidget($(`<div id="${ship.type}"><div class="grid-stack-item-content shipCont"><div class="ship ship${orientacion}">${ship.type}</div></div><div/>`),
+        x, y, w, h); //element,x,y,width,height
 
     })
 }
 
-const loadSalvoes = function(salvoes, grid, enemyGrid){
+const loadSalvoes = function(salvoes, ships){
+
+    var locations = ships.map(sh => {return sh.locations})
+
+    console.log(locations)
+
     
     playerSalvoes = salvoes.filter(function(sub){
         if(sub.player == gpId){
@@ -167,7 +178,20 @@ const loadSalvoes = function(salvoes, grid, enemyGrid){
             
             cell = $(`#1-${y}${x}`)
 
-            cell.addClass('salvoed-red')
+            cell.addClass('salvoed')
+            
+            locations.forEach(function(locs){
+                locs.forEach(function(loc){
+                    xAux = parseInt(loc.slice(1))-1
+                    yAux = loc.charCodeAt(0)-65
+
+                    //If current salvo location coincides with an ally ship location it will turn red
+                    if(xAux == x && yAux == y){
+                        cell.addClass('bg-red')
+                    }
+                })
+            })
+            
 
             turn = document.createElement('SPAN')
             turn.innerText = sub.turn

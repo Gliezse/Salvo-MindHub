@@ -46,13 +46,47 @@
 }
 
 .salvoed{
-    background-color: rgb(145, 255, 0);
+    background-color: rgb(255, 145, 0);
 }
 
-.salvoed-red{
+.bg-red{
     background-color: #b14100;
 }
 
 .PatrolHorizontal{
     background-image:url("patrolboathor.png"); 
+}
+
+.shipCont{
+    padding: 10px;
+    overflow-x: hidden;
+    overflow-y: hidden !important;
+}
+
+.ship{
+    display: block;
+    margin: auto;
+    height: 100%;
+    background-color: rgb(0, 140, 54);
+    border-radius: 100px;
+    border: solid #00b17c 2px;
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+    text-overflow: clip;
+    overflow: hidden;
+}
+
+.shipVertical{
+    writing-mode: vertical-lr;
+}
+
+.ship:active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
 }
