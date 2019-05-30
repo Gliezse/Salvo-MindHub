@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Salvo duracell</title>
+</head>
+<body >
+    <main id="app" style="font-family:Arial, Helvetica, sans-serif;">
+        <h1>Games:</h1>
+        <ol>
+            <li v-for="game in datos" style="margin-bottom: 2rem;">
+                <b>Game ID:</b> {{game.ID}}. <br><b>Created:</b> {{game.Created}} <br>
+                <b>Players:</b>
+                <ul>
+                    <li v-for="player in game.Players" style="margin-top: 0.6rem;">
+                        <b>Username: </b>{{player.name}} <br><b>Id:</b> {{player.id}}. <br><b>Email:</b> {{player.email}}
+                    </li>
+                </ul>
+            </li>
+        </ol>
+    </main>
+    <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="games.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+
+.grid-ships, .enemy-grid{
+    border: solid #29f1b5 10px;
+    border-radius: 20px;
+    color: white;
+    height: 495px;
+    width: 495px;
+    position: relative;
+}
+
+#grid{
+    margin: 45px 0 0 45px;
+    position: absolute;
+    width: 450px;
+ 
+}
+
+.grid-wrapper{
+    display: absolute;
+    display: flex;
+    flex-direction: column;
+}
+
+.grid-row{
+    display: flex;
+    flex-direction: row;
+}
+
+.grid-cell{
+    display: flex;
+    box-sizing: border-box;
+    width: 45px;
+    height: 45px;
+    border: 0.5px solid white;
+    vertical-align: middle;
+    font-weight: bold;
+    text-align: center;
+    align-items: center;
+    background-color: #29f1b5;
+}
+.grid-cell span{
+    margin: auto
+}
+.grid-marks{
+    background-color: #00b17c;
+}
+
+.salvoed{
+    background-color: rgb(145, 255, 0);
+}
+
+.salvoed-red{
+    background-color: #b14100;
+}
+
+.PatrolHorizontal{
+    background-image:url("patrolboathor.png"); 
+}
