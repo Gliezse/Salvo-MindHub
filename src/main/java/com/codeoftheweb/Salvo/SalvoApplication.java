@@ -121,6 +121,8 @@ public class SalvoApplication {
 			scoreRepos.save(new Score(g1, p2,0));
 			scoreRepos.save(new Score(g2, p3,0.5));
 			scoreRepos.save(new Score(g2, p1,0.5));
+			scoreRepos.save(new Score(g3, p4, 0.5));
+			scoreRepos.save(new Score(g3, p3, 0.5));
 		};
 	}
 
