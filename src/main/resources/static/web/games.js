@@ -20,7 +20,6 @@ load();
 function init(games){
 
     var uniquePlayers = []
-    var scores = []
     
     games.forEach(function(game){
         var gp = game.gamePlayers
@@ -51,6 +50,8 @@ function init(games){
         uniquePlayers[i].won = 0
         uniquePlayers[i].tied = 0
         uniquePlayers[i].lost = 0
+        uniquePlayers[i].total = 0
+
 
         games.forEach(function(game){
             var gps = game.gamePlayers
@@ -65,6 +66,9 @@ function init(games){
                         }else{
                             uniquePlayers[i].lost += 1
                         }
+
+                        uniquePlayers[i].total += 1
+
                     }                  
                 }
                 
