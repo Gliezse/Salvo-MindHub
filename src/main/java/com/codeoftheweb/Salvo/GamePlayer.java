@@ -121,9 +121,9 @@ public class GamePlayer {
 
         Map<String,Object> dtoAUX = getPlayer().toDTO();
         dtoAUX.remove("scores");
-        dtoAUX.put("score", getPlayer().getScore(this.getGame()));
 
         dto.put("player", dtoAUX);
+        dto.put("score", getPlayer().getScore(this.getGame()));
 
         return dto;
     }

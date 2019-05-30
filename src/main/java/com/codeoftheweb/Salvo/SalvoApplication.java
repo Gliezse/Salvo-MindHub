@@ -99,7 +99,7 @@ public class SalvoApplication {
             salvoSet6.add(new Salvo(2, new ArrayList<>(Arrays.asList("C10","A10"))));
 
             Set<Salvo> salvoSet7 = new HashSet<>();
-            salvoSet7.add(new Salvo(1, new ArrayList<>(Arrays.asList("H1", "H1"))));
+            salvoSet7.add(new Salvo(1, new ArrayList<>(Arrays.asList("H1", "J6"))));
             salvoSet7.add(new Salvo(2, new ArrayList<>(Arrays.asList("C7","B4"))));
 
             Set<Salvo> salvoSet8 = new HashSet<>();
@@ -121,6 +121,8 @@ public class SalvoApplication {
 			scoreRepos.save(new Score(g1, p2,0));
 			scoreRepos.save(new Score(g2, p3,0.5));
 			scoreRepos.save(new Score(g2, p1,0.5));
+			scoreRepos.save(new Score(g3, p4, 0.5));
+			scoreRepos.save(new Score(g3, p3, 0.5));
 		};
 	}
 
