@@ -5,22 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Salvo duracell</title>
+    <link rel="stylesheet" href="dist/style.css">
 </head>
 <body >
-    <main id="app" style="font-family:Arial, Helvetica, sans-serif;">
+    <main id="app" class="container">
         <h1>Games:</h1>
         <ol>
-            <li v-for="game in games" style="margin-bottom: 2rem;">
-                <b>Game ID:</b> {{game.id}}. <br><b>Created:</b> {{game.created}} <br>
-                <b>Players:</b>
-                <ul>
-                    <li v-for="(gamePlayer,index) in game.gamePlayers" style="margin-top: 0.6rem;">
-                        <span>Player {{index+1}}: {{gamePlayer.player.name}}</span>
+            <div v-for="game in games" class="gameDiv">
+                <li class="game">
+                        <b>Game ID:</b> {{game.id}} <br><b>Created:</b> {{game.created}} <br>
+                        <b>Players:</b>
+                        <ul>
+                            <li v-for="(gamePlayer,index) in game.gamePlayers" style="margin-top: 0.6rem;">
+                                <span>Player {{index+1}}: {{gamePlayer.player.name}}</span>
+                            </li>
+                        </ul>
                     </li>
-                </ul>
-            </li>
+            </div>
+            
         </ol>
-        <table style="width: 40vw; text-align: center">
+
+        <h1>Score table:</h1>
+
+        <table class="scoreTable">
             <tr>
                 <th>Player</th>
                 <th>Total</th>

@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+body{
+    background-color: aliceblue;
+  font-family: 'Poppins', sans-serif;
+}
 
 .grid-ships, .enemy-grid{
     border: solid #29f1b5 10px;
@@ -89,4 +95,42 @@
     cursor: grabbing;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
+}
+
+
+.container{
+    width: 80vw;
+    margin: auto;
+}
+
+.gameDiv{
+    display: block;
+    margin: 20px;
+    padding: auto;
+    
+}
+
+.game{
+    background-color: #00b17c;
+    border: solid #29f1b5 6px;
+    color: beige;
+    padding: 10px;
+    width: auto;
+    display: inline-block;
+}
+
+.scoreTable{
+    width: 40%;
+    background-color: #00b17c;
+    text-align: center;
+    color: white;
+}
+
+.scoreTable th{
+    background-color: #00b17c;
+    border: solid #00b17c 5px;
+}
+
+.scoreTable td{
+    background-color: #29f1b5;
 }
