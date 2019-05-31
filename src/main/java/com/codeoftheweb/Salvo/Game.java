@@ -76,13 +76,4 @@ public class Game {
         return dto;
     }
 
-    /*public Map<String, Object> getGameSalvoes(){
-        Map<String, Object> dto = new LinkedHashMap<>();
-
-        getgPlayers().stream().forEach(gp -> gp.getSalvos().stream().forEach(salvo ->));
-
-        return dto;
-    }*/
-
-
 }
