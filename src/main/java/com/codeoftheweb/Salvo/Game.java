@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
@@ -15,7 +16,7 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name="native", strategy = "native")
     private long id;
-    private Date date;
+    private LocalDate date;
 
     @OneToMany(fetch = FetchType.EAGER , mappedBy = "game")
     private List<GamePlayer> gPlayers = new ArrayList<>();
@@ -24,14 +25,14 @@ public class Game {
     private List<Score> scores = new ArrayList<>();
 
     public Game(){
-        this.date = new Date();
+        this.date = LocalDate.now();
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

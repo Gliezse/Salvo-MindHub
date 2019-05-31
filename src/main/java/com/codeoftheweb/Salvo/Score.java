@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -23,7 +24,7 @@ public class Score {
     private Player player;
 
     private double score;
-    private Date finishDate;
+    private LocalDate finishDate;
 
     public Score(){}
 
@@ -38,7 +39,7 @@ public class Score {
         this.score=score;
     }
 
-    public Score(Game game, Player player, double score, Date finishDate){
+    public Score(Game game, Player player, double score, LocalDate finishDate){
         this.game= game;
         this.player=player;
         this.score=score;
@@ -79,11 +80,11 @@ public class Score {
         this.score = score;
     }
 
-    public Date getFinishDate() {
+    public LocalDate getFinishDate() {
         return finishDate;
     }
 
-    public void setFinishDate(Date finishDate) {
+    public void setFinishDate(LocalDate finishDate) {
         this.finishDate = finishDate;
     }
 }
