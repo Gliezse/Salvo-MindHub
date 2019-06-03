@@ -78,5 +78,4 @@ function init(games){
     }
 
     app.players = uniquePlayers
-
 }
