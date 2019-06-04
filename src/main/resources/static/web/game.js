@@ -1,3 +1,0 @@
-$(function () {
-    $('.grid-stack').gridstack();
-});
