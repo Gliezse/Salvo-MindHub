@@ -1,5 +1,11 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
 
-.grid-ships{
+body{
+    background-color: aliceblue;
+  font-family: 'Poppins', sans-serif;
+}
+
+.grid-ships, .enemy-grid{
     border: solid #29f1b5 10px;
     border-radius: 20px;
     color: white;
@@ -45,6 +51,86 @@
     background-color: #00b17c;
 }
 
-.red{
-    background-color: red;
+.salvoed{
+    background-color: rgb(255, 145, 0);
+}
+
+.bg-red{
+    background-color: #b14100;
+}
+
+.PatrolHorizontal{
+    background-image:url("patrolboathor.png"); 
+}
+
+.shipCont{
+    padding: 10px;
+    overflow-x: hidden;
+    overflow-y: hidden !important;
+}
+
+.ship{
+    display: block;
+    margin: auto;
+    height: 100%;
+    background-color: rgb(0, 140, 54);
+    border-radius: 100px;
+    border: solid #00b17c 2px;
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+    text-overflow: clip;
+    overflow: hidden;
+}
+
+.shipVertical{
+    writing-mode: vertical-lr;
+}
+
+.ship:active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+
+.container{
+    width: 80vw;
+    margin: auto;
+}
+
+.gameDiv{
+    display: block;
+    margin: 20px;
+    padding: auto;
+    
+}
+
+.game{
+    background-color: #00b17c;
+    border: solid #29f1b5 6px;
+    color: beige;
+    padding: 10px;
+    width: auto;
+    display: inline-block;
+}
+
+.scoreTable{
+    width: 40%;
+    background-color: #00b17c;
+    text-align: center;
+    color: white;
+}
+
+.scoreTable th{
+    background-color: #00b17c;
+    border: solid #00b17c 5px;
+}
+
+.scoreTable td{
+    background-color: #29f1b5;
 }

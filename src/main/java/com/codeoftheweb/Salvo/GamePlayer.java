@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.*;
 
+import static java.time.LocalDate.now;
 import static java.util.stream.Collectors.toList;
 
 
@@ -34,7 +36,7 @@ public class GamePlayer {
     @OneToMany(fetch = FetchType.EAGER , mappedBy = "gamePlayer", cascade = CascadeType.ALL)
     private Set<Salvo> salvos = new HashSet<>();
 
-    private Date joined;
+    private LocalDate joined;
 
 
     public GamePlayer(){}
@@ -42,7 +44,7 @@ public class GamePlayer {
     public GamePlayer(Game game, Player player){
         this.game = game;
         this.player = player;
-        this.joined = new Date();
+        this.joined = LocalDate.now();
     }
 
     public GamePlayer(Game game, Player player, Set<Ship> ships, Set<Salvo> salvos){
@@ -52,7 +54,7 @@ public class GamePlayer {
 
         salvos.forEach(sub->this.addSalvo(sub));
 
-        this.joined = new Date();
+        this.joined =  LocalDate.now();
     }
 
     @JsonIgnore
@@ -73,11 +75,11 @@ public class GamePlayer {
         this.player = player;
     }
 
-    public Date getJoined() {
+    public LocalDate getJoined() {
         return joined;
     }
 
-    public void setJoined(Date joined) {
+    public void setJoined(LocalDate joined) {
         this.joined = joined;
     }
 
@@ -121,9 +123,9 @@ public class GamePlayer {
 
         Map<String,Object> dtoAUX = getPlayer().toDTO();
         dtoAUX.remove("scores");
-        dtoAUX.put("score", getPlayer().getScore(this.getGame()));
 
         dto.put("player", dtoAUX);
+        dto.put("score", getPlayer().getScore(this.getGame()));
 
         return dto;
     }
@@ -142,9 +144,11 @@ public class GamePlayer {
         Map<String,Object> dto = new LinkedHashMap<>();
         Map<String,Object> dtoAUX = new LinkedHashMap<>();
 
-        getSalvos().forEach(sub -> dtoAUX.put(Integer.toString(sub.getTurn()),sub.getLocations()));
-        dto.put(Long.toString(getId()), dtoAUX);
+        dto.put("turn", "avr");
 
+        /*getSalvos().forEach(sub -> dtoAUX.put(Integer.toString(sub.getTurn()),sub.getLocations()));
+        dto.put("gplayerid",Long.toString(getId()));
+        dto.put("shots", dtoAUX);*/
         return dto;
     }
 
@@ -156,7 +160,7 @@ public class GamePlayer {
         dto.put("created", getGame().getDate());
         dto.put("gameplayers", getGame().getgPlayers().stream().map(sub -> sub.toDTO()).collect(toList()));
         dto.put("ships", getShips().stream().map(ss-> ss.getShipDTO()).collect(toList()));
-        dto.put("salvoes", getGame().getgPlayers().stream().map(sub->sub.getSalvoesDTO()));
+        dto.put("salvoes", getGame().getgPlayers().stream().flatMap(gp->gp.getSalvos().stream().map(sub -> sub.toDTO())));
 
         return dto;
     }

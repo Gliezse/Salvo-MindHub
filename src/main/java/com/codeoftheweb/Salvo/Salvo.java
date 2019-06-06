@@ -5,7 +5,9 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Salvo {
@@ -77,5 +79,15 @@ public class Salvo {
 
     public void setTurn(int turn) {
         this.turn = turn;
+    }
+
+    public Map<String,Object> toDTO(){
+        Map<String,Object> dto = new LinkedHashMap<>();
+
+        dto.put("turn",getTurn());
+        dto.put("player",getGp().getId());
+        dto.put("locations", getLocations());
+
+        return dto;
     }
 }

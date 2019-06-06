@@ -2,25 +2,30 @@ var app = new Vue({
     el: "#app",
     data:{
         datos:[],
-        ships:[]
-    }   
+        gpId:""
+    },
+    computed:{
+
+    }
 })
 
 const params = new URLSearchParams(window.location.search);
 const gpId = params.get('gp')
+app.gpId = gpId
 
 function load(){
     $.get("/api/game_view/"+gpId)
     .done(function(datazo){
         app.datos = datazo;
-        datos =  datazo;
-        ships = datazo.ships            
-        init(datos,ships)
+        datos =  datazo;            
+        init(datos)
     })
 }
 load()
 
-function init(datos,ships){
+function init(datos){
+    ships = datos.ships
+    salvoes = datos.salvoes
     
     var options = {
         //Dimensiones de la grilla
@@ -45,19 +50,19 @@ function init(datos,ships){
     $(".grid-stack").gridstack(options)
 
     grid = $('#grid').data('gridstack');
+    enemyGrid = $('#enemy-grid').data('gridstack')
 
     loadShips(ships, grid)
 
-    createGrid(11, $(".grid-ships"))
+    createGrid(11, $(".grid-ships"), 1)
+    createGrid(11, $(".enemy-grid"), 2)  
 
-    
-    
-    
+    loadSalvoes(salvoes, ships)
 
 }
 
 //creates the grid structure
-const createGrid = function(size, element){
+const createGrid = function(size, element, gridN){
 
     let wrapper = document.createElement('DIV')
     wrapper.classList.add('grid-wrapper')
@@ -65,14 +70,14 @@ const createGrid = function(size, element){
     for(let i = 0; i < size; i++){
         let row = document.createElement('DIV')
         row.classList.add('grid-row')
-        row.id =`grid-row${i}`
+        row.id =`${gridN}-grid-row${i}`
         wrapper.appendChild(row)
 
         for(let j = 0; j < size; j++){
             let cell = document.createElement('DIV')
             cell.classList.add('grid-cell')
             if(i > 0 && j > 0)
-            cell.id = `${i - 1}${ j - 1}`
+            cell.id = `${gridN}-${i - 1}${ j - 1}`
 
             if(j===0 && i > 0){
                 let textNode = document.createElement('SPAN')
@@ -115,12 +120,88 @@ const loadShips = function(ships,grid){
             h = yLast - y + 1       //La altura es la diferencia entre la primera y la ultima Y
         }
 
-        grid.addWidget($(`<div id="${ship.type}"><div class="grid-stack-item-content carrierHorizontal"><div class="red"></div></div><div/>`),
+        var orientacion = ""
+
+        if(h == 1){
+            orientacion = "Horizontal"
+        }else{
+            orientacion = "Vertical"
+        }
+
+        grid.addWidget($(`<div id="${ship.type}"><div class="grid-stack-item-content shipCont"><div class="ship ship${orientacion}">${ship.type}</div></div><div/>`),
         x, y, w, h); //element,x,y,width,height
 
-        $(`#${ship.type}`).css('background-color','red');
-
     })
+}
+
+const loadSalvoes = function(salvoes, ships){
+
+    var locations = ships.map(sh => {return sh.locations})
+
+    console.log(locations)
+
+    
+    playerSalvoes = salvoes.filter(function(sub){
+        if(sub.player == gpId){
+            return sub
+        }
+    })
+    enemySalvoes = salvoes.filter(function(sub){
+        if(sub.player != gpId){
+            return sub
+        }
+    })
+
+    playerSalvoes.forEach(function(sub){
+        for(loc in sub.locations){
+
+            x = parseInt(sub.locations[loc].slice(1))-1
+            y = sub.locations[loc].charCodeAt(0)-65
+            
+            cell = $(`#2-${y}${x}`)
+
+            cell.addClass('salvoed')
+
+            turn = document.createElement('SPAN')
+            turn.innerText = sub.turn
+
+            cell.append(turn)
+
+        }
+    })
+
+    enemySalvoes.forEach(function(sub){
+        for(loc in sub.locations){
+            
+            x = parseInt(sub.locations[loc].slice(1))-1
+            y = sub.locations[loc].charCodeAt(0)-65
+            
+            cell = $(`#1-${y}${x}`)
+
+            cell.addClass('salvoed')
+            
+            locations.forEach(function(locs){
+                locs.forEach(function(loc){
+                    xAux = parseInt(loc.slice(1))-1
+                    yAux = loc.charCodeAt(0)-65
+
+                    //If current salvo location coincides with an ally ship location it will turn red
+                    if(xAux == x && yAux == y){
+                        cell.addClass('bg-red')
+                    }
+                })
+            })
+            
+
+            turn = document.createElement('SPAN')
+            turn.innerText = sub.turn
+
+            cell.append(turn)
+        }
+    })
+    
+    
+    
 }
 
 //adds a listener to the ships, which shoots its rotation when clicked
