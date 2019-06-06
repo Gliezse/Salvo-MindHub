@@ -2,7 +2,10 @@ var app = new Vue({
     el: "#app",
     data:{
         games:[],
-        players:[]
+        players:[],
+        status: "Not Logged",
+        logged: false,
+        user: {}
     },
     
 })
@@ -10,12 +13,18 @@ var app = new Vue({
 function load(){
     $.get("/api/games")
     .done(function(datazo){
-        app.games = datazo;
-        init(datazo)
+        app.games = datazo.games;
+        app.user = datazo.user;
+
+        //Si hay alguien loggeado hay que indicarselo al vue
+        if(app.user != "guest"){
+            app.status = "Logged"
+            app.logged = true
+        }
+
+        init(datazo.games)
     })
 }
-
-load();
 
 function init(games){
 
@@ -76,7 +85,45 @@ function init(games){
 
         })
     }
-
-    app.players = uniquePlayers
-
+    app.players = uniquePlayers    
 }
+
+//Se cargan los datos desde la base de datos por primera vez
+load();
+
+$('#login-form').submit(function () {
+    $.post("/api/login", {
+        email: $("#login-email").val(),
+        password: $("#login-pwd").val()
+    })
+        .done(function () {
+            console.log("Logged in")
+            
+            app.logged = true
+            app.status = "Logged"
+
+            //Se vuelven a traer los datos con el jugador loggeado
+            load()
+        })
+        .fail(function () {
+            console.log("Login error")
+        })
+})
+
+$('#logout-form').submit(function () {
+    $.post('/api/logout')
+        .done(function () {
+            console.log("Logged out")
+            app.logged = false
+            app.status = "Not Logged"
+            $("#login-email").val("")
+            $("#login-pwd").val("")
+
+            //Se actualizan los datos locales
+            load()
+        })
+        .fail(function () {
+            console.log("Logout error")
+        })
+})
+

@@ -9,6 +9,20 @@
 </head>
 <body >
     <main id="app" class="container">
+
+        <form id="login-form" onsubmit="return false" v-show="!logged">
+            <label>Email: <input type="text" name="email" id="login-email" required></label>
+            <label>Password: <input type="password" name="password" id="login-pwd" required></label>
+            <input type="submit" value="Log in">
+        </form>
+
+        <div v-show="logged">
+            <h2>Logged as: <b>{{user.name}}</b></h2>
+            <form id="logout-form" onsubmit="return false">
+                <input type="submit" value="Log out">
+            </form>
+        </div>
+        
         <h1>Games:</h1>
         <ol>
             <div v-for="game in games" class="gameDiv">
