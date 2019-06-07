@@ -11,27 +11,16 @@
     <link rel="stylesheet" href="dist/gridstack-extra.css" />
     <link rel="stylesheet" href="dist/style.css" />
 </head>
-<body style="width: 80vw; margin: auto">
+<body>
     <main id="app">
-        <div id="game-data">
-            <div class="perotu mmama trolaxd"></div>
+        <div v-if="datos != []">
             <h1>Game: {{datos.id}}</h1>
-            <div v-if="datos.gameplayers">
-                <h3>Player 1: <span v-if="datos.gameplayers[0]">{{datos.gameplayers[0].player.name}} <span v-if="datos.gameplayers[0].id == gpId">(You)</span></span><span v-else>None</span></h3>
-                <h3>Player 2: <span v-if="datos.gameplayers[1]">{{datos.gameplayers[1].player.name}} <span v-if="datos.gameplayers[1].id == gpId">(You)</span></span><span v-else>None</span></h3>
-            </div>
-            
         </div>
         <div class="grid-ships">
             <div id="grid" class="grid-stack grid-stack-10">
                 
             </div>
         </div>
-        <div class="enemy-grid" >
-                <div id="enemy-grid" class="grid-stack grid-stack-10">
-                    
-                </div>
-            </div>
     </main>
 
 
