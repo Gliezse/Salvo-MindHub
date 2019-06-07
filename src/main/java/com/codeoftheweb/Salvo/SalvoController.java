@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -38,8 +39,20 @@ public class SalvoController {
 
 
     @RequestMapping("/game_view/{id}")
-    public Map<String,Object> gameView(@PathVariable("id") long id){
-        return gamePlayerRepository.findById(id).orElse(null).gameViewDTO();
+    public ResponseEntity<Map<String,Object>> gameView(@PathVariable("id") long id, Authentication authentication){
+        Optional<GamePlayer> auxgp = gamePlayerRepository.findById(id);
+        //Si no existe el gameplayer
+        if(!auxgp.isPresent()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Player player = playerRepository.findByEmail(authentication.getName());
+        //Si el gameplayer no le corresponde al player loggeado
+        if(player.getId() != auxgp.get().getPlayer().getId()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<>(auxgp.get().gameViewDTO(), HttpStatus.OK);
     }
 
     @RequestMapping("/games")

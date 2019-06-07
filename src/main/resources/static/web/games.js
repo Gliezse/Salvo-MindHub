@@ -7,7 +7,28 @@ var app = new Vue({
         logged: false,
         user: {}
     },
-    
+    methods:{
+        isAPlayer: function(gpList){
+
+            for(var i in gpList){
+                if(gpList[i].player.id == this.user.id){
+                    return true
+                }
+            }
+            
+ 
+            return false
+        },
+        enterGame: function(gpList){
+            for(var i in gpList){
+                console.log("loop")
+                if(gpList[i].player.id == this.user.id){
+                    console.log("/web/game.html?gp="+gpList[i].id)
+                    window.location.href = "/web/game.html?gp="+gpList[i].id
+                }
+            }
+        }
+    }    
 })
 
 function load(){
