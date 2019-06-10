@@ -34,8 +34,9 @@ var app = new Vue({
             .fail(function(){(alert("You must be logged in in order to create a new game!"))})
         },
         joinGame: function(gId){
-            $.post("/api/games/"+gId+"/players")
-            
+            $.post("/api/game/"+gId+"/players")
+            .done(function(response){window.location.href = "/web/game.html?gp="+response.gpid})
+            .fail(function(response){console.log(response.status)})
         }
     }    
 })

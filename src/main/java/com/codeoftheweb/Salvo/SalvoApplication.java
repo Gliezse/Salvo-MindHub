@@ -59,20 +59,6 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			Game g3 = new Game();
 			Game g4 = new Game();
 
-			/*g1.addGamePlayer(new GamePlayer(p1, shipSet1, salvoSet1));
-			g1.addGamePlayer(new GamePlayer(p2, shipSet2, salvoSet2));
-			g2.addGamePlayer(new GamePlayer(p1, shipSet3, salvoSet3));
-			g2.addGamePlayer(new GamePlayer(p4, shipSet4, salvoSet4));
-			g3.addGamePlayer(new GamePlayer(p4, shipSet5, salvoSet5));
-			g3.addGamePlayer(new GamePlayer(p3, shipSet6, salvoSet6));
-			g4.addGamePlayer(new GamePlayer(p2, shipSet7, salvoSet7));
-			g4.addGamePlayer(new GamePlayer(p4, shipSet8, salvoSet8));*/
-
-			gRepos.save(g1);
-			gRepos.save(g2);
-			gRepos.save(g3);
-			gRepos.save(g4);
-
 			Set<Ship> shipSet1 = new HashSet<>();
 			shipSet1.add(new Ship("patrol_boat", new ArrayList<>(Arrays.asList("H1","H2"))));
 			shipSet1.add(new Ship("destroyer", new ArrayList<>(Arrays.asList("A2","B2","C2"))));
@@ -140,17 +126,28 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			salvoSet8.add(new Salvo(1, new ArrayList<>(Arrays.asList("D7", "A2"))));
 			salvoSet8.add(new Salvo(2, new ArrayList<>(Arrays.asList("C7","F3"))));
 
+			g1.addGamePlayer(new GamePlayer(p1, shipSet1, salvoSet1));
+			g1.addGamePlayer(new GamePlayer(p2, shipSet2, salvoSet2));
+			g2.addGamePlayer(new GamePlayer(p1, shipSet3, salvoSet3));
+			g2.addGamePlayer(new GamePlayer(p4, shipSet4, salvoSet4));
+			g3.addGamePlayer(new GamePlayer(p4, shipSet5, salvoSet5));
+			g3.addGamePlayer(new GamePlayer(p3, shipSet6, salvoSet6));
+			g4.addGamePlayer(new GamePlayer(p2, shipSet7, salvoSet7));
+			g4.addGamePlayer(new GamePlayer(p4, shipSet8, salvoSet8));
 
+			gRepos.save(g1);
+			gRepos.save(g2);
+			gRepos.save(g3);
+			gRepos.save(g4);
 
 			//GamePlayers
-			repository.save(new GamePlayer(g1, p1, shipSet1, salvoSet1));
+			/*repository.save(new GamePlayer(g1, p1, shipSet1, salvoSet1));
 			repository.save(new GamePlayer(g1, p2, shipSet2, salvoSet2));
 			repository.save(new GamePlayer(g2, p3, shipSet3, salvoSet3));
 			repository.save(new GamePlayer(g2, p1, shipSet4, salvoSet4));
 			repository.save(new GamePlayer(g3, p4, shipSet5, salvoSet5));
 			repository.save(new GamePlayer(g3, p3, shipSet6, salvoSet6));
-			repository.save(new GamePlayer(g4, p2, shipSet7, salvoSet7));
-			repository.save(new GamePlayer(g4, p4, shipSet8, salvoSet8));
+			repository.save(new GamePlayer(g4, p2, shipSet7, salvoSet7));*/
 
 			//Scores
 			scoreRepos.save(new Score(g1, p1,1));

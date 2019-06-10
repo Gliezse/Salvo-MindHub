@@ -18,8 +18,8 @@ public class Game {
     private long id;
     private LocalDate date;
 
-    @OneToMany(fetch = FetchType.EAGER , mappedBy = "game")
-    private List<GamePlayer> gPlayers = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER , mappedBy = "game", cascade = CascadeType.ALL)
+    private Set<GamePlayer> gPlayers = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "game")
     private List<Score> scores = new ArrayList<>();
@@ -65,7 +65,7 @@ public class Game {
     }
 
     @JsonIgnore
-    public List<GamePlayer> getgPlayers(){
+    public Set<GamePlayer> getgPlayers(){
         return gPlayers;
     }
 

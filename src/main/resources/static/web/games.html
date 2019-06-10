@@ -51,7 +51,7 @@
                 </li>
                 <div v-if="logged">
                     <button v-show="isAPlayer(game.gamePlayers)" v-on:click="enterGame(game.gamePlayers)">Play</button>
-                    <button v-show="!isAPlayer(game.gamePlayers)" v-on:click="joinGame(game.id)"></button>
+                    <button v-show="!isAPlayer(game.gamePlayers)" v-on:click="joinGame(game.id)">Join Game</button>
                 </div>
                 
             </div>

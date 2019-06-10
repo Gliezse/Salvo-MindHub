@@ -78,20 +78,17 @@ public class SalvoController {
         }
 
         Player player = playerRepository.findByEmail(auth.getName());
-
-        //ARREGLAR PLS
-        GamePlayer gamePlayer = gamePlayerRepository.save(new GamePlayer(player));
-
-        gameRepository.save(new Game(gamePlayer));
-
+        Game game = new Game();
+        game.addGamePlayer(new GamePlayer(game,player));
+        gameRepository.save(game);
 
         Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("gpid", gamePlayer.getId());
+        dto.put("gpid", game.getgPlayers().stream().findFirst().get().getId());
 
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
-    @PostMapping("/games/{id}/players")
+    @PostMapping("/game/{id}/players")
     public ResponseEntity<Map<String, Object>> joinGame(Authentication auth, @PathVariable("id") long id){
         if(auth == null || auth instanceof AnonymousAuthenticationToken){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -104,7 +101,7 @@ public class SalvoController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        if(game.get().getgPlayers().size() == 2){
+        if(game.get().getgPlayers().size() > 1){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
@@ -112,14 +109,12 @@ public class SalvoController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        GamePlayer gamePlayer = gamePlayerRepository.save(new GamePlayer(game.get(),player));
-
-        game.get().addGamePlayer(gamePlayer);
+        GamePlayer gamePlayer = gamePlayerRepository.save(new GamePlayer(game.get(), player));
 
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("gpid", gamePlayer.getId());
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(dto,HttpStatus.CREATED);
     }
 
     @RequestMapping("/players")
