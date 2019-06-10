@@ -47,6 +47,13 @@ public class GamePlayer {
         this.joined = LocalDate.now();
     }
 
+
+    public GamePlayer(Player player, Set<Ship> ships, Set<Salvo> salvos){
+        this.player = player;
+        this.ships = ships;
+        this.salvos = salvos;
+    }
+
     public GamePlayer(Game game, Player player, Set<Ship> ships, Set<Salvo> salvos){
         this.game = game;
         this.player = player;

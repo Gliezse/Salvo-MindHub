@@ -262,3 +262,7 @@ $("#logout").click(function(){
             console.log("Logout error")
         })
 })
+
+$("#back").click(function(){
+    window.location.href = "/web/games.html"
+})

@@ -7,7 +7,38 @@ var app = new Vue({
         logged: false,
         user: {}
     },
-    
+    methods:{
+        isAPlayer: function(gpList){
+
+            for(var i in gpList){
+                if(gpList[i].player.id == this.user.id){
+                    return true
+                }
+            }
+            
+ 
+            return false
+        },
+        enterGame: function(gpList){
+            for(var i in gpList){
+                console.log("loop")
+                if(gpList[i].player.id == this.user.id){
+                    console.log("/web/game.html?gp="+gpList[i].id)
+                    window.location.href = "/web/game.html?gp="+gpList[i].id
+                }
+            }
+        },
+        createNewGame: function(){
+            $.post("/api/games")
+            .done(function(response){window.location.href = "/web/game.html?gp="+response.gpid})
+            .fail(function(){(alert("You must be logged in in order to create a new game!"))})
+        },
+        joinGame: function(gId){
+            $.post("/api/game/"+gId+"/players")
+            .done(function(response){window.location.href = "/web/game.html?gp="+response.gpid})
+            .fail(function(response){console.log(response.status)})
+        }
+    }    
 })
 
 function load(){

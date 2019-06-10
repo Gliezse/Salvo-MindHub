@@ -32,19 +32,28 @@
                 <input type="submit" value="Log out">
             </form>
         </div>
+
+        <button v-on:click="createNewGame()">Create new game</button>
+
+       
         
         <h1>Games:</h1>
         <ol>
             <div v-for="game in games" class="gameDiv">
                 <li class="game">
-                        <b>Game ID:</b> {{game.id}} <br><b>Created:</b> {{game.created}} <br>
-                        <b>Players:</b>
-                        <ul>
-                            <li v-for="(gamePlayer,index) in game.gamePlayers" style="margin-top: 0.6rem;">
-                                <span>Player {{index+1}}: {{gamePlayer.player.name}}</span>
-                            </li>
-                        </ul>
-                    </li>
+                    <b>Game ID:</b> {{game.id}} <br><b>Created:</b> {{game.created}} <br>
+                    <b>Players:</b>
+                    <ul>
+                        <li v-for="(gamePlayer,index) in game.gamePlayers" style="margin-top: 0.6rem;">
+                            <span>Player {{index+1}}: {{gamePlayer.player.name}}</span>
+                        </li>
+                    </ul>
+                </li>
+                <div v-if="logged">
+                    <button v-show="isAPlayer(game.gamePlayers)" v-on:click="enterGame(game.gamePlayers)">Play</button>
+                    <button v-show="!isAPlayer(game.gamePlayers)" v-on:click="joinGame(game.id)">Join Game</button>
+                </div>
+                
             </div>
             
         </ol>
