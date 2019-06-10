@@ -9,18 +9,51 @@
 </head>
 <body >
     <main id="app" class="container">
+        <div v-show="!logged">
+                <h4>Login</h4>
+                <form id="login-form" onsubmit="return false">
+                    <label>Email: <input type="text" name="email" id="login-email" required></label><br>
+                    <label>Password: <input type="password" name="password" id="login-pwd" required></label>
+                    <input type="submit" value="Log in">
+                </form>
+                <h4>Or Signup</h4>
+                <form id="signup-form" onsubmit="return false">
+                    <label>Name: <input type="text" name="name" id="signup-name" required></label><br>
+                    <label>Email: <input type="text" name="email" id="signup-email" required></label><br>
+                    <label>Password: <input type="password" name="password" id="signup-pwd" required></label>
+                    <input type="submit" value="Sign up">
+                </form>
+        </div>
+        
+
+        <div v-show="logged">
+            <h2>Logged as: <b>{{user.name}}</b></h2>
+            <form id="logout-form" onsubmit="return false">
+                <input type="submit" value="Log out">
+            </form>
+        </div>
+
+        <button v-on:click="createNewGame()">Create new game</button>
+
+       
+        
         <h1>Games:</h1>
         <ol>
             <div v-for="game in games" class="gameDiv">
                 <li class="game">
-                        <b>Game ID:</b> {{game.id}} <br><b>Created:</b> {{game.created}} <br>
-                        <b>Players:</b>
-                        <ul>
-                            <li v-for="(gamePlayer,index) in game.gamePlayers" style="margin-top: 0.6rem;">
-                                <span>Player {{index+1}}: {{gamePlayer.player.name}}</span>
-                            </li>
-                        </ul>
-                    </li>
+                    <b>Game ID:</b> {{game.id}} <br><b>Created:</b> {{game.created}} <br>
+                    <b>Players:</b>
+                    <ul>
+                        <li v-for="(gamePlayer,index) in game.gamePlayers" style="margin-top: 0.6rem;">
+                            <span>Player {{index+1}}: {{gamePlayer.player.name}}</span>
+                        </li>
+                    </ul>
+                </li>
+                <div v-if="logged">
+                    <button v-show="isAPlayer(game.gamePlayers)" v-on:click="enterGame(game.gamePlayers)">Play</button>
+                    <button v-show="!isAPlayer(game.gamePlayers)" v-on:click="joinGame(game.id)"></button>
+                </div>
+                
             </div>
             
         </ol>

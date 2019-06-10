@@ -252,3 +252,17 @@ const listenBusyCells = function(){
         }
     }
 }
+
+$("#logout").click(function(){
+    $.post('/api/logout')
+        .done(function () {
+            window.location.href = "/web/games.html"
+        })
+        .fail(function () {
+            console.log("Logout error")
+        })
+})
+
+$("#back").click(function(){
+    window.location.href = "/web/games.html"
+})

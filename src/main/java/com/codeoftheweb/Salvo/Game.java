@@ -28,6 +28,12 @@ public class Game {
         this.date = LocalDate.now();
     }
 
+    public Game(GamePlayer gp){
+        gp.setGame(this);
+        addGamePlayer(gp);
+        this.date = LocalDate.now();
+    }
+
     public LocalDate getDate() {
         return date;
     }
