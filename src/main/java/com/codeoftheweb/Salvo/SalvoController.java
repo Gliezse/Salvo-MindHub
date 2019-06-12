@@ -10,10 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -86,6 +83,36 @@ public class SalvoController {
         dto.put("gpid", game.getgPlayers().stream().findFirst().get().getId());
 
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/games/players/{gpid}/ships")
+    public ResponseEntity<String> placeShips(Authentication auth, @PathVariable("gpid") long gpid, @RequestBody Set<Ship> ships){
+        if(auth==null || auth instanceof AnonymousAuthenticationToken){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Optional<GamePlayer> gamePlayer = gamePlayerRepository.findById(gpid);
+
+        if(!gamePlayer.isPresent()){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        if(gamePlayer.get().getPlayer().getEmail() != auth.getName()){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        Optional<GamePlayer> opponentGamePlayer = gamePlayer.get().getGame().getgPlayers().stream().filter(gp -> gp.getId()==gamePlayer.get().getId()).findFirst();
+
+        if(!opponentGamePlayer.isPresent()){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        if (gamePlayer.get().getShips().size()>0 || ships.size() != 5){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        ships.forEach(ship->gamePlayer.get().addShip(ship));
+        gamePlayerRepository.save(gamePlayer.get());
+        return new ResponseEntity<>(HttpStatus.CREATED);
+
     }
 
     @PostMapping("/game/{id}/players")

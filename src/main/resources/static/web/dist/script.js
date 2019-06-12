@@ -266,3 +266,38 @@ $("#logout").click(function(){
 $("#back").click(function(){
     window.location.href = "/web/games.html"
 })
+
+$("#addShips").click(function(){
+
+    let data = [
+        {
+            "type":"testDestroyer",
+            "locations":["H1","H2","H3"]
+        },
+        {
+            "type":"testPatrol",
+            "locations":["C2","D2"]
+        },
+        {
+            "type":"testCarrier",
+            "locations":["H5","H6","H7","H8"]
+        },
+        {
+            "type":"testSubmarine",
+            "locations":["B9","B10"]
+        },
+        {
+            "type":"testTaxi",
+            "locations":["A2"]
+        }
+    ]
+    
+    $.post({
+        url:"/api/games/players/"+app.gpId+"/ships",
+        data: JSON.stringify(data),
+        dataType: "text",
+        contentType: "application/json"
+    })
+    .done(function(response){console.log("nice")})
+    .fail(function(response){console.log("not nice")})
+})
