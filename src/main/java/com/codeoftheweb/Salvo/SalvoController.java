@@ -99,7 +99,7 @@ public class SalvoController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        Optional<GamePlayer> opponentGamePlayer = gamePlayer.get().getGame().getgPlayers().stream().filter(gp -> gp.getId()==gamePlayer.get().getId()).findFirst();
+        Optional<GamePlayer> opponentGamePlayer = gamePlayer.get().getGame().getgPlayers().stream().filter(gp -> gp.getId()!=gamePlayer.get().getId()).findFirst();
 
         if(!opponentGamePlayer.isPresent()){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);

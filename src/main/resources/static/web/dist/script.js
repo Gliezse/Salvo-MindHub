@@ -3,10 +3,8 @@ var app = new Vue({
     data:{
         datos:[],
         gpId:""
-    },
-    computed:{
-
     }
+    
 })
 
 const params = new URLSearchParams(window.location.search);
@@ -22,6 +20,14 @@ function load(){
     })
 }
 load()
+
+function update(){
+    $.get("/api/game_view/"+gpId)
+    .done(function(datazo){
+        app.datos = datazo;
+        loadShips(datazo.ships, $("#grid").data('gridstack'))
+    })
+}
 
 function init(datos){
     ships = datos.ships
@@ -44,8 +50,11 @@ function init(datos){
         //Columna estatica, true/false
         staticGrid: false,
         //Anims
-        animate: true
+        animate: false
     }
+
+    $("#grid").html("")
+    $("#enemy-grid").html("")
 
     $(".grid-stack").gridstack(options)
 
@@ -54,11 +63,11 @@ function init(datos){
 
     loadShips(ships, grid)
 
+    
     createGrid(11, $(".grid-ships"), 1)
     createGrid(11, $(".enemy-grid"), 2)  
 
     loadSalvoes(salvoes, ships)
-
 }
 
 //creates the grid structure
@@ -99,6 +108,25 @@ const createGrid = function(size, element, gridN){
 }
 
 const loadShips = function(ships,grid){
+    if(ships.length == 0){        
+        ships = [{
+            "type":"Carrier",
+            "locations":["A1","A2","A3","A4","A5"]
+        },{
+            "type":"Battleship",
+            "locations":["C1","C2","C3","C4"]
+        },{
+            "type":"Destroyer",
+            "locations":["E1","E2","E3"]
+        },{
+            "type":"Submarine",
+            "locations":["G1","G2","G3"]
+        },{
+            "type":"Patrol",
+            "locations":["I1","I2"]
+        }]
+    }
+
     ships.forEach(function(ship){
         var loc = ship.locations                    //Lista de cells donde esta el barco
         var firstCell = loc[0]                      //La primera de estas cells
@@ -128,10 +156,28 @@ const loadShips = function(ships,grid){
             orientacion = "Vertical"
         }
 
-        grid.addWidget($(`<div id="${ship.type}"><div class="grid-stack-item-content shipCont"><div class="ship ship${orientacion}">${ship.type}</div></div><div/>`),
+        grid.addWidget($(`<div id="${ship.type}" class="ship2"><div class="grid-stack-item-content ship ship${orientacion} ${ship.type}${orientacion}">${ship.type}</div><div/>`),
         x, y, w, h); //element,x,y,width,height
 
     })
+
+    $(".ship2").dblclick(function(){
+        let shipType= $(this).attr("id")
+        let cells = 0
+
+        if(shipType=="Carrier"){
+            cells = 5
+        }else if(shipType == "Battleship"){
+            cells = 4
+        }else if(shipType == "Submarine" || shipType == "Destroyer"){
+            cells = 3
+        }else{
+            cells = 2
+        }
+
+        rotateShips(shipType,cells)
+    })
+
 }
 
 const loadSalvoes = function(salvoes, ships){
@@ -207,36 +253,53 @@ const loadSalvoes = function(salvoes, ships){
 //adds a listener to the ships, which shoots its rotation when clicked
 const rotateShips = function(shipType, cells){
 
-        $(`#${shipType}`).click(function(){
-            let x = +($(this).attr('data-gs-x'))
-            let y = +($(this).attr('data-gs-y'))
-        if($(this).children().hasClass(`${shipType}Horizontal`)){
-            if(y + cells - 1 < 10){
-                grid.resize($(this),1,cells);
-                $(this).children().removeClass(`${shipType}Horizontal`);
-                $(this).children().addClass(`${shipType}Vertical`);
-            } else{
-                grid.update($(this), null, 10 - cells)
-                grid.resize($(this),1,cells);
-                $(this).children().removeClass(`${shipType}Horizontal`);
-                $(this).children().addClass(`${shipType}Vertical`);
+    let ship = $(`#${shipType}`)
+
+    //Arreglar en base al rodri code
+        let x = +($(ship).attr('data-gs-x'))
+        let y = +($(ship).attr('data-gs-y'))
+        let w = +($(ship).attr('data-gs-width'))
+        let h = +($(ship).attr('data-gs-height'))
+
+        if($(ship).children().hasClass(`${shipType}Horizontal`)){
+            for(let i = 0 ; i < w ; i++ ){
+                if(y == 9-i){
+                    return console.log("sad")
+                }//esto
                 
             }
-            
+            if(y + cells - 1 < 10){
+                grid.resize($(ship),1,cells);
+                $(ship).children().removeClass(`${shipType}Horizontal`);
+                $(ship).children().addClass(`${shipType}Vertical`);
+                $(ship).children().removeClass(`shipHorizontal`);
+                $(ship).children().addClass(`shipVertical`);
+            } else{
+                grid.update($(ship), null, 10 - cells)
+                grid.resize($(ship),1,cells);
+                $(ship).children().removeClass(`${shipType}Horizontal`);
+                $(ship).children().addClass(`${shipType}Vertical`);
+                $(ship).children().removeClass(`shipHorizontal`);
+                $(ship).children().addClass(`shipVertical`);            
+            }          
         }else{
             if(x + cells - 1  < 10){
-                grid.resize($(this),cells,1);
-                $(this).children().addClass(`${shipType}Horizontal`);
-                $(this).children().removeClass(`${shipType}Vertical`);
+                grid.resize($(ship),cells,1);
+                $(ship).children().addClass(`${shipType}Horizontal`);
+                $(ship).children().removeClass(`${shipType}Vertical`);
+                $(ship).children().addClass(`shipHorizontal`);
+                $(ship).children().removeClass(`shipVertical`);
             } else{
-                grid.update($(this), 10 - cells)
-                grid.resize($(this),cells,1);
-                $(this).children().addClass(`${shipType}Horizontal`);
-                $(this).children().removeClass(`${shipType}Vertical`);
+                grid.update($(ship), 10 - cells)
+                grid.resize($(ship),cells,1);
+                $(ship).children().addClass(`${shipType}Horizontal`);
+                $(ship).children().removeClass( `${shipType}Vertical`);
+                $(ship).children().addClass(`shipHorizontal`);
+                $(ship).children().removeClass( `shipVertical`);
             }
             
         }
-    });
+    
 
 }
 
@@ -271,24 +334,24 @@ $("#addShips").click(function(){
 
     let data = [
         {
-            "type":"testDestroyer",
+            "type":"Destroyer",
             "locations":["H1","H2","H3"]
         },
         {
-            "type":"testPatrol",
-            "locations":["C2","D2"]
+            "type":"Patrol",
+            "locations":["E2","F2"]
         },
         {
-            "type":"testCarrier",
-            "locations":["H5","H6","H7","H8"]
+            "type":"Carrier",
+            "locations":["H5","H6","H7","H8","H9"]
         },
         {
-            "type":"testSubmarine",
-            "locations":["B9","B10"]
+            "type":"Submarine",
+            "locations":["B8","B9","B10"]
         },
         {
-            "type":"testTaxi",
-            "locations":["A2"]
+            "type":"Battleship",
+            "locations":["A1","B1","C1","D1"]
         }
     ]
     
@@ -298,6 +361,11 @@ $("#addShips").click(function(){
         dataType: "text",
         contentType: "application/json"
     })
-    .done(function(response){console.log("nice")})
-    .fail(function(response){console.log("not nice")})
+    .done(function(response){
+        console.log(response.status)
+        update()
+    })
+    .fail(function(response){
+        console.log(response.status)
+    })
 })
