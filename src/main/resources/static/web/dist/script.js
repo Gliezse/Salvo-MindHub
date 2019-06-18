@@ -3,31 +3,83 @@ var app = new Vue({
     data:{
         datos:[],
         gpId:""
+    },
+    methods:{
+        placeShips: function(){
+            if(datos.gameplayers.length == 1){
+                return alert("You can only place ships after the player 2 joins!")
+            }
+
+            let data = []
+
+            $(".grid-stack-item").get().forEach(function(ship){
+
+                let cells = []
+
+                let x = parseInt($(ship).attr('data-gs-x'))
+                let y = parseInt($(ship).attr('data-gs-y'))
+                let w = parseInt($(ship).attr('data-gs-width'))
+                let h = parseInt($(ship).attr('data-gs-height'))
+
+                let xAux = x+1;
+                let yAux = y+65;
+                let shipType = $(ship).attr('id')
+
+                if(w>h){
+                    for(var i = 0 ; i < w ; i++){
+                        cells.push(String.fromCharCode(yAux) + (xAux+i))
+                    }
+                }else{
+                    for(var i = 0 ; i < h ; i++){
+                        cells.push(String.fromCharCode(yAux+i) + (xAux))
+                    }
+                }
+                data.push({
+                    "type":shipType,
+                    "locations":cells
+                })
+            })
+
+            $.post({
+                url:"/api/games/players/"+app.gpId+"/ships",
+                data: JSON.stringify(data),
+                dataType: "text",
+                contentType: "application/json"
+            })
+            .done(function(response){
+                console.log(response.status)
+                load()
+            })
+            .fail(function(response){
+                console.log(response.status)
+            })
+        }
     }
     
 })
+
+//TODO: meter todo dentro del vue
 
 const params = new URLSearchParams(window.location.search);
 const gpId = params.get('gp')
 app.gpId = gpId
 
+var grid;
+
 function load(){
     $.get("/api/game_view/"+gpId)
     .done(function(datazo){
         app.datos = datazo;
-        datos =  datazo;            
+        datos =  datazo;  
+        
+        let gridCont = $(".grid-ships").first().html("")
+        gridCont.append('<div id="grid" class="grid-stack grid-stack-10"></div>')
+
         init(datos)
     })
 }
 load()
 
-function update(){
-    $.get("/api/game_view/"+gpId)
-    .done(function(datazo){
-        app.datos = datazo;
-        loadShips(datazo.ships, $("#grid").data('gridstack'))
-    })
-}
 
 function init(datos){
     ships = datos.ships
@@ -51,6 +103,10 @@ function init(datos){
         staticGrid: false,
         //Anims
         animate: false
+    }
+
+    if(ships.length != 0){
+        options.staticGrid = true
     }
 
     $("#grid").html("")
@@ -108,7 +164,7 @@ const createGrid = function(size, element, gridN){
 }
 
 const loadShips = function(ships,grid){
-    if(ships.length == 0){        
+    if(ships.length == 0 && datos.gameplayers[1]){        
         ships = [{
             "type":"Carrier",
             "locations":["A1","A2","A3","A4","A5"]
@@ -162,20 +218,25 @@ const loadShips = function(ships,grid){
     })
 
     $(".ship2").dblclick(function(){
-        let shipType= $(this).attr("id")
-        let cells = 0
-
-        if(shipType=="Carrier"){
-            cells = 5
-        }else if(shipType == "Battleship"){
-            cells = 4
-        }else if(shipType == "Submarine" || shipType == "Destroyer"){
-            cells = 3
+        if(app.datos.ships.length != 0){
+            return
         }else{
-            cells = 2
-        }
+            let shipType= $(this).attr("id")
+            let cells = 0
 
-        rotateShips(shipType,cells)
+            if(shipType=="Carrier"){
+                cells = 5
+            }else if(shipType == "Battleship"){
+                cells = 4
+            }else if(shipType == "Submarine" || shipType == "Destroyer"){
+                cells = 3
+            }else{
+                cells = 2
+            }
+
+            rotateShips(shipType,cells)
+        }
+        
     })
 
 }
@@ -256,64 +317,67 @@ const rotateShips = function(shipType, cells){
     let ship = $(`#${shipType}`)
 
     //Arreglar en base al rodri code
-        let x = +($(ship).attr('data-gs-x'))
-        let y = +($(ship).attr('data-gs-y'))
-        let w = +($(ship).attr('data-gs-width'))
-        let h = +($(ship).attr('data-gs-height'))
+    let x = +($(ship).attr('data-gs-x'))
+    let y = +($(ship).attr('data-gs-y'))
+    let w = +($(ship).attr('data-gs-width'))
+    let h = +($(ship).attr('data-gs-height'))
 
-        if($(ship).children().hasClass(`${shipType}Horizontal`)){
-            for(let i = 0 ; i < w ; i++ ){
-                if(y == 9-i){
-                    return console.log("sad")
-                }//esto
-                
-            }
-            if(y + cells - 1 < 10){
-                grid.resize($(ship),1,cells);
-                $(ship).children().removeClass(`${shipType}Horizontal`);
-                $(ship).children().addClass(`${shipType}Vertical`);
-                $(ship).children().removeClass(`shipHorizontal`);
-                $(ship).children().addClass(`shipVertical`);
-            } else{
-                grid.update($(ship), null, 10 - cells)
-                grid.resize($(ship),1,cells);
-                $(ship).children().removeClass(`${shipType}Horizontal`);
-                $(ship).children().addClass(`${shipType}Vertical`);
-                $(ship).children().removeClass(`shipHorizontal`);
-                $(ship).children().addClass(`shipVertical`);            
-            }          
-        }else{
-            if(x + cells - 1  < 10){
-                grid.resize($(ship),cells,1);
-                $(ship).children().addClass(`${shipType}Horizontal`);
-                $(ship).children().removeClass(`${shipType}Vertical`);
-                $(ship).children().addClass(`shipHorizontal`);
-                $(ship).children().removeClass(`shipVertical`);
-            } else{
-                grid.update($(ship), 10 - cells)
-                grid.resize($(ship),cells,1);
-                $(ship).children().addClass(`${shipType}Horizontal`);
-                $(ship).children().removeClass( `${shipType}Vertical`);
-                $(ship).children().addClass(`shipHorizontal`);
-                $(ship).children().removeClass( `shipVertical`);
-            }
-            
+    if(w>h){
+        
+        if(y+w-1 > 9){
+            return alert("Be careful, you are going to fall off the table!")
         }
+
+        for(var i = 1; i<w ; i++){
+            if(!grid.isAreaEmpty(x,y+i)){
+                return alert("You are going to crash another ship if you rotate that way.")
+            }
+        }
+
+
+        if(y + cells - 1 < 10){
+            grid.resize($(ship),1,cells);
+            $(ship).children().removeClass(`${shipType}Horizontal`);
+            $(ship).children().addClass(`${shipType}Vertical`);
+            $(ship).children().removeClass(`shipHorizontal`);
+            $(ship).children().addClass(`shipVertical`);
+        } else{
+            grid.update($(ship), null, 10 - cells)
+            grid.resize($(ship),1,cells);
+            $(ship).children().removeClass(`${shipType}Horizontal`);
+            $(ship).children().addClass(`${shipType}Vertical`);
+            $(ship).children().removeClass(`shipHorizontal`);
+            $(ship).children().addClass(`shipVertical`);            
+        }          
+    }else{
+
+        if(x+h-1 > 9){
+            return alert("Be careful, you are going to fall off the table!")
+        }
+        for(var i = 1; i<h; i++){
+            if(!grid.isAreaEmpty(x+i , y)){
+                return alert("You are going to crash another ship if you rotate that way.")
+            }
+        }
+
+        if(x + cells - 1  < 10){
+            grid.resize($(ship),cells,1);
+            $(ship).children().addClass(`${shipType}Horizontal`);
+            $(ship).children().removeClass(`${shipType}Vertical`);
+            $(ship).children().addClass(`shipHorizontal`);
+            $(ship).children().removeClass(`shipVertical`);
+        } else{
+            grid.update($(ship), 10 - cells)
+            grid.resize($(ship),cells,1);
+            $(ship).children().addClass(`${shipType}Horizontal`);
+            $(ship).children().removeClass( `${shipType}Vertical`);
+            $(ship).children().addClass(`shipHorizontal`);
+            $(ship).children().removeClass( `shipVertical`);
+        }
+        
+    }
     
 
-}
-
-//loops over all the grid cells, verifying if they are empty or busy
-const listenBusyCells = function(){
-    for(let i = 0; i < 10; i++){
-        for(let j = 0; j < 10; j++){
-            if(!grid.isAreaEmpty(i,j)){
-                $(`#${j}${i}`).addClass('busy-cell').removeClass('empty-cell')
-            } else{
-                $(`#${j}${i}`).removeClass('busy-cell').addClass('empty-cell')
-            }
-        }
-    }
 }
 
 $("#logout").click(function(){
@@ -328,44 +392,4 @@ $("#logout").click(function(){
 
 $("#back").click(function(){
     window.location.href = "/web/games.html"
-})
-
-$("#addShips").click(function(){
-
-    let data = [
-        {
-            "type":"Destroyer",
-            "locations":["H1","H2","H3"]
-        },
-        {
-            "type":"Patrol",
-            "locations":["E2","F2"]
-        },
-        {
-            "type":"Carrier",
-            "locations":["H5","H6","H7","H8","H9"]
-        },
-        {
-            "type":"Submarine",
-            "locations":["B8","B9","B10"]
-        },
-        {
-            "type":"Battleship",
-            "locations":["A1","B1","C1","D1"]
-        }
-    ]
-    
-    $.post({
-        url:"/api/games/players/"+app.gpId+"/ships",
-        data: JSON.stringify(data),
-        dataType: "text",
-        contentType: "application/json"
-    })
-    .done(function(response){
-        console.log(response.status)
-        update()
-    })
-    .fail(function(response){
-        console.log(response.status)
-    })
 })
