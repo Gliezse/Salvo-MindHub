@@ -19,13 +19,17 @@
                 <h3>Player 1: <span v-if="datos.gameplayers[0]">{{datos.gameplayers[0].player.name}} <span v-if="datos.gameplayers[0].id == gpId">(You)</span></span><span v-else>None</span></h3>
                 <h3>Player 2: <span v-if="datos.gameplayers[1]">{{datos.gameplayers[1].player.name}} <span v-if="datos.gameplayers[1].id == gpId">(You)</span></span><span v-else>None</span></h3>
             </div>
-            <button id="logout">Logout</button>
-            <button id="back">Back to games list</button>
+            <button id="logout" @click="logout()">Logout</button>
+            <button id="back" @click="back()">Back to games list</button>
             <button id="addShips" @click="placeShips()">Add Ships</button>
             
         </div>
         
         <div class="grid-ships"></div>
+
+        <h3 v-if="playersTurn">Turn: {{turn}}</h3>
+        <h3 v-else>Waiting for your opponent to shoot...</h3>
+        <button id="shoot-button" @click="shootSalvoes()" v-bind:disabled="selectedCells != 2">Shoot!</button>
 
         <div class="enemy-grid" >
             <div id="enemy-grid" class="grid-stack grid-stack-10">                 

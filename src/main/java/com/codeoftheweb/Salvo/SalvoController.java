@@ -18,24 +18,21 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping("/api")
 public class SalvoController {
 
+    //Repositories
     @Autowired
     private GamePlayerRepository gamePlayerRepository;
-
     @Autowired
     private GameRepository gameRepository;
-
     @Autowired
-    PlayerRepository playerRepository;
-
+    private PlayerRepository playerRepository;
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
+    //GET MAPPINGS
     @RequestMapping("/gameplayer/{id}")
     public Map<String,Object> getGPInfo(@PathVariable("id") long id){
         return gamePlayerRepository.findById(id).orElse(null).toDTO();
     }
-
-
 
     @RequestMapping("/game_view/{id}")
     public ResponseEntity<Map<String,Object>> gameView(@PathVariable("id") long id, Authentication authentication){
@@ -67,6 +64,30 @@ public class SalvoController {
 
         return dto;
     }
+
+    @RequestMapping("/players")
+    public List<Object> players(){
+        return playerRepository.findAll().stream().map(sub->sub.toDTO()).collect(toList());
+    }
+
+    @RequestMapping("/gameplayers")
+    public List<Object> gameplayers(){
+        return gamePlayerRepository.findAll().stream().map(sub->sub.toDTO()).collect(toList());
+    }
+
+    @RequestMapping(value="/players", method= RequestMethod.POST)
+    public ResponseEntity<String> signup(@RequestParam String email, @RequestParam String name, @RequestParam String password){
+        Player auxPlayer = playerRepository.findByEmail(email);
+
+        if(auxPlayer!=null){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }else{
+            playerRepository.save(new Player(email,name,passwordEncoder.encode(password)));
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+    }
+
+    //POST MAPPINGS
 
     @PostMapping("/games")
     public ResponseEntity<Map<String,Object>> createGame(Authentication auth){
@@ -115,6 +136,41 @@ public class SalvoController {
 
     }
 
+    @PostMapping("/games/players/{id}/salvoes")
+    public ResponseEntity<String> postSalvoes(Authentication auth, @PathVariable("id") long id, @RequestBody Salvo salvo){
+        if(auth == null || auth instanceof AnonymousAuthenticationToken){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Optional<GamePlayer> gamePlayer = gamePlayerRepository.findById(id);
+
+        if(!gamePlayer.isPresent()){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        Player player = playerRepository.findByEmail(auth.getName());
+
+        if (player.getId() != gamePlayer.get().getPlayer().getId()){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        Optional<GamePlayer> opponentGamePlayer = gamePlayer.get().getGame().getgPlayers().stream().filter(gp -> gp.getId()!=gamePlayer.get().getId()).findFirst();
+
+        if(!opponentGamePlayer.isPresent()){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        Salvo aux = gamePlayer.get().getSalvos().stream().filter(s -> s.getTurn() == salvo.getTurn()).findFirst().orElse(null);
+
+        if(aux != null){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        gamePlayer.get().addSalvo(salvo);
+        gamePlayerRepository.save(gamePlayer.get());
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     @PostMapping("/game/{id}/players")
     public ResponseEntity<Map<String, Object>> joinGame(Authentication auth, @PathVariable("id") long id){
         if(auth == null || auth instanceof AnonymousAuthenticationToken){
@@ -142,27 +198,5 @@ public class SalvoController {
         dto.put("gpid", gamePlayer.getId());
 
         return new ResponseEntity<>(dto,HttpStatus.CREATED);
-    }
-
-    @RequestMapping("/players")
-    public List<Object> players(){
-        return playerRepository.findAll().stream().map(sub->sub.toDTO()).collect(toList());
-    }
-
-    @RequestMapping("/gameplayers")
-    public List<Object> gameplayers(){
-        return gamePlayerRepository.findAll().stream().map(sub->sub.toDTO()).collect(toList());
-    }
-
-    @RequestMapping(value="/players", method= RequestMethod.POST)
-    public ResponseEntity<String> signup(@RequestParam String email, @RequestParam String name, @RequestParam String password){
-        Player auxPlayer = playerRepository.findByEmail(email);
-
-        if(auxPlayer!=null){
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }else{
-            playerRepository.save(new Player(email,name,passwordEncoder.encode(password)));
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }
     }
 }
