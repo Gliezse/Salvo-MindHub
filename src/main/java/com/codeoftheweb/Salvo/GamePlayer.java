@@ -104,6 +104,8 @@ public class GamePlayer {
         return ships;
     }
 
+    public void setShips(Set<Ship> ships){this.ships = ships;}
+
     public void addShip(Ship s){
         s.setGamePlayer(this);
         this.ships.add(s);
