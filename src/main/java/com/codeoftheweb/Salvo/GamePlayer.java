@@ -5,6 +5,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static java.time.LocalDate.now;
@@ -36,7 +38,7 @@ public class GamePlayer {
     @OneToMany(fetch = FetchType.EAGER , mappedBy = "gamePlayer", cascade = CascadeType.ALL)
     private Set<Salvo> salvos = new HashSet<>();
 
-    private LocalDate joined;
+    private LocalDateTime joined;
 
 
     public GamePlayer(){}
@@ -44,24 +46,25 @@ public class GamePlayer {
     public GamePlayer(Game game, Player player){
         this.game = game;
         this.player = player;
-        this.joined = LocalDate.now();
+        this.joined = LocalDateTime.now();
     }
 
 
     public GamePlayer(Player player, Set<Ship> ships, Set<Salvo> salvos){
         this.player = player;
-        this.ships = ships;
-        this.salvos = salvos;
+        ships.forEach(this::addShip);
+        salvos.forEach(this::addSalvo);
+        this.joined = LocalDateTime.now();
     }
 
     public GamePlayer(Game game, Player player, Set<Ship> ships, Set<Salvo> salvos){
         this.game = game;
         this.player = player;
-        ships.forEach(sub-> this.addShip(sub));
+        ships.forEach(this::addShip);
 
-        salvos.forEach(sub->this.addSalvo(sub));
+        salvos.forEach(this::addSalvo);
 
-        this.joined =  LocalDate.now();
+        this.joined =  LocalDateTime.now();
     }
 
     @JsonIgnore
@@ -82,11 +85,11 @@ public class GamePlayer {
         this.player = player;
     }
 
-    public LocalDate getJoined() {
+    public LocalDateTime getJoined() {
         return joined;
     }
 
-    public void setJoined(LocalDate joined) {
+    public void setJoined(LocalDateTime joined) {
         this.joined = joined;
     }
 
@@ -128,7 +131,8 @@ public class GamePlayer {
         Map<String,Object> dto = new LinkedHashMap<String,Object>();
 
         dto.put("id",getId());
-        dto.put("joined",getJoined());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
+        dto.put("joined",getJoined().format(formatter));
 
         Map<String,Object> dtoAUX = getPlayer().toDTO();
         dtoAUX.remove("scores");

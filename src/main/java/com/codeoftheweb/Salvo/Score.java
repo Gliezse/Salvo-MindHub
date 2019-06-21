@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -24,7 +25,7 @@ public class Score {
     private Player player;
 
     private double score;
-    private LocalDate finishDate;
+    private LocalDateTime finishDate;
 
     public Score(){}
 
@@ -39,7 +40,7 @@ public class Score {
         this.score=score;
     }
 
-    public Score(Game game, Player player, double score, LocalDate finishDate){
+    public Score(Game game, Player player, double score, LocalDateTime finishDate){
         this.game= game;
         this.player=player;
         this.score=score;
@@ -80,11 +81,11 @@ public class Score {
         this.score = score;
     }
 
-    public LocalDate getFinishDate() {
+    public LocalDateTime getFinishDate() {
         return finishDate;
     }
 
-    public void setFinishDate(LocalDate finishDate) {
+    public void setFinishDate(LocalDateTime finishDate) {
         this.finishDate = finishDate;
     }
 }

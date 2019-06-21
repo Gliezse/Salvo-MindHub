@@ -134,3 +134,11 @@ body{
 .scoreTable td{
     background-color: #29f1b5;
 }
+
+.enemy-cell{
+    cursor: pointer;
+}
+
+.preselected-salvo{
+    background-color: red;
+}
