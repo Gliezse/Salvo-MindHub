@@ -15,7 +15,7 @@ var app = new Vue({
     created(){
         let self = this
         const params = new URLSearchParams(window.location.search);
-        self.gpId = params.get('gp')
+        this.gpId = params.get('gp')
 
         self.load()
     },
@@ -27,16 +27,19 @@ var app = new Vue({
                 app.datos = datazo; 
             })
             .then(function(){
-                self.setTurn()
                 self.setPlayers()
-                self.setGrids()                
+                self.setTurn()
+                self.setGrids()         
             })
 
         },
 
         setTurn: function(){
-            playerSalvoes = app.datos.salvoes.filter(function (sub) {
-                if (sub.player == this.gpId) {
+            let self = this
+
+            let playerSalvoes = this.datos.salvoes.filter(function (sub) {
+                console.log(sub.player, self.gpId)
+                if (sub.player == self.gpId) {
                     return sub
                 }
             })
@@ -44,35 +47,30 @@ var app = new Vue({
             if (playerSalvoes.length == 0) {
                 this.turn = 1
             } else {
-                this.turn = 0
-
-                playerSalvoes.forEach(function (salvo) {
-                    if (salvo.turn > this.turn) {
-                        this.turn = parseInt(salvo.turn) + 1
-                    }
-                })
+                this.turn = playerSalvoes.length + 1
             }
         },
 
         setPlayers: function(){
             if (this.datos.gameplayers.length == 1) {
-                this.player1 = this.datos.gameplayers[0].name
+                this.player1.name = this.datos.gameplayers[0].player.name
+                this.player1.id = this.datos.gameplayers[0].id
             } else {
                 p1n = this.datos.gameplayers[0].player.name
                 p2n = this.datos.gameplayers[1].player.name
                 p1id = this.datos.gameplayers[0].id
                 p2id = this.datos.gameplayers[1].id
-                p1joined = this.datos.gameplayers[0].joined
-                p2joined = this.datos.gameplayers[1].joined
 
-                if(Date.parse(p1joined) > Date.parse(p2joined)){
+                if (parseInt(this.datos.gameplayers[0].id) < parseInt(this.datos.gameplayers[1].id)) {
                     this.player1.name = p1n
                     this.player2.name = p2n
                     this.player1.id = p1id
                     this.player2.id = p2id                
                 }else{
-                    this.player1 = p2n
-                    this.player2 = p1n
+                    this.player1.name = p2n
+                    this.player2.name = p1n
+                    this.player1.id = p2id
+                    this.player2.id = p1id
                 }
             }
         },
@@ -304,10 +302,10 @@ var app = new Vue({
                             yAux = loc.charCodeAt(0) - 65
 
                             //TODO: fix this
-                            /*//If current salvo location coincides with an ally ship location it will turn red
+                            //If current salvo location coincides with an ally ship location it will turn red
                             if (xAux == x && yAux == y) {
                                 cell.addClass('bg-red')
-                            }*/
+                            }
                         })
                     })
 
