@@ -137,7 +137,7 @@ public class GamePlayer {
                 salvo.getLocations().stream().forEach( loc -> {
                     opponentGamePlayer.get().getShips().stream().forEach( oppShip -> {
                         oppShip.getLocations().forEach( oppShipLoc -> {
-                            if (loc == oppShipLoc){
+                            if (loc.equals(oppShipLoc)){
                                 Map<String,Object> dto = new LinkedHashMap<>();
 
                                 dto.put("gpid",this.getId());
@@ -159,6 +159,74 @@ public class GamePlayer {
         }
 
     }
+
+    public Set<Map<String,Object>> getSunkAllyShips(){
+        Set<Map<String,Object>> sunkShips = new LinkedHashSet<>();
+
+        Optional<GamePlayer> opponentGamePlayer = this.getGame().getgPlayers().stream().filter(gp-> gp.getId() != this.getId()).findFirst();
+
+        if(opponentGamePlayer.isPresent()){
+            Set<String> salvoes = new HashSet<>();
+
+            opponentGamePlayer.get().getSalvos().forEach(salvo -> {
+                salvoes.addAll(salvo.getLocations());
+            });
+
+            this.getShips().forEach(allyShip -> {
+                //Map<String, Object> auxdto = new LinkedHashMap<>();
+
+                //auxdto.put(oppShip.getType(), oppShip.getLocations());
+
+                //oppShipsLocations.add(auxdto);
+
+                if(!salvoes.containsAll(allyShip.getLocations())){
+                    sunkShips.add(allyShip.getShipDTO());
+                }
+
+            });
+
+            return sunkShips;
+
+        }else{
+            return null;
+        }
+
+    }
+
+    public Set<Map<String,Object>> getSunkEnemyShips(){
+        Set<Map<String,Object>> sunkShips = new HashSet<>();
+
+        Optional<GamePlayer> opponentGamePlayer = this.getGame().getgPlayers().stream().filter(gp-> gp.getId() != this.getId()).findFirst();
+
+        if(opponentGamePlayer.isPresent()){
+            Set<String> salvoes = new HashSet<>();
+
+            this.getSalvos().forEach(salvo -> {
+                salvoes.addAll(salvo.getLocations());
+            });
+
+            opponentGamePlayer.get().getShips().forEach(oppShip -> {
+                //Map<String, Object> auxdto = new LinkedHashMap<>();
+
+                //auxdto.put(oppShip.getType(), oppShip.getLocations());
+
+                //oppShipsLocations.add(auxdto);
+
+                if(!salvoes.containsAll(oppShip.getLocations())){
+                    sunkShips.add(oppShip.getShipDTO());
+                }
+
+            });
+
+            return sunkShips;
+
+        }else{
+            return null;
+        }
+
+    }
+
+
 
     public Map<String,Object> toDTO(){
         Map<String,Object> dto = new LinkedHashMap<String,Object>();
@@ -209,6 +277,8 @@ public class GamePlayer {
         dto.put("salvoes", getGame().getgPlayers().stream().flatMap(gp->gp.getSalvos().stream().map(sub -> sub.toDTO())));
         if(this.getGame().getgPlayers().size()>1){
             dto.put("hits",getGame().getgPlayers().stream().map(gp -> gp.getHits()).collect(toList()));
+            dto.put("sunkEnemyShips", this.getSunkEnemyShips());
+            dto.put("sunkAllyShips", this.getSunkAllyShips());
         }
 
 
