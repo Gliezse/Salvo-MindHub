@@ -127,6 +127,39 @@ public class GamePlayer {
         return getPlayer().getScore(this.getGame());
     }
 
+    public Set<Map<String,Object>> getHits(){
+        Optional<GamePlayer> opponentGamePlayer = this.getGame().getgPlayers().stream().filter(gp -> gp.getId() != this.getId()).findFirst();
+
+        if(opponentGamePlayer.isPresent()){
+            Set<Map<String,Object>> set = new HashSet<>();
+
+            this.getSalvos().stream().forEach( salvo-> {
+                salvo.getLocations().stream().forEach( loc -> {
+                    opponentGamePlayer.get().getShips().stream().forEach( oppShip -> {
+                        oppShip.getLocations().forEach( oppShipLoc -> {
+                            if (loc == oppShipLoc){
+                                Map<String,Object> dto = new LinkedHashMap<>();
+
+                                dto.put("gpid",this.getId());
+                                dto.put("turn",salvo.getTurn());
+                                dto.put("shipHit",oppShip.getType());
+                                dto.put("locHit",oppShipLoc);
+
+                                set.add(dto);
+                            }
+                        });
+                    });
+                });
+            });
+
+            return set;
+
+        }else{
+            return null;
+        }
+
+    }
+
     public Map<String,Object> toDTO(){
         Map<String,Object> dto = new LinkedHashMap<String,Object>();
 
@@ -174,6 +207,10 @@ public class GamePlayer {
         dto.put("gameplayers", getGame().getgPlayers().stream().map(sub -> sub.toDTO()).collect(toList()));
         dto.put("ships", getShips().stream().map(ss-> ss.getShipDTO()).collect(toList()));
         dto.put("salvoes", getGame().getgPlayers().stream().flatMap(gp->gp.getSalvos().stream().map(sub -> sub.toDTO())));
+        if(this.getGame().getgPlayers().size()>1){
+            dto.put("hits",getGame().getgPlayers().stream().map(gp -> gp.getHits()).collect(toList()));
+        }
+
 
         return dto;
     }
