@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -214,6 +213,56 @@ public class GamePlayer {
 
     }
 
+    public Enum<GameState> getGameState(){
+
+        Optional<GamePlayer> opponentGamePlayer = this.getGame().getgPlayers().stream().filter(gp -> gp.getId() != this.getId()).findFirst();
+
+        if(!opponentGamePlayer.isPresent()){
+            return GameState.WAITING_OPPONENT_TO_JOIN;
+        }
+
+        if(this.getShips().size() != 5){
+           return GameState.PLACING_SHIPS;
+        }else if(opponentGamePlayer.get().getShips().size() != 5){
+            return GameState.OPPONENT_PLACING_SHIPS;
+        }
+
+        int myTurn = this.getSalvos().stream().mapToInt(Salvo::getTurn).max().orElse(0);
+        int opponentTurn = opponentGamePlayer.get().getSalvos().stream().mapToInt(Salvo::getTurn).max().orElse(0);
+
+        boolean iCreatedThisGame = this.getId() < opponentGamePlayer.get().getId();
+        boolean gameOver = getSunkAllyShips().size() == 5 || getSunkEnemyShips().size() == 5;
+
+        if (iCreatedThisGame) {
+            if (myTurn == opponentTurn) {
+                if(gameOver){
+                    return getGameResult();
+                }
+                return GameState.PLACING_SALVOES;
+            } else {
+                return GameState.WAITING_OPPONENT_SALVOES;
+            }
+        } else {
+            if (myTurn == opponentTurn) {
+                if(gameOver){
+                    return getGameResult();
+                }
+                return GameState.WAITING_OPPONENT_SALVOES;
+            } else {
+                return GameState.PLACING_SALVOES;
+            }
+        }
+    }
+
+    public Enum<GameState> getGameResult(){
+        if(getSunkAllyShips().size() < getSunkEnemyShips().size()){
+            return GameState.WON;
+        }else if(getSunkAllyShips().size() > getSunkEnemyShips().size()){
+            return GameState.LOST;
+        }else{
+            return GameState.TIED;
+        }
+    }
 
 
     public Map<String,Object> toDTO(){
@@ -256,6 +305,7 @@ public class GamePlayer {
             dto.put("sunkEnemyShips", this.getSunkEnemyShips());
             dto.put("sunkAllyShips", this.getSunkAllyShips());
         }
+        dto.put("gamestate",this.getGameState());
 
 
         return dto;
