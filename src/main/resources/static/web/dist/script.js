@@ -10,7 +10,23 @@ var app = new Vue({
         shipsPlaced: false,
         selectedCells: 0,
         turn:0,
-        playersTurn:true
+        playersTurn:true,
+        playerHits: [],
+        enemyHits: [],
+        enemyShipsLeft:{
+            carrier:5,
+            battleship:4,
+            destroyer:3,
+            submarine:3,
+            patrol:2
+        },
+        playerShipsLeft:{
+            carrier:5,
+            battleship:4,
+            destroyer:3,
+            submarine:3,
+            patrol:2
+        }
     },
     created(){
         let self = this
@@ -29,9 +45,53 @@ var app = new Vue({
             .then(function(){
                 self.setPlayers()
                 self.setTurn()
-                self.setGrids()         
+                self.setHits()  
+                self.setGrids()                    
             })
 
+        },
+
+        setHits: function(){
+            if(this.datos.gameplayers.length > 1){
+                if(this.datos.hits[0].length > 1){
+                    this.datos.hits[0].sort(function(x,y){
+                        if (x.turn < y.turn)
+                            return 1;
+                        if (x.turn > y.turn)
+                            return -1;
+                        return 0;
+                    })
+                }
+                if(this.datos.hits[1].length > 1){
+                    this.datos.hits[1].sort(function(x,y){
+                        if (x.turn < y.turn)
+                            return 1;
+                        if (x.turn > y.turn)
+                            return -1;
+                        return 0;
+                    })
+                }
+
+                if(this.datos.hits[0].length > 0){
+
+                    if(this.datos.hits[0][0].gpid == this.gpId){
+                        this.playerHits = this.datos.hits[0]
+                        this.enemyHits = this.datos.hits[1]
+                    }else{
+                        this.playerHits = this.datos.hits[1]
+                        this.enemyHits = this.datos.hits[0]
+                    }
+                }else if(this.datos.hits[1].length > 0){
+                    if(this.datos.hits[1][0].gpid = this.gpId){
+                        this.playerHits = this.datos.hits[1]
+                        this.enemyHits = this.datos.hits[0]
+                    }else{
+                        this.playerHits = this.datos.hits[1]
+                        this.enemyHits = this.datos.hits[0]
+                    }
+                }
+            }
+            
         },
 
         setTurn: function(){
@@ -248,6 +308,21 @@ var app = new Vue({
         },
 
         loadSalvoes: function (salvoes, ships) {
+            this.enemyShipsLeft = {
+                carrier:5,
+                battleship:4,
+                destroyer:3,
+                submarine:3,
+                patrol:2
+            }
+            this.playerShipsLeft = {
+                carrier:5,
+                battleship:4,
+                destroyer:3,
+                submarine:3,
+                patrol:2
+            }
+
             let self = this
 
             var locations = ships.map(sh => { return sh.locations })
@@ -284,6 +359,25 @@ var app = new Vue({
                     if(sub.turn > playersLastTurn){
                         playersLastTurn=sub.turn
                     }
+
+
+                    self.playerHits.forEach(function(hit){
+                        if(sub.locations[loc] == hit.locHit){
+                            cell.addClass('bg-red')
+
+                            if(hit.shipHit == "Carrier"){
+                                self.enemyShipsLeft.carrier -= 1
+                            }else if(hit.shipHit == "Battleship"){
+                                self.enemyShipsLeft.battleship -= 1
+                            }else if(hit.shipHit == "Destroyer"){
+                                self.enemyShipsLeft.destroyer -= 1
+                            }else if(hit.shipHit == "Submarine"){
+                                self.enemyShipsLeft.submarine -= 1
+                            }else{
+                                self.enemyShipsLeft.patrol -= 1
+                            }
+                        }
+                    })
                 }
             })
             enemySalvoes.forEach(function (sub) {
@@ -301,12 +395,27 @@ var app = new Vue({
                             xAux = parseInt(loc.slice(1)) - 1
                             yAux = loc.charCodeAt(0) - 65
 
-                            //TODO: fix this
-                            //If current salvo location coincides with an ally ship location it will turn red
+
                             if (xAux == x && yAux == y) {
                                 cell.addClass('bg-red')
                             }
                         })
+                    })
+
+                    self.enemyHits.forEach(function(enHit){
+                        if(enHit.locHit == sub.locations[loc]){
+                            if(enHit.shipHit == "Carrier"){
+                                self.playerShipsLeft.carrier -= 1
+                            }else if(enHit.shipHit == "Battleship"){
+                                self.playerShipsLeft.battleship -= 1
+                            }else if(enHit.shipHit == "Destroyer"){
+                                self.playerShipsLeft.destroyer -= 1
+                            }else if(enHit.shipHit == "Submarine"){
+                                self.playerShipsLeft.submarine -= 1
+                            }else{
+                                self.playerShipsLeft.patrol -= 1
+                            }
+                        }
                     })
 
 
