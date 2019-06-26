@@ -250,7 +250,7 @@ var app = new Vue({
             }
 
             ships.forEach(function (ship) {
-                var loc = ship.locations                    //Lista de cells donde esta el barco
+                var loc = ship.locations.sort()     //Lista de cells donde esta el barco
                 var firstCell = loc[0]                      //La primera de estas cells
                 var lastCell = loc[loc.length - 1]          //La ultima de las mismas
 

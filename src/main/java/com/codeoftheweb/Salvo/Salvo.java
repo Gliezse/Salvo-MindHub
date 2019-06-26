@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 public class Salvo {
@@ -23,7 +20,7 @@ public class Salvo {
     private GamePlayer gamePlayer;
 
     @ElementCollection
-    private List<String> locations = new ArrayList<>();
+    private Set<String> locations = new HashSet<>();
 
     private int turn;
 
@@ -33,13 +30,13 @@ public class Salvo {
         this.gamePlayer=gp;
     }
 
-    public Salvo(GamePlayer gp, List<String> locations, int turn){
+    public Salvo(GamePlayer gp, Set<String> locations, int turn){
         this.gamePlayer = gp;
         this.locations = locations;
         this.turn = turn;
     }
 
-    public Salvo(int turn, List<String> locations){
+    public Salvo(int turn, Set<String> locations){
         this.turn = turn;
         this.locations = locations;
     }
@@ -61,11 +58,11 @@ public class Salvo {
         this.gamePlayer = gp;
     }
 
-    public List<String> getLocations() {
+    public Set<String> getLocations() {
         return locations;
     }
 
-    public void setLocations(List<String> locations) {
+    public void setLocations(Set<String> locations) {
         this.locations = locations;
     }
 

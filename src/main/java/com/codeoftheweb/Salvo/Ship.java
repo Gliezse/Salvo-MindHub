@@ -20,11 +20,11 @@ public class Ship {
     private String type;
 
     @ElementCollection
-    private List<String> locations = new ArrayList<>();
+    private Set<String> locations = new HashSet<>();
 
     public Ship(){}
 
-    public Ship(String type, List<String> locations){
+    public Ship(String type, Set<String> locations){
         this.type = type;
         this.locations = locations;
     }
@@ -53,11 +53,11 @@ public class Ship {
         this.type = type;
     }
 
-    public List<String> getLocations() {
+    public Set<String> getLocations() {
         return locations;
     }
 
-    public void setLocations(List<String> locations) {
+    public void setLocations(Set<String> locations) {
         this.locations = locations;
     }
 

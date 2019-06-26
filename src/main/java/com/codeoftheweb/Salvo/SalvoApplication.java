@@ -60,71 +60,71 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			Game g4 = new Game();
 
 			Set<Ship> shipSet1 = new HashSet<>();
-			shipSet1.add(new Ship("patrol_boat", new ArrayList<>(Arrays.asList("H1","H2"))));
-			shipSet1.add(new Ship("destroyer", new ArrayList<>(Arrays.asList("A2","B2","C2"))));
+			shipSet1.add(new Ship("patrol_boat", new HashSet<>(Arrays.asList("H1","H2"))));
+			shipSet1.add(new Ship("destroyer", new HashSet<>(Arrays.asList("A2","B2","C2"))));
 
 			Set<Ship> shipSet2 = new HashSet<>();
-			shipSet2.add(new Ship("Patrol", new ArrayList<>(Arrays.asList("B5","B6"))));
-			shipSet2.add(new Ship("Lanchadebokita", new ArrayList<>(Arrays.asList("B10","C10","D10","E10"))));
+			shipSet2.add(new Ship("Patrol", new HashSet<>(Arrays.asList("B5","B6"))));
+			shipSet2.add(new Ship("Lanchadebokita", new HashSet<>(Arrays.asList("B10","C10","D10","E10"))));
 
 			Set<Ship> shipSet3 = new HashSet<>();
-			shipSet3.add(new Ship("Patrol", new ArrayList<>(Arrays.asList("B5","B6"))));
-			shipSet3.add(new Ship("Rippeadora", new ArrayList<>(Arrays.asList("B2","C2"))));
+			shipSet3.add(new Ship("Patrol", new HashSet<>(Arrays.asList("B5","B6"))));
+			shipSet3.add(new Ship("Rippeadora", new HashSet<>(Arrays.asList("B2","C2"))));
 
 			Set<Ship> shipSet4 = new HashSet<>();
-			shipSet4.add(new Ship("Patrol", new ArrayList<>(Arrays.asList("B5","B6"))));
-			shipSet4.add(new Ship("LanchaSuperChino", new ArrayList<>(Arrays.asList("H3","H4","H5","H6","H7"))));
+			shipSet4.add(new Ship("Patrol", new HashSet<>(Arrays.asList("B5","B6"))));
+			shipSet4.add(new Ship("LanchaSuperChino", new HashSet<>(Arrays.asList("H3","H4","H5","H6","H7"))));
 
 			Set<Ship> shipSet5 = new HashSet<>();
-			shipSet5.add(new Ship("UKNOWIHADTODOITTOEM", new ArrayList<>(Arrays.asList("H1","H3"))));
-			shipSet5.add(new Ship("SS.Titanic", new ArrayList<>(Arrays.asList("A2","B2","C2"))));
+			shipSet5.add(new Ship("UKNOWIHADTODOITTOEM", new HashSet<>(Arrays.asList("H1","H3"))));
+			shipSet5.add(new Ship("SS.Titanic", new HashSet<>(Arrays.asList("A2","B2","C2"))));
 
 			Set<Ship> shipSet6 = new HashSet<>();
-			shipSet6.add(new Ship("YutaMovil", new ArrayList<>(Arrays.asList("B5","B6"))));
-			shipSet6.add(new Ship("Lanchaderiverpleit", new ArrayList<>(Arrays.asList("E6","E7","E8"))));
+			shipSet6.add(new Ship("YutaMovil", new HashSet<>(Arrays.asList("B5","B6"))));
+			shipSet6.add(new Ship("Lanchaderiverpleit", new HashSet<>(Arrays.asList("E6","E7","E8"))));
 
 			Set<Ship> shipSet7 = new HashSet<>();
-			shipSet7.add(new Ship("wenaloscabrooos", new ArrayList<>(Arrays.asList("B5","B6"))));
-			shipSet7.add(new Ship("lancha42", new ArrayList<>(Arrays.asList("B2","C2","D2"))));
+			shipSet7.add(new Ship("wenaloscabrooos", new HashSet<>(Arrays.asList("B5","B6"))));
+			shipSet7.add(new Ship("lancha42", new HashSet<>(Arrays.asList("B2","C2","D2"))));
 
 			Set<Ship> shipSet8 = new HashSet<>();
-			shipSet8.add(new Ship("Fabricadepancho", new ArrayList<>(Arrays.asList("B5","B6"))));
-			shipSet8.add(new Ship("Lanchakiosko25", new ArrayList<>(Arrays.asList("H3","H4","H5","H6","H7"))));
+			shipSet8.add(new Ship("Fabricadepancho", new HashSet<>(Arrays.asList("B5","B6"))));
+			shipSet8.add(new Ship("Lanchakiosko25", new HashSet<>(Arrays.asList("H3","H4","H5","H6","H7"))));
 
 
 
 			Set<Salvo> salvoSet1 = new HashSet<>();
-			salvoSet1.add( new Salvo(1, new ArrayList<>(Arrays.asList("C4","A2"))));
-			salvoSet1.add(new Salvo(2, new ArrayList<>(Arrays.asList("H6","D9"))));
+			salvoSet1.add( new Salvo(1, new HashSet<>(Arrays.asList("C4","A2"))));
+			salvoSet1.add(new Salvo(2, new HashSet<>(Arrays.asList("H6","D9"))));
 
 			Set<Salvo> salvoSet2 = new HashSet<>();
-			salvoSet2.add(new Salvo(1, new ArrayList<>(Arrays.asList("F2", "G3"))));
-			salvoSet2.add(new Salvo(2, new ArrayList<>(Arrays.asList("C7","A10"))));
+			salvoSet2.add(new Salvo(1, new HashSet<>(Arrays.asList("F2", "G3"))));
+			salvoSet2.add(new Salvo(2, new HashSet<>(Arrays.asList("C7","A10"))));
 
 			Set<Salvo> salvoSet3 = new HashSet<>();
-			salvoSet3.add(new Salvo(1, new ArrayList<>(Arrays.asList("H2", "H5"))));
-			salvoSet3.add(new Salvo(2, new ArrayList<>(Arrays.asList("C6","B6"))));
+			salvoSet3.add(new Salvo(1, new HashSet<>(Arrays.asList("H2", "H5"))));
+			salvoSet3.add(new Salvo(2, new HashSet<>(Arrays.asList("C6","B6"))));
 
 			Set<Salvo> salvoSet4 = new HashSet<>();
-			salvoSet4.add(new Salvo(1, new ArrayList<>(Arrays.asList("D6", "A1"))));
-			salvoSet4.add(new Salvo(2, new ArrayList<>(Arrays.asList("C10","F2"))));
+			salvoSet4.add(new Salvo(1, new HashSet<>(Arrays.asList("D6", "A1"))));
+			salvoSet4.add(new Salvo(2, new HashSet<>(Arrays.asList("C10","F2"))));
 
 
 			Set<Salvo> salvoSet5 = new HashSet<>();
-			salvoSet5.add( new Salvo(1, new ArrayList<>(Arrays.asList("C2","A4"))));
-			salvoSet5.add(new Salvo(2, new ArrayList<>(Arrays.asList("H9","D2"))));
+			salvoSet5.add( new Salvo(1, new HashSet<>(Arrays.asList("C2","A4"))));
+			salvoSet5.add(new Salvo(2, new HashSet<>(Arrays.asList("H9","D2"))));
 
 			Set<Salvo> salvoSet6 = new HashSet<>();
-			salvoSet6.add(new Salvo(1, new ArrayList<>(Arrays.asList("F3", "G3"))));
-			salvoSet6.add(new Salvo(2, new ArrayList<>(Arrays.asList("C10","A10"))));
+			salvoSet6.add(new Salvo(1, new HashSet<>(Arrays.asList("F3", "G3"))));
+			salvoSet6.add(new Salvo(2, new HashSet<>(Arrays.asList("C10","A10"))));
 
 			Set<Salvo> salvoSet7 = new HashSet<>();
-			salvoSet7.add(new Salvo(1, new ArrayList<>(Arrays.asList("H1", "J6"))));
-			salvoSet7.add(new Salvo(2, new ArrayList<>(Arrays.asList("C7","B4"))));
+			salvoSet7.add(new Salvo(1, new HashSet<>(Arrays.asList("H1", "J6"))));
+			salvoSet7.add(new Salvo(2, new HashSet<>(Arrays.asList("C7","B4"))));
 
 			Set<Salvo> salvoSet8 = new HashSet<>();
-			salvoSet8.add(new Salvo(1, new ArrayList<>(Arrays.asList("D7", "A2"))));
-			salvoSet8.add(new Salvo(2, new ArrayList<>(Arrays.asList("C7","F3"))));
+			salvoSet8.add(new Salvo(1, new HashSet<>(Arrays.asList("D7", "A2"))));
+			salvoSet8.add(new Salvo(2, new HashSet<>(Arrays.asList("C7","F3"))));
 
 			g1.addGamePlayer(new GamePlayer(p1, shipSet1, salvoSet1));
 			g1.addGamePlayer(new GamePlayer(p2, shipSet2, salvoSet2));
