@@ -41,17 +41,17 @@
         <div>
             <h3>Enemy Ships:</h3>
             <span>Carrier: <span v-if="enemyShipsLeft.carrier != 0">{{enemyShipsLeft.carrier}} cells left</span><span v-else>Sunk!</span></span><br>
-            <span>Battleship: <span v-if="enemyShipsLeft.carrier != 0"> {{enemyShipsLeft.battleship}} cells left</span><span v-else>Sunk!</span></span><br>
-            <span>Destroyer: <span v-if="enemyShipsLeft.carrier != 0">{{enemyShipsLeft.destroyer}} cells left</span><span v-else>Sunk!</span></span><br>
-            <span>Submarine: <span v-if="enemyShipsLeft.carrier != 0">{{enemyShipsLeft.submarine}} cells left</span><span v-else>Sunk!</span></span><br>
-            <span>Patrol: <span v-if="enemyShipsLeft.carrier != 0">{{enemyShipsLeft.patrol}} cells left</span><span v-else>Sunk!</span></span><br>
+            <span>Battleship: <span v-if="enemyShipsLeft.battleship != 0"> {{enemyShipsLeft.battleship}} cells left</span><span v-else>Sunk!</span></span><br>
+            <span>Destroyer: <span v-if="enemyShipsLeft.destroyer != 0">{{enemyShipsLeft.destroyer}} cells left</span><span v-else>Sunk!</span></span><br>
+            <span>Submarine: <span v-if="enemyShipsLeft.submarine != 0">{{enemyShipsLeft.submarine}} cells left</span><span v-else>Sunk!</span></span><br>
+            <span>Patrol: <span v-if="enemyShipsLeft.patrol != 0">{{enemyShipsLeft.patrol}} cells left</span><span v-else>Sunk!</span></span><br>
 
             <h3>Your Ships:</h3>
             <span>Carrier: <span v-if="playerShipsLeft.carrier != 0">{{playerShipsLeft.carrier}} cells left</span><span v-else>Sunk!</span></span><br>
-            <span>Battleship: <span v-if="playerShipsLeft.carrier != 0"> {{playerShipsLeft.battleship}} cells left</span><span v-else>Sunk!</span></span><br>
-            <span>Destroyer: <span v-if="playerShipsLeft.carrier != 0">{{playerShipsLeft.destroyer}} cells left</span><span v-else>Sunk!</span></span><br>
-            <span>Submarine: <span v-if="playerShipsLeft.carrier != 0">{{playerShipsLeft.submarine}} cells left</span><span v-else>Sunk!</span></span><br>
-            <span>Patrol: <span v-if="playerShipsLeft.carrier != 0">{{playerShipsLeft.patrol}} cells left</span><span v-else>Sunk!</span></span><br>
+            <span>Battleship: <span v-if="playerShipsLeft.battleship != 0"> {{playerShipsLeft.battleship}} cells left</span><span v-else>Sunk!</span></span><br>
+            <span>Destroyer: <span v-if="playerShipsLeft.destroyer != 0">{{playerShipsLeft.destroyer}} cells left</span><span v-else>Sunk!</span></span><br>
+            <span>Submarine: <span v-if="playerShipsLeft.submarine != 0">{{playerShipsLeft.submarine}} cells left</span><span v-else>Sunk!</span></span><br>
+            <span>Patrol: <span v-if="playerShipsLeft.patrol != 0">{{playerShipsLeft.patrol}} cells left</span><span v-else>Sunk!</span></span><br>
 
 
             <div style="float: left; text-align: center;" >

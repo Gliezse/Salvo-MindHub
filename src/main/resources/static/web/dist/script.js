@@ -55,12 +55,20 @@ var app = new Vue({
             if(this.datos.gameplayers.length > 1){
                 if(this.datos.hits[0].length > 1){
                     this.datos.hits[0].sort(function(x,y){
-                        return x.turn < y.turn
+                        if (x.turn < y.turn)
+                            return 1;
+                        if (x.turn > y.turn)
+                            return -1;
+                        return 0;
                     })
                 }
                 if(this.datos.hits[1].length > 1){
                     this.datos.hits[1].sort(function(x,y){
-                        return x.turn < y.turn
+                        if (x.turn < y.turn)
+                            return 1;
+                        if (x.turn > y.turn)
+                            return -1;
+                        return 0;
                     })
                 }
 

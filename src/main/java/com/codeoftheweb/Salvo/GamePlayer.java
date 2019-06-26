@@ -173,13 +173,7 @@ public class GamePlayer {
             });
 
             this.getShips().forEach(allyShip -> {
-                //Map<String, Object> auxdto = new LinkedHashMap<>();
-
-                //auxdto.put(oppShip.getType(), oppShip.getLocations());
-
-                //oppShipsLocations.add(auxdto);
-
-                if(!salvoes.containsAll(allyShip.getLocations())){
+                if(salvoes.containsAll(allyShip.getLocations())){
                     sunkShips.add(allyShip.getShipDTO());
                 }
 
@@ -206,13 +200,7 @@ public class GamePlayer {
             });
 
             opponentGamePlayer.get().getShips().forEach(oppShip -> {
-                //Map<String, Object> auxdto = new LinkedHashMap<>();
-
-                //auxdto.put(oppShip.getType(), oppShip.getLocations());
-
-                //oppShipsLocations.add(auxdto);
-
-                if(!salvoes.containsAll(oppShip.getLocations())){
+                if(salvoes.containsAll(oppShip.getLocations())){
                     sunkShips.add(oppShip.getShipDTO());
                 }
 
@@ -251,18 +239,6 @@ public class GamePlayer {
 
 
 
-        return dto;
-    }
-
-    public Map<String,Object> getSalvoesDTO(){
-        Map<String,Object> dto = new LinkedHashMap<>();
-        Map<String,Object> dtoAUX = new LinkedHashMap<>();
-
-        dto.put("turn", "avr");
-
-        /*getSalvos().forEach(sub -> dtoAUX.put(Integer.toString(sub.getTurn()),sub.getLocations()));
-        dto.put("gplayerid",Long.toString(getId()));
-        dto.put("shots", dtoAUX);*/
         return dto;
     }
 
