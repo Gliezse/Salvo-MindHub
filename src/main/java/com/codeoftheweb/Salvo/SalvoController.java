@@ -88,7 +88,6 @@ public class SalvoController {
     }
 
     //POST MAPPINGS
-
     @PostMapping("/games")
     public ResponseEntity<Map<String,Object>> createGame(Authentication auth){
         if(auth == null || auth instanceof AnonymousAuthenticationToken){
@@ -108,63 +107,111 @@ public class SalvoController {
 
     @PostMapping("/games/players/{gpid}/ships")
     public ResponseEntity<String> placeShips(Authentication auth, @PathVariable("gpid") long gpid, @RequestBody Set<Ship> ships){
+        //Auth Check
         if(auth==null || auth instanceof AnonymousAuthenticationToken){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        Optional<GamePlayer> gamePlayer = gamePlayerRepository.findById(gpid);
 
+        //Gameplayer existance check
+        Optional<GamePlayer> gamePlayer = gamePlayerRepository.findById(gpid);
         if(!gamePlayer.isPresent()){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+
+        //Check if the logged player has the same id the gameplayer's player has
         if(gamePlayer.get().getPlayer().getEmail() != auth.getName()){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         Optional<GamePlayer> opponentGamePlayer = gamePlayer.get().getGame().getgPlayers().stream().filter(gp -> gp.getId()!=gamePlayer.get().getId()).findFirst();
 
+        //Check if there is an opponent
         if(!opponentGamePlayer.isPresent()){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
+        //Checks if the ships haven't been added yet
         if (gamePlayer.get().getShips().size()>0 || ships.size() != 5){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        Set<String> shipTypes = new HashSet<>();
+
+        for(ShipTypes sType : ShipTypes.values()){
+            shipTypes.add(sType.name());
+        }
+
+        //Check if all incoming ships' types are valid
+        if(!shipTypes.containsAll(ships.stream().map(Ship::getType).collect(toList()))){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        //Checks the ships are all different
+        if(ships.stream().map(Ship::getType).distinct().count() != 5){
+            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+        }
+
+        //Check if all ships have the correct length
+        for(Ship ship : ships){
+            for(ShipTypes sType : ShipTypes.values()){
+                if(sType.name().equals(ship.getType())){
+                    if(sType.getLength() != ship.getLocations().size()){
+                        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                    }
+                }
+            }
         }
 
         ships.forEach(ship->gamePlayer.get().addShip(ship));
         gamePlayerRepository.save(gamePlayer.get());
         return new ResponseEntity<>(HttpStatus.CREATED);
-
     }
 
     @PostMapping("/games/players/{id}/salvoes")
     public ResponseEntity<String> postSalvoes(Authentication auth, @PathVariable("id") long id, @RequestBody Salvo salvo){
+        //Auth Check
         if(auth == null || auth instanceof AnonymousAuthenticationToken){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        Optional<GamePlayer> gamePlayer = gamePlayerRepository.findById(id);
 
+        Optional<GamePlayer> gamePlayer = gamePlayerRepository.findById(id);
+        //Gameplayer existance check
         if(!gamePlayer.isPresent()){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         Player player = playerRepository.findByEmail(auth.getName());
 
+        //Check if the logged player has the same id the gameplayer's player has
         if (player.getId() != gamePlayer.get().getPlayer().getId()){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         Optional<GamePlayer> opponentGamePlayer = gamePlayer.get().getGame().getgPlayers().stream().filter(gp -> gp.getId()!=gamePlayer.get().getId()).findFirst();
 
+        //Check if there is an opponent
         if(!opponentGamePlayer.isPresent()){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        Salvo aux = gamePlayer.get().getSalvos().stream().filter(s -> s.getTurn() == salvo.getTurn()).findFirst().orElse(null);
-
-        if(aux != null){
+        //Check if it is the players turn to play
+        if(gamePlayer.get().getGameState() != GameState.PLACING_SALVOES){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
+        int lastTurn = gamePlayer.get().getSalvos().stream().mapToInt(Salvo::getTurn).max().orElse(0);
+
+        //Checks if the incoming salvo has the correct turn
+        if(salvo.getTurn() != lastTurn + 1){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        //Check if the salvo has only 2 locations
+        if(salvo.getLocations().size() != 2){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        //If there are no problems, the salvo is added an saved with its gameplayer
         gamePlayer.get().addSalvo(salvo);
         gamePlayerRepository.save(gamePlayer.get());
 
