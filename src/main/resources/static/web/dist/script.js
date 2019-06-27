@@ -26,27 +26,33 @@ var app = new Vue({
             destroyer:3,
             submarine:3,
             patrol:2
-        }
+        },
+        gameState: ""
     },
+    //TODO: Add gamestate functions
     created(){
         let self = this
         const params = new URLSearchParams(window.location.search);
         this.gpId = params.get('gp')
 
-        self.load()
+        setInterval(self.load,1000)
     },
     methods:{
         load:function(){
             let self = this
             $.get("/api/game_view/" + this.gpId)
             .done(function (datazo) {
-                app.datos = datazo; 
+                if(datazo.gamestate != self.gameState){
+                    self.datos = datazo;
+                    self.gameState = datazo.gamestate 
+                    self.setPlayers()
+                    self.setTurn()
+                    self.setHits()  
+                    self.setGrids()     
+                }
             })
-            .then(function(){
-                self.setPlayers()
-                self.setTurn()
-                self.setHits()  
-                self.setGrids()                    
+            .fail(function(response){
+                alert(JSON.parse(response.responseText).error);
             })
 
         },
@@ -104,11 +110,8 @@ var app = new Vue({
                 }
             })
 
-            if (playerSalvoes.length == 0) {
-                this.turn = 1
-            } else {
-                this.turn = playerSalvoes.length + 1
-            }
+            this.turn = Math.max(...playerSalvoes.map(salvo => salvo.turn))+1
+
         },
 
         setPlayers: function(){
@@ -430,14 +433,6 @@ var app = new Vue({
                 }
             })
 
-            //TODO: en vez de hacerlo en el front, voy a tener que saber si el player puede jugar o debe esperar
-            //desde el backend
-            /*if(playersLastTurn != opponentsLastTurn){
-                this.playersTurn = false
-            }else{
-                this.playersLastTurn = true
-            }*/
-
         },
 
         rotateShips: function (shipType, cells) {
@@ -554,12 +549,12 @@ var app = new Vue({
                 app.load()
             })
             .fail(function(response){
-                console.log(response.status)
+                alert(JSON.parse(response.responseText).error)
             })
         },
 
         placeSalvo: function(cellId){
-            if(this.datos.gameplayers.length > 1 && this.shipsPlaced && this.playersTurn){
+            if(this.gameState == "PLACING_SALVOES"){
                 let cell = $(`#${cellId}`)
                 if($(cell).hasClass("salvoed")){
                     return
@@ -576,15 +571,14 @@ var app = new Vue({
                     }
                 }
             }else{
-                if(this.datos.gameplayers.length == 1){
+                if(this.gameState == "WAITING_OPPONENT_TO_JOIN"){
                     return alert("You can't place salvoes if there isn't any opponent!")
                 }
-                if(!this.shipsPlaced){
+                if(this.gameState == "PLACING_SHIPS"){
                     return alert("You can't place salvoes if you haven't placed any ship!")
                 }
-                if(!this.playersTurn){
-                    return alert("You can't place salvoes if it isn't your turn!")
-                }
+                return alert("You can't place salvoes if it isn't your turn!")
+                
                 
             }
         },
@@ -614,14 +608,11 @@ var app = new Vue({
                 contentType: "application/json"
             })
             .done(function(response){
-                alert("nice")
-                console.log(response.status)
                 self.selectedCells = 0
                 self.load()
             })
             .fail(function(response){
-                alert("malai")
-                console.log(response.status)
+                alert(JSON.parse(response.responseText).error)
             })
             
         },
@@ -632,7 +623,7 @@ var app = new Vue({
                     window.location.href = "/web/games.html"
                 })
                 .fail(function () {
-                    console.log("Logout error")
+                    alert("Logout error")
                 })
         },
 
@@ -642,6 +633,3 @@ var app = new Vue({
     }
     
 })
-
-
-//TODO: Implementar sistema para decidir si es el turno del player o del contrincante

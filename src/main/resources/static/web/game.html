@@ -16,8 +16,8 @@
         <div id="game-data">
             <h1>Game: {{datos.id}}</h1>
             <div v-if="datos.gameplayers">
-                <h3>Player 1: <span v-if="player1.name">{{player1.name}} <span v-if="player1.id == gpId">(You)</span></span><span v-else>None</span></h3>
-                <h3>Player 2: <span v-if="player2.name">{{player2.name}} <span v-if="player2.id == gpId">(You)</span></span><span v-else>None</span></h3>
+                <h3>Player 1: <span v-if="player1.name">{{player1.name}} <span v-if="player1.id == gpId">(You)</span></span></h3>
+                <h3>Player 2: <span v-if="player2.name">{{player2.name}} <span v-if="player2.id == gpId">(You)</span></span><span v-else><i>Waiting...</i></span></h3>
             </div>
             <button id="logout" @click="logout()">Logout</button>
             <button id="back" @click="back()">Back to games list</button>
