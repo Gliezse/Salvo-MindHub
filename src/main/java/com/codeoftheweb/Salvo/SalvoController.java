@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
@@ -23,6 +24,8 @@ public class SalvoController {
     private GameRepository gameRepository;
     @Autowired
     private PlayerRepository playerRepository;
+    @Autowired
+    private ScoreRepository scoreRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -217,7 +220,18 @@ public class SalvoController {
 
         //If there are no problems, the salvo is added an saved with its gameplayer
         gamePlayer.get().addSalvo(salvo);
-        gamePlayerRepository.save(gamePlayer.get());
+        GamePlayer updatedGP = gamePlayerRepository.save(gamePlayer.get());
+
+        if(updatedGP.getGameState() == GameState.WON){
+            scoreRepository.save(new Score(updatedGP.getGame(), updatedGP.getPlayer(), 1 , LocalDateTime.now()));
+            scoreRepository.save(new Score(opponentGamePlayer.get().getGame(), opponentGamePlayer.get().getPlayer(), 0, LocalDateTime.now()));
+        }else if (updatedGP.getGameState() == GameState.LOST){
+            scoreRepository.save(new Score(updatedGP.getGame(), updatedGP.getPlayer(), 0 , LocalDateTime.now()));
+            scoreRepository.save(new Score(opponentGamePlayer.get().getGame(), opponentGamePlayer.get().getPlayer(), 1, LocalDateTime.now()));
+        }else if(updatedGP.getGameState() == GameState.TIED){
+            scoreRepository.save(new Score(updatedGP.getGame(), updatedGP.getPlayer(), 0.5 , LocalDateTime.now()));
+            scoreRepository.save(new Score(opponentGamePlayer.get().getGame(), opponentGamePlayer.get().getPlayer(), 0.5, LocalDateTime.now()));
+        }
 
         return new ResponseEntity<>(makeMap(ResponseMessages.KEY_OK, ResponseMessages.OK_CREATED), HttpStatus.CREATED);
     }
