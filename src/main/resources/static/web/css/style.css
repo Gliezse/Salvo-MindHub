@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+body{
+    background-color: #1e2225;
+    font-family: 'Poppins', sans-serif;
+    color: white;
+}
+
+.grid-ships, .enemy-grid{
+    border: solid #1a1e22 10px;
+    border-radius: 20px;
+    color: white;
+    height: auto;
+    width: auto;
+    position: relative;
+}
+
+#grid{
+    margin: 45px 0 0 45px;
+    position: absolute;
+    width:450px;
+ 
+}
+
+.grid-wrapper{
+    display: absolute;
+    display: flex;
+    flex-direction: column;
+}
+
+.grid-row{
+    display: flex;
+    flex-direction: row;
+}
+
+.grid-cell{
+    display: flex;
+    box-sizing: border-box;
+    width: 45px;
+    height: 45px;
+    border: 0.1px solid #373E46;
+    vertical-align: middle;
+    font-weight: bold;
+    text-align: center;
+    align-items: center;
+    background-color: #44505C;
+}
+.grid-cell span{
+    margin: auto
+}
+.grid-marks{
+    background-color: #3A434B;
+}
+
+.salvoed{
+    background-color: rgb(255, 145, 0);
+}
+
+.bg-red{
+    background-color: #b14100;
+}
+
+.shipCont{
+    overflow-x: hidden;
+    overflow-y: hidden !important;
+}
+
+.ship{
+    display: block;
+    margin: auto;
+    height: 100%;
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+    text-overflow: clip;
+    overflow: hidden;
+}
+
+.shipVertical{
+    writing-mode: vertical-lr;
+}
+
+.CarrierHorizontal{
+    background-image: url(/web/img/ships/CarrierHorizontal.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.CarrierVertical{
+    background-image: url(/web/img/ships/CarrierVertical.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.SubmarineHorizontal{
+    background-image: url(/web/img/ships/SubmarineHorizontal.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.SubmarineVertical{
+    background-image: url(/web/img/ships/SubmarineVertical.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.BattleshipHorizontal{
+    background-image: url(/web/img/ships/BattleshipHorizontal.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.BattleshipVertical{
+    background-image: url(/web/img/ships/BattleshipVertical.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.DestroyerHorizontal{
+    background-image: url(/web/img/ships/DestroyerHorizontal.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.DestroyerVertical{
+    background-image: url(/web/img/ships/DestroyerVertical.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.PatrolHorizontal{
+    background-image: url(/web/img/ships/PatrolHorizontal.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.PatrolVertical{
+    background-image: url(/web/img/ships/PatrolVertical.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+
+.ship:active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+
+.container{
+    width: 80vw;
+    margin: auto;
+}
+
+.gameDiv{
+    display: block;
+    margin: 20px;
+    padding: auto;
+    
+}
+
+.game{
+    background-color: #00b17c;
+    border: solid #29f1b5 6px;
+    color: beige;
+    padding: 10px;
+    width: auto;
+    display: inline-block;
+}
+
+.scoreTable{
+    width: 40%;
+    background-color: #00b17c;
+    text-align: center;
+    color: white;
+}
+
+.scoreTable th{
+    background-color: #00b17c;
+    border: solid #00b17c 5px;
+}
+
+.scoreTable td{
+    background-color: #29f1b5;
+}
+
+.enemy-cell{
+    cursor: pointer;
+}
+
+.preselected-salvo{
+    background-color: red;
+}
+
+#ally-grid-cont{
+    display: inline;
+}
+
+#enemy-grid-cont{
+    display: inline;
+}

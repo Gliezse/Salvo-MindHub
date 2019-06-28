@@ -104,13 +104,16 @@ var app = new Vue({
             let self = this
 
             let playerSalvoes = this.datos.salvoes.filter(function (sub) {
-                console.log(sub.player, self.gpId)
                 if (sub.player == self.gpId) {
                     return sub
                 }
             })
 
-            this.turn = Math.max(...playerSalvoes.map(salvo => salvo.turn))+1
+            if(playerSalvoes.length == 0){
+                this.turn = 1
+            }else{
+                this.turn = Math.max(...playerSalvoes.map(salvo => salvo.turn)) + 1
+            }
 
         },
 
@@ -253,7 +256,16 @@ var app = new Vue({
             }
 
             ships.forEach(function (ship) {
-                var loc = ship.locations.sort()     //Lista de cells donde esta el barco
+                var loc = ship.locations                    //Lista de cells donde esta el barco
+
+                loc.sort(function (x, y) {
+                    if (x.charCodeAt(0) == y.charCodeAt(0)) {
+                        return parseInt(x.slice(1)) > parseInt(y.slice(1))
+                    } else {
+                        return x.charCodeAt(0) > y.charCodeAt(0)
+                    }
+                })
+                     
                 var firstCell = loc[0]                      //La primera de estas cells
                 var lastCell = loc[loc.length - 1]          //La ultima de las mismas
 
@@ -281,7 +293,7 @@ var app = new Vue({
                     orientacion = "Vertical"
                 }
 
-                grid.addWidget($(`<div id="${ship.type}" class="ship2"><div class="grid-stack-item-content ship ship${orientacion} ${ship.type}${orientacion}">${ship.type}</div><div/>`),
+                grid.addWidget($(`<div id="${ship.type}" class="ship2"><div class="grid-stack-item-content ship ship${orientacion} ${ship.type}${orientacion}"></div><div/>`),
                     x, y, w, h); //element,x,y,width,height
 
             })
@@ -629,6 +641,12 @@ var app = new Vue({
 
         back: function(){
             window.location.href = "/web/games.html"
+        },
+        gameStarted: function(){
+            if (this.gameState != "WAITING_OPPONENT_TO_JOIN" && this.gameState != "PLACING_SHIPS" && this.gameState != "OPPONENT_PLACING_SHIPS") {
+                return true
+            }
+            return false
         }
     }
     
