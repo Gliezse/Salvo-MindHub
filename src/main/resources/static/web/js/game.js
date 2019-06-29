@@ -7,7 +7,6 @@ var app = new Vue({
         player2: {},
         grid: null,
         enemyGrid: null,
-        shipsPlaced: false,
         selectedCells: 0,
         turn:0,
         playersTurn:true,
@@ -143,10 +142,20 @@ var app = new Vue({
 
         setGrids: function () {
             let gridCont = $(".grid-ships").first().html("")
-            let enemiGridCont = $(".enemy-grid").first().html("")
+            let enemyGridCont = $(".enemy-grid").first().html("")
 
-            gridCont.append('<div id="grid" class="grid-stack grid-stack-10"></div>')
-            enemiGridCont.append('<div id="enemy-grid" class="grid-stack grid-stack-10"></div>')
+            let allyAppend = '<div id="grid" class="grid-stack grid-stack-10"></div>'
+            let enemyAppend = '<div id="enemy-grid" class="grid-stack grid-stack-10"></div>'
+
+            if(this.gameState == 'WAITING_OPPONENT_TO_JOIN'){
+                allyAppend += '<div class="full-layout"></div>'
+                enemyAppend += '<div class="full-layout"></div>'
+            }else if(this.gameState == 'PLACING_SHIPS' || this.gameState == 'OPPONENT_PLACING_SHIPS'){
+                enemyAppend += '<div class="full-layout"></div>'                
+            }
+
+            gridCont.append(allyAppend)
+            enemyGridCont.append(enemyAppend)
             ships = this.datos.ships
             salvoes = this.datos.salvoes
 
@@ -170,9 +179,8 @@ var app = new Vue({
                 animate: false
             }
 
-            if (ships.length != 0) {
+            if (this.gameState != "PLACING_SHIPS") {
                 options.staticGrid = true
-                this.shipsPlaced = true
             }
 
             $("#grid").html("")
@@ -210,8 +218,11 @@ var app = new Vue({
                         cell.id = `${gridN}-${i - 1}${j - 1}`
 
                         if(gridN == 2){
-                            cell.setAttribute('onClick',`app.placeSalvo("${cell.id}")`)
                             cell.classList.add("enemy-cell")
+                            if(this.gameState == 'PLACING_SALVOES'){
+                                cell.setAttribute('onClick',`app.placeSalvo("${cell.id}")`)
+                                cell.classList.add('selectable-enemy-cell')
+                            }
                         }
                     }
 
@@ -260,11 +271,24 @@ var app = new Vue({
 
                 loc.sort(function (x, y) {
                     if (x.charCodeAt(0) == y.charCodeAt(0)) {
-                        return parseInt(x.slice(1)) > parseInt(y.slice(1))
+
+                        console.log(parseInt(x.slice(1)), parseInt(y.slice(1)))
+
+                        if(parseInt(x.slice(1)) > parseInt(y.slice(1))){
+                            return 1
+                        }else{
+                            return -1
+                        }
                     } else {
-                        return x.charCodeAt(0) > y.charCodeAt(0)
+                        if(x.charCodeAt(0) > y.charCodeAt(0)){
+                            return 1
+                        }else{
+                            return -1
+                        }
                     }
                 })
+
+                console.log(loc)
                      
                 var firstCell = loc[0]                      //La primera de estas cells
                 var lastCell = loc[loc.length - 1]          //La ultima de las mismas
@@ -365,6 +389,7 @@ var app = new Vue({
                     cell = $(`#2-${y}${x}`)
 
                     cell.addClass('salvoed')
+                    cell.removeClass('selectable-enemy-cell')
 
                     turn = document.createElement('SPAN')
                     turn.innerText = sub.turn
@@ -571,13 +596,16 @@ var app = new Vue({
                 if($(cell).hasClass("salvoed")){
                     return
                 }
+                
                 if($(cell).hasClass("preselected-salvo")){
                     $(cell).removeClass("preselected-salvo")
+                    $(cell).empty();
                     this.selectedCells -= 1;
                 }else{
                     if(this.selectedCells == 2){
                         alert("you can only select 2 cells per turn!")
                     }else{
+                        $(cell).append('<div class="salvo"></div>')
                         $(cell).addClass("preselected-salvo")
                         this.selectedCells += 1;
                     }
@@ -647,6 +675,33 @@ var app = new Vue({
                 return true
             }
             return false
+        },
+        gameEnded: function(){
+            if(this.gameState == 'WON' || this.gameState == 'LOST' || this.gameState == 'TIED'){
+                return true
+            }
+            return false
+        }
+    },
+    computed:{
+        state: function(){
+            if(this.gameState == 'WAITING_OPPONENT_TO_JOIN'){
+                return 'Waiting for an opponent to join the game...'
+            }else if(this.gameState == 'PLACING_SHIPS'){
+                return 'Place your ships!'
+            }else if(this.gameState == 'OPPONENT_PLACING_SHIPS'){
+                return 'Wait until your opponent places their ships!'
+            }else if(this.gameState == 'PLACING_SALVOES'){
+                return "It's your turn, place your salvoes in your opponent grid!"
+            }else if(this.gameState == 'WAITING_OPPONENT_SALVOES'){
+                return "It's your opponent turn"
+            }else if(this.gameState == 'WON'){
+                return "You won! Well played!"
+            }else if(this.gameState == 'LOST'){
+                return "Oh no, you lost!"
+            }else if(this.gameState == 'TIED'){
+                return 'Tied game! Both win!'
+            }
         }
     }
     

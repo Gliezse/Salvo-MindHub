@@ -4,6 +4,21 @@ body{
     background-color: #1e2225;
     font-family: 'Poppins', sans-serif;
     color: white;
+
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+
+.status{
+    background-color: #44505C;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.status h3{
+    margin: 0;
 }
 
 .grid-ships, .enemy-grid{
@@ -11,15 +26,16 @@ body{
     border-radius: 20px;
     color: white;
     height: auto;
-    width: auto;
+    max-width: 515px;
+    min-width: 515px;
     position: relative;
 }
 
 #grid{
     margin: 45px 0 0 45px;
     position: absolute;
-    width:450px;
- 
+    min-width:450px;
+    max-width:450px;
 }
 
 .grid-wrapper{
@@ -36,8 +52,8 @@ body{
 .grid-cell{
     display: flex;
     box-sizing: border-box;
-    width: 45px;
-    height: 45px;
+    min-width: 45px;
+    min-height: 45px;
     border: 0.1px solid #373E46;
     vertical-align: middle;
     font-weight: bold;
@@ -53,7 +69,7 @@ body{
 }
 
 .salvoed{
-    background-color: rgb(255, 145, 0);
+    background-color: rgb(133, 149, 219);
 }
 
 .bg-red{
@@ -184,12 +200,26 @@ body{
     background-color: #29f1b5;
 }
 
-.enemy-cell{
+.selectable-enemy-cell{
     cursor: pointer;
+}
+.selectable-enemy-cell:hover{
+    background-color: rgb(98, 113, 129);
 }
 
 .preselected-salvo{
+    background-color: rgb(133, 149, 219);
+}
+.preselected-salvo:hover{
+    background-color: rgb(133, 149, 219);
+}
+
+.salvo{
+    width: 30px;
+    height: 30px;
     background-color: red;
+    border-radius: 100px;
+    margin: auto;
 }
 
 #ally-grid-cont{
@@ -198,4 +228,12 @@ body{
 
 #enemy-grid-cont{
     display: inline;
+}
+
+.full-layout{
+    position: absolute;
+    z-index: 100;
+    width: 495px;
+    height: 495px;
+    background-color: rgb(128, 128, 128,0.5);
 }

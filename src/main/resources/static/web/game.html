@@ -27,14 +27,42 @@
             
         </div>
         
+        <div class="w-100 p-4 status mb-3 mt-3"><h3>{{state}}</h3></div>
+
         <button id="addShips" @click="placeShips()" v-if="gameState == 'PLACING_SHIPS'">Add Ships</button>
+    
         
 
         <div id="grids-cont" class="row">
+            
 
             <div id="ally-grid-cont" class="col-lg-6 col-md-12 mb-4">
                 <div class="grid-ships m-auto">
+                    
                 </div>
+
+                <table class="table table-bordered text-center table-sm table-hover table-dark mt-4">
+                    <tr>
+                        <th colspan="3">Opponent Hits</th>
+                    </tr>
+                    <tr>
+                        <th>Turn</th><th>Ship Hit</th><th>Location Hit</th>
+                    </tr>
+                    <tbody v-if="enemyHits.length != 0">
+                        <tr v-for="hit in enemyHits">
+                            <td>{{hit.turn}}</td>
+                            <td>{{hit.shipHit}}</td>
+                            <td>{{hit.locHit}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody v-else>
+                        <tr>
+                            <td colspan="3">Your opponent hasn't hit any of your ships yet!</td>
+                        </tr>
+                    </tbody>
+                    
+                    
+                </table>
 
             </div>
 
@@ -45,7 +73,7 @@
                     </div>-->
                 </div>
 
-                <table class="table table-bordered text-center table-sm table-hover table-dark">
+                <table class="table table-bordered text-center table-sm table-hover table-dark mt-4">
                     <tr>
                         <th colspan="3">Player Hits</th>
                     </tr>
@@ -95,57 +123,6 @@
                 <span>Destroyer: <span v-if="playerShipsLeft.destroyer != 0">{{playerShipsLeft.destroyer}} cells left</span><span v-else>Sunk!</span></span><br>
                 <span>Submarine: <span v-if="playerShipsLeft.submarine != 0">{{playerShipsLeft.submarine}} cells left</span><span v-else>Sunk!</span></span><br>
                 <span>Patrol: <span v-if="playerShipsLeft.patrol != 0">{{playerShipsLeft.patrol}} cells left</span><span v-else>Sunk!</span></span><br>
-
-
-                <div style="float: left; text-align: center;" >
-                
-                    <table style="min-width: 400px; margin-top: 20px;">
-                        <tr>
-                            <th colspan="3">Player Hits</th>
-                        </tr>
-                        <tr>
-                            <th>Turn</th><th>Ship Hit</th><th>Location Hit</th>
-                        </tr>
-                        <tbody v-if="playerHits != 0">
-                            <tr v-for="hit in playerHits">
-                                <td>{{hit.turn}}</td>
-                                <td>{{hit.shipHit}}</td>
-                                <td>{{hit.locHit}}</td>
-                            </tr>
-                        </tbody>
-                        <tbody v-else>
-                            <tr>
-                                <td colspan="3">You haven't hit an opponent ship yet!</td>
-                            </tr>
-                        </tbody>
-                        
-                    </table>
-                </div>
-                <div style="text-align: center;">
-                    
-                    <table style="min-width: 400px">
-                        <tr>
-                            <th colspan="3">Opponent Hits</th>
-                        </tr>
-                        <tr>
-                            <th>Turn</th><th>Ship Hit</th><th>Location Hit</th>
-                        </tr>
-                        <tbody v-if="enemyHits.length != 0">
-                            <tr v-for="hit in enemyHits">
-                                <td>{{hit.turn}}</td>
-                                <td>{{hit.shipHit}}</td>
-                                <td>{{hit.locHit}}</td>
-                            </tr>
-                        </tbody>
-                        <tbody v-else>
-                            <tr>
-                                <td colspan="3">Your opponent hasn't hit any of your ships yet!</td>
-                            </tr>
-                        </tbody>
-                        
-                        
-                    </table>
-                </div>
             </div>
         </div>
     </main>
