@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Salvo Grid pero durisima</title>
 
+    <!--FontAwesome-->
+    <script src="https://kit.fontawesome.com/f6a1986fab.js"></script>
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -14,122 +17,133 @@
     <link rel="stylesheet" href="dist/gridstack-extra.css" />
     <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
-    <main id="app" class="container">
+<body id="game-body">
+    <main id="app">
+        <div class="giant-div">
+            <div class="go-back" @click="back()">
+                <h5><i class="fas fa-caret-square-left"></i> Go back to games list</h5>
+            </div>
+            
+            <div v-show = "gameState == 'WAITING_OPPONENT_TO_JOIN'">
+                <div class="centro">
+                    <h1>Waiting for an opponent to join</h1>
+                </div> 
+            </div>
+               
+        </div>
+        <!--
         <div id="game-data">
-            <button id="logout" @click="logout()">Logout</button>
-            <button id="back" @click="back()">Back to games list</button>
-            <h1>Game: {{datos.id}}</h1>
-            <div v-if="datos.gameplayers">
-                <h3>Player 1: <span v-if="player1.name">{{player1.name}} <span v-if="player1.id == gpId">(You)</span></span></h3>
-                <h3>Player 2: <span v-if="player2.name">{{player2.name}} <span v-if="player2.id == gpId">(You)</span></span><span v-else><i>Waiting...</i></span></h3>
-            </div>
-            
-        </div>
-        
-        <div class="w-100 p-4 status mb-3 mt-3"><h3>{{state}}</h3></div>
-
-        <button id="addShips" @click="placeShips()" v-if="gameState == 'PLACING_SHIPS'">Add Ships</button>
-    
-        
-
-        <div id="grids-cont" class="row">
-            
-
-            <div id="ally-grid-cont" class="col-lg-6 col-md-12 mb-4">
-                <div class="grid-ships m-auto">
-                    
+                <button id="logout" @click="logout()">Logout</button>
+                <button id="back" @click="back()">Back to games list</button>
+                <h1>Game: {{datos.id}}</h1>
+                <div v-if="datos.gameplayers">
+                    <h3>Player 1: <span v-if="player1.name">{{player1.name}} <span v-if="player1.id == gpId">(You)</span></span></h3>
+                    <h3>Player 2: <span v-if="player2.name">{{player2.name}} <span v-if="player2.id == gpId">(You)</span></span><span v-else><i>Waiting...</i></span></h3>
                 </div>
-
-                <table class="table table-bordered text-center table-sm table-hover table-dark mt-4">
-                    <tr>
-                        <th colspan="3">Opponent Hits</th>
-                    </tr>
-                    <tr>
-                        <th>Turn</th><th>Ship Hit</th><th>Location Hit</th>
-                    </tr>
-                    <tbody v-if="enemyHits.length != 0">
-                        <tr v-for="hit in enemyHits">
-                            <td>{{hit.turn}}</td>
-                            <td>{{hit.shipHit}}</td>
-                            <td>{{hit.locHit}}</td>
-                        </tr>
-                    </tbody>
-                    <tbody v-else>
-                        <tr>
-                            <td colspan="3">Your opponent hasn't hit any of your ships yet!</td>
-                        </tr>
-                    </tbody>
-                    
-                    
-                </table>
-
-            </div>
-
-            <div class="col-lg-6 col-md-12">
-
-                <div class="enemy-grid m-auto">
-                    <!--<div id="enemy-grid" class="grid-stack grid-stack-10">
-                    </div>-->
-                </div>
-
-                <table class="table table-bordered text-center table-sm table-hover table-dark mt-4">
-                    <tr>
-                        <th colspan="3">Player Hits</th>
-                    </tr>
-                    <tr>
-                        <th>Turn</th>
-                        <th>Ship Hit</th>
-                        <th>Location Hit</th>
-                    </tr>
-                    <tbody v-if="playerHits != 0">
-                        <tr v-for="hit in playerHits">
-                            <td>{{hit.turn}}</td>
-                            <td>{{hit.shipHit}}</td>
-                            <td>{{hit.locHit}}</td>
-                        </tr>
-                    </tbody>
-                    <tbody v-else>
-                        <tr>
-                            <td colspan="3">You haven't hit an opponent ship yet!</td>
-                        </tr>
-                    </tbody>
                 
-                </table>
             </div>
             
-        </div>
+            <div class="w-100 p-4 status mb-3 mt-3"><h3>{{state}}</h3></div>
+    
+            <button id="addShips" @click="placeShips()" v-if="gameState == 'PLACING_SHIPS'">Add Ships</button>
         
-        <div id="enemy-grid-cont" v-show="gameStarted()">
-            <div v-if="gameState == 'PLACING_SALVOES'">
-                <h3>Turn: {{turn}}</h3>
-                <button id="shoot-button" @click="shootSalvoes()" v-bind:disabled="selectedCells != 2">Shoot!</button>
+            
+            
+            <div id="grids-cont" class="row">
+    
+                <div id="ally-grid-cont" class="col-lg-6 col-md-12 mb-4">
+                    <div class="grid-ships m-auto">
+                        
+                    </div>
+    
+                    <table class="table table-bordered text-center table-sm table-hover table-dark mt-4">
+                        <tr>
+                            <th colspan="3">Opponent Hits</th>
+                        </tr>
+                        <tr>
+                            <th>Turn</th><th>Ship Hit</th><th>Location Hit</th>
+                        </tr>
+                        <tbody v-if="enemyHits.length != 0">
+                            <tr v-for="hit in enemyHits">
+                                <td>{{hit.turn}}</td>
+                                <td>{{hit.shipHit}}</td>
+                                <td>{{hit.locHit}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td colspan="3">Your opponent hasn't hit any of your ships yet!</td>
+                            </tr>
+                        </tbody>
+                        
+                        
+                    </table>
+    
+                </div>
+    
+                <div class="col-lg-6 col-md-12">
+    
+                    <div class="enemy-grid m-auto">
+                    </div>
+    
+                    <table class="table table-bordered text-center table-sm table-hover table-dark mt-4">
+                        <tr>
+                            <th colspan="3">Player Hits</th>
+                        </tr>
+                        <tr>
+                            <th>Turn</th>
+                            <th>Ship Hit</th>
+                            <th>Location Hit</th>
+                        </tr>
+                        <tbody v-if="playerHits != 0">
+                            <tr v-for="hit in playerHits">
+                                <td>{{hit.turn}}</td>
+                                <td>{{hit.shipHit}}</td>
+                                <td>{{hit.locHit}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td colspan="3">You haven't hit an opponent ship yet!</td>
+                            </tr>
+                        </tbody>
+                    
+                    </table>
+                </div>
+                
             </div>
             
-            <h3 v-else>Waiting for your opponent to shoot...</h3>               
-
-            
-            <div>
-                <h3>Enemy Ships:</h3>
-                <span>Carrier: <span v-if="enemyShipsLeft.carrier != 0">{{enemyShipsLeft.carrier}} cells left</span><span v-else>Sunk!</span></span><br>
-                <span>Battleship: <span v-if="enemyShipsLeft.battleship != 0"> {{enemyShipsLeft.battleship}} cells left</span><span v-else>Sunk!</span></span><br>
-                <span>Destroyer: <span v-if="enemyShipsLeft.destroyer != 0">{{enemyShipsLeft.destroyer}} cells left</span><span v-else>Sunk!</span></span><br>
-                <span>Submarine: <span v-if="enemyShipsLeft.submarine != 0">{{enemyShipsLeft.submarine}} cells left</span><span v-else>Sunk!</span></span><br>
-                <span>Patrol: <span v-if="enemyShipsLeft.patrol != 0">{{enemyShipsLeft.patrol}} cells left</span><span v-else>Sunk!</span></span><br>
-
-                <h3>Your Ships:</h3>
-                <span>Carrier: <span v-if="playerShipsLeft.carrier != 0">{{playerShipsLeft.carrier}} cells left</span><span v-else>Sunk!</span></span><br>
-                <span>Battleship: <span v-if="playerShipsLeft.battleship != 0"> {{playerShipsLeft.battleship}} cells left</span><span v-else>Sunk!</span></span><br>
-                <span>Destroyer: <span v-if="playerShipsLeft.destroyer != 0">{{playerShipsLeft.destroyer}} cells left</span><span v-else>Sunk!</span></span><br>
-                <span>Submarine: <span v-if="playerShipsLeft.submarine != 0">{{playerShipsLeft.submarine}} cells left</span><span v-else>Sunk!</span></span><br>
-                <span>Patrol: <span v-if="playerShipsLeft.patrol != 0">{{playerShipsLeft.patrol}} cells left</span><span v-else>Sunk!</span></span><br>
-            </div>
-        </div>
+            <div id="enemy-grid-cont" v-show="gameStarted()">
+                <div v-if="gameState == 'PLACING_SALVOES'">
+                    <h3>Turn: {{turn}}</h3>
+                    <button id="shoot-button" @click="shootSalvoes()" v-bind:disabled="selectedCells != 2">Shoot!</button>
+                </div>
+                
+                <h3 v-else>Waiting for your opponent to shoot...</h3>               
+    
+                
+                <div>
+                    <h3>Enemy Ships:</h3>
+                    <span>Carrier: <span v-if="enemyShipsLeft.carrier != 0">{{enemyShipsLeft.carrier}} cells left</span><span v-else>Sunk!</span></span><br>
+                    <span>Battleship: <span v-if="enemyShipsLeft.battleship != 0"> {{enemyShipsLeft.battleship}} cells left</span><span v-else>Sunk!</span></span><br>
+                    <span>Destroyer: <span v-if="enemyShipsLeft.destroyer != 0">{{enemyShipsLeft.destroyer}} cells left</span><span v-else>Sunk!</span></span><br>
+                    <span>Submarine: <span v-if="enemyShipsLeft.submarine != 0">{{enemyShipsLeft.submarine}} cells left</span><span v-else>Sunk!</span></span><br>
+                    <span>Patrol: <span v-if="enemyShipsLeft.patrol != 0">{{enemyShipsLeft.patrol}} cells left</span><span v-else>Sunk!</span></span><br>
+    
+                    <h3>Your Ships:</h3>
+                    <span>Carrier: <span v-if="playerShipsLeft.carrier != 0">{{playerShipsLeft.carrier}} cells left</span><span v-else>Sunk!</span></span><br>
+                    <span>Battleship: <span v-if="playerShipsLeft.battleship != 0"> {{playerShipsLeft.battleship}} cells left</span><span v-else>Sunk!</span></span><br>
+                    <span>Destroyer: <span v-if="playerShipsLeft.destroyer != 0">{{playerShipsLeft.destroyer}} cells left</span><span v-else>Sunk!</span></span><br>
+                    <span>Submarine: <span v-if="playerShipsLeft.submarine != 0">{{playerShipsLeft.submarine}} cells left</span><span v-else>Sunk!</span></span><br>
+                    <span>Patrol: <span v-if="playerShipsLeft.patrol != 0">{{playerShipsLeft.patrol}} cells left</span><span v-else>Sunk!</span></span><br>
+                </div>
+            </div>-->
+        
     </main>
 
 
     <!--Scripts-->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="dist/vue.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
     <script src="dist/jquery-ui.min.js"></script>

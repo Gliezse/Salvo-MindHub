@@ -26,7 +26,8 @@ var app = new Vue({
             submarine:3,
             patrol:2
         },
-        gameState: ""
+        gameState: "",
+        dotsAux: 0
     },
     //TODO: Add gamestate functions
     created(){
@@ -35,6 +36,7 @@ var app = new Vue({
         this.gpId = params.get('gp')
 
         setInterval(self.load,1000)
+        setInterval(self.dots,500)
     },
     methods:{
         load:function(){
@@ -681,6 +683,18 @@ var app = new Vue({
                 return true
             }
             return false
+        },
+
+        dots: function () {
+            let text = $(".centro h1").get()
+
+            if(this.dotsAux < 3){
+                $(text).html($(text).html() + ".")
+                this.dotsAux += 1
+            }else{
+                $(text).html($(text).html().slice(0, $(text).html().length-3))
+                this.dotsAux = 0
+            }
         }
     },
     computed:{
