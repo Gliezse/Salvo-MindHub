@@ -22,10 +22,10 @@
     <main id="app">
         <div class="giant-div">
             <button class="btn go-back" @click="back()">
-                <h5><i class="fas fa-caret-square-left"></i> Go back to games list</h5>
+                <h5><i class="fas fa-caret-square-left" style="font-size: 1em"></i> Go back to games list</h5>
             </button>
             
-            <div v-show = "gameState == 'WAITING_OPPONENT_TO_JOIN'">
+            <div>
                 <div class="text-white info" data-target="#infoModal" data-toggle="modal"> 
                     <i class="fas fa-question-circle"></i>
                 </div>
@@ -41,7 +41,7 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <div class="modal-body">
+                                <div class="modal-body" v-if="gameState == 'WAITING_OPPONENT_TO_JOIN'">
                                     <span>
                                         <h5>Hello <b>{{player1.name}}!</b></h5>
                                     </span>
@@ -51,6 +51,16 @@
                                         Please be patient! Once they join, you can place your ships
                                     </p>
                                 </div>
+                                <div class="modal-body" v-if="gameState == 'PLACING_SHIPS' || gameState == 'OPPONENT_PLACING_SHIPS'">
+                                    <span>
+                                        <h5>Hello <b>{{currPlayer.name}}!</b></h5>
+                                    </span>
+                                    <p>
+                                        Your opponent is {{enemyPlayer.name}}
+                                    </p>
+                                </div>
+                                
+                                <h5>Game id: {{datos.id}}</h5>
                                 <div class="modal-footer">
                                     <button type="button" class="btn" data-dismiss="modal">OK!</button>
                                 </div>
@@ -60,17 +70,15 @@
                 </div>
 
                 <div id="waiting-div" class="centro">
-                    <h1 class="animated bounceIn">Waiting for an opponent to join</h1>
+                    <h1 class="animated bounceIn d-none">Waiting for an opponent to join</h1>
                 </div> 
             </div>
             <div class="centro">
-                <div id="initial-grid-cont" class="d-none " v-show="gameState != 'WAITING_OPPONENT_TO_JOIN'">
-                    <h3 class="mb-4 animated fadeIn delay-1s">This is your grid</h3>
+                <div id="initial-grid-cont" class="d-none w-auto">       
                     <div class="grid-ships m-auto animated bounceIn"></div>
-                    <h3 class="mt-4 animated fadeIn delay-2s">Place your pets as your will!</h3>
-                    <h4 class="animated fadeIn delay-2s">When you are ready click "place"</h4>
+                    <h4 id="initial-text" class="mt-2 animated fadeIn delay-1s">This is your grid</h4>
                     <button class="btn animated fadeIn delay-4s" id="addShips" @click="placeShips()">
-                        <h4>Place</h4>
+                        <h6>Place</h6>
                     </button>
                 </div>
             </div>

@@ -50,15 +50,22 @@ body{
 }
 
 .go-back{
+    z-index: 100;
     background-color: white;
     color: #1e2225;
     border-radius: 10px;
     padding: 5px 10px;
     position: absolute;
-    width: auto;
+    width: 3em;
+    height: 2.5em;
     top: 15px;
     left: 10px;
     cursor: pointer;
+    transition: width 1s;
+}
+
+.go-back:hover{
+    width: 24em;
 }
 
 .go-back h5{
@@ -66,6 +73,7 @@ body{
 }
 
 .info{
+    z-index: 100;
     position: absolute;
     right: 20px;
     top: 15px;

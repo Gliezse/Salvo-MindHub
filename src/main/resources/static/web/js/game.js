@@ -43,15 +43,8 @@ var app = new Vue({
             let self = this
             $.get("/api/game_view/" + this.gpId)
             .done(function (datazo) {
-                if(datazo.gamestate != self.gameState){
-                    if(self.gameState == 'WAITING_OPPONENT_TO_JOIN'){
-                        $('#waiting-div h1').addClass('bounceOutDown')
-                        $('#waiting-div h1').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-                            self.setAll(datazo)
-                        });
-                    }else{
-                        self.setAll(datazo)
-                    }      
+                if(datazo.gamestate != self.gameState){         
+                    self.setAll(datazo)
                 }
             })
             .fail(function(response){
@@ -61,13 +54,65 @@ var app = new Vue({
         },
 
         setAll: function(datazo){
-            $("#initial-grid-cont").removeClass('d-none')
             this.datos = datazo;
             this.gameState = datazo.gamestate
             this.setPlayers()
             this.setTurn()
             this.setHits()
-            this.setGrids() 
+            this.setGrids()
+
+            let waitingText = $("#waiting-div h1").get();
+            let initialText = $('#initial-text').get()
+
+            if(this.gameState == 'WAITING_OPPONENT_TO_JOIN'){
+                $('#waiting-div h1').removeClass('d-none')
+            }
+            
+            if(this.gameState == 'PLACING_SHIPS'){
+                
+                
+                if($(waitingText).hasClass('d-none')){
+                    $("#initial-grid-cont").removeClass('d-none')
+                }else{
+                    $(waitingText).removeClass('bounceIn')
+                    $(waitingText).html("Opponent found!")
+                    $(waitingText).addClass('tada')
+
+                    $(waitingText).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                        if($(waitingText).hasClass('tada')){
+                            $(waitingText).addClass('bounceOutDown') 
+                            $(waitingText).removeClass('tada')
+                        }else if($(waitingText).hasClass('bounceOutDown')){
+                            $("#initial-grid-cont").removeClass('d-none')
+                        }
+                    });
+                }
+
+                $(initialText).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                    if($(initialText).hasClass('fadeIn')){
+                        $(initialText).removeClass('delay-1s')
+                        $(initialText).removeClass('fadeIn')
+                        $(initialText).addClass('fadeOut')
+                    }else{
+                        $(initialText).removeClass('fadeOut')
+                        $(initialText).html("Place your pets as your will! When you are ready click 'Place'")
+                        $(initialText).addClass('fadeIn')
+                    }
+                })
+                
+            }
+
+            if(this.gameState == 'OPPONENT_PLACING_SHIPS'){
+                if(!$("#initial-grid-cont").hasClass('d-none')){
+                    $('#initial-grid-cont').addClass('d-none')
+                }
+
+                this.dotsAux = 0
+
+                $(waitingText).html('Wait until '+this.enemyPlayer.name+' places their ships')
+                $(waitingText).attr('class','animated bounceIn')
+
+            }
         },
 
         setHits: function(){
@@ -261,6 +306,7 @@ var app = new Vue({
         },
 
         loadShips: function (ships, grid) {
+            let self = this
             if (ships.length == 0 && this.datos.gameplayers[1]) {
                 ships = [{
                     "type": "Carrier",
@@ -326,7 +372,18 @@ var app = new Vue({
                     orientacion = "Vertical"
                 }
 
-                grid.addWidget($(`<div id="${ship.type}" class="ship2"><div class="grid-stack-item-content ship ship${orientacion} ${ship.type}${orientacion} animated fadeIn delay-3s"></div><div/>`),
+                let classes = `grid-stack-item-content ship ship${orientacion} ${ship.type}${orientacion} animated`
+
+                if(self.gameState == 'PLACING_SHIPS'){
+                    classes += " fadeIn delay-3s"
+                }else{
+                    classes += " bounceIn delay-1s"
+                }
+
+
+
+
+                grid.addWidget($(`<div id="${ship.type}" class="ship2"><div class="${classes}"></div><div/>`),
                     x, y, w, h); //element,x,y,width,height
 
             })
@@ -591,8 +648,15 @@ var app = new Vue({
                 contentType: "application/json"
             })
             .done(function(response){
-                console.log(response.status)
-                app.load()
+
+                $("#initial-grid-cont").addClass('animated')
+                $("#initial-grid-cont").addClass('fadeOut')
+
+                $("#initial-grid-cont").one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                    console.log(response.status)
+                    app.load()
+                })
+                
             })
             .fail(function(response){
                 alert(JSON.parse(response.responseText).error)
@@ -694,14 +758,16 @@ var app = new Vue({
 
         dots: function () {
             let text = $(".centro h1").get()
-
-            if(this.dotsAux < 3){
-                $(text).html($(text).html() + ".")
-                this.dotsAux += 1
-            }else{
-                $(text).html($(text).html().slice(0, $(text).html().length-3))
-                this.dotsAux = 0
+            if(this.gameState == 'WAITING_OPPONENT_TO_JOIN' || this.gameState == 'OPPONENT_PLACING_SHIPS'){
+                if(this.dotsAux < 3){
+                    $(text).html($(text).html() + ".")
+                    this.dotsAux += 1
+                }else{
+                    $(text).html($(text).html().slice(0, $(text).html().length-3))
+                    this.dotsAux = 0
+                }
             }
+            
         }
     },
     computed:{
@@ -722,6 +788,26 @@ var app = new Vue({
                 return "Oh no, you lost!"
             }else if(this.gameState == 'TIED'){
                 return 'Tied game! Both win!'
+            }
+        },
+        
+        currPlayer:function(){
+            if(this.datos.gameplayers.length == 1){
+                return this.player1
+            }else{
+                if(this.player1.id == this.gpId){
+                    return this.player1
+                }else{
+                    return this.player2
+                }
+            }
+        },
+
+        enemyPlayer:function(){
+            if(this.player1.id != this.gpId){
+                return this.player1
+            }else{
+                return this.player2
             }
         }
     }
