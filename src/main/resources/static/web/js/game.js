@@ -54,6 +54,8 @@ var app = new Vue({
         },
 
         setAll: function(datazo){
+            let self = this
+
             this.datos = datazo;
             this.gameState = datazo.gamestate
             this.setPlayers()
@@ -112,6 +114,65 @@ var app = new Vue({
                 $(waitingText).html('Wait until '+this.enemyPlayer.name+' places their ships')
                 $(waitingText).attr('class','animated bounceIn')
 
+            }
+
+            if(this.gameState == 'PLACING_SALVOES' || this.gameState == 'WAITING_OPPONENT_SALVOES'){
+                if ($('#initial-grid-cont').children().length != 0){
+                    $("#initial-grid-cont").addClass('animated')
+                    $("#initial-grid-cont").addClass('fadeOut')
+                    
+                    $('#initial-grid-cont').html(" ")
+                    this.setAll(this.datos)
+                }else{
+                    if(!$(waitingText).hasClass('d-none')){
+                        $(waitingText).html("Done! <br> Game begins!")
+                        $(waitingText).attr('class', 'animated tada')
+
+                        $(waitingText).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                            $(waitingText).attr('class', 'animated bounceOutDown')
+                        })
+                    }
+                }
+
+                $('#both-grids-cont').removeClass('d-none')
+
+                $('.ship').first().one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                    if(self.gameState == 'PLACING_SALVOES'){
+
+                        $('#shoot-button').addClass('d-none')
+
+                        $('.enemy-grid').first().removeClass('small-grid')
+                        $('.grid-ships').first().addClass('small-grid')
+
+                        if($('#ally-turn-marker').hasClass('d-none')){
+                            $('#ally-turn-marker').removeClass('d-none')
+                        }else{
+                            $('#ally-turn-marker').removeClass('fadeOut')
+                            $('#ally-turn-marker').addClass('fadeIn')
+                        }
+
+                        if(!$('#enemy-turn-marker').hasClass('d-none')){
+                            $('#enemy-turn-marker').addClass('fadeOut')
+                        }
+                        
+                    }else{
+
+                        $('.grid-ships').first().removeClass('small-grid')
+                        $('.enemy-grid').first().addClass('small-grid')
+
+                        if ($('#enemy-turn-marker').hasClass('d-none')) {
+                            $('#enemy-turn-marker').removeClass('d-none')
+                        } else {
+                            $('#enemy-turn-marker').removeClass('fadeOut')
+                            $('#enemy-turn-marker').addClass('fadeIn')
+                        }
+
+                        if (!$('#ally-turn-marker').hasClass('d-none')) {
+                            $('#ally-turn-marker').addClass('fadeOut')
+                        }
+                        
+                    }
+                })
             }
         },
 
@@ -206,15 +267,9 @@ var app = new Vue({
             let allyAppend = '<div id="grid" class="grid-stack grid-stack-10"></div>'
             let enemyAppend = '<div id="enemy-grid" class="grid-stack grid-stack-10"></div>'
 
-            if(this.gameState == 'WAITING_OPPONENT_TO_JOIN'){
-                allyAppend += '<div class="full-layout"></div>'
-                enemyAppend += '<div class="full-layout"></div>'
-            }else if(this.gameState == 'PLACING_SHIPS' || this.gameState == 'OPPONENT_PLACING_SHIPS'){
-                enemyAppend += '<div class="full-layout"></div>'                
-            }
-
             gridCont.append(allyAppend)
             enemyGridCont.append(enemyAppend)
+
             ships = this.datos.ships
             salvoes = this.datos.salvoes
 
@@ -379,8 +434,6 @@ var app = new Vue({
                 }else{
                     classes += " bounceIn delay-1s"
                 }
-
-
 
 
                 grid.addWidget($(`<div id="${ship.type}" class="ship2"><div class="${classes}"></div><div/>`),
@@ -653,7 +706,7 @@ var app = new Vue({
                 $("#initial-grid-cont").addClass('fadeOut')
 
                 $("#initial-grid-cont").one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-                    console.log(response.status)
+                    $('#initial-grid-cont').html(" ")
                     app.load()
                 })
                 
@@ -674,6 +727,8 @@ var app = new Vue({
                     $(cell).removeClass("preselected-salvo")
                     $(cell).empty();
                     this.selectedCells -= 1;
+                    $('#shoot-button').removeClass('bounceIn')
+                    $('#shoot-button').addClass('bounceOut')
                 }else{
                     if(this.selectedCells == 2){
                         alert("you can only select 2 cells per turn!")
@@ -681,6 +736,16 @@ var app = new Vue({
                         $(cell).append('<div class="salvo"></div>')
                         $(cell).addClass("preselected-salvo")
                         this.selectedCells += 1;
+
+                        if(this.selectedCells == 2){
+                            if($('#shoot-button').hasClass('d-none')){
+                                $('#shoot-button').removeClass('d-none')
+                            }else{
+                                $('#shoot-button').removeClass('bounceOut')
+                                $('#shoot-button').addClass('bounceIn')
+                            }
+                            
+                        }
                     }
                 }
             }else{
@@ -809,6 +874,46 @@ var app = new Vue({
             }else{
                 return this.player2
             }
+        },
+
+        allyShipsLeftQ: function(){
+            let aux = 5;
+
+            let values = Object.values(this.playerShipsLeft);
+
+            values.forEach(v => {
+                if (v == 0) {
+                    aux -= 1
+                }
+            })
+
+            return aux
+        },
+
+        oppShipsLeftQ: function(){
+            let aux = 5;
+
+            let values = Object.values(this.enemyShipsLeft);
+
+            values.forEach(v => {
+                if(v == 0){
+                    aux -= 1
+                }
+            })
+
+            return aux
+        },
+
+        allyHitsOnLastTurn: function(){
+            let self = this;
+
+            let hits = this.playerHits.filter(ph =>{
+                if(ph.turn == self.turn - 1){
+                    return ph
+                }
+            })
+
+            return hits;
         }
     }
     

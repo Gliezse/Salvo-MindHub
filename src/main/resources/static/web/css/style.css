@@ -134,6 +134,8 @@ body{
     max-width: 515px;
     min-width: 515px;
     position: relative;
+
+    transition: all 0.2s ease-in;
 }
 
 #grid{
@@ -260,6 +262,22 @@ body{
     background-repeat: no-repeat;
 }
 
+.small-grid{
+    transform: scale(0.7,0.7) translate(0px,110px);
+}
+
+.turn-marker{
+    bottom: -295px;
+}
+
+.gen-button{
+	z-index: 100;
+	background-color: white;
+	color: #1e2225;
+    border-radius: 10px;
+	padding: 5px 10px;
+	cursor: pointer;
+}
 
 .ship:active {
     cursor: grabbing;
