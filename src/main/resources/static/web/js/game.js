@@ -44,18 +44,30 @@ var app = new Vue({
             $.get("/api/game_view/" + this.gpId)
             .done(function (datazo) {
                 if(datazo.gamestate != self.gameState){
-                    self.datos = datazo;
-                    self.gameState = datazo.gamestate 
-                    self.setPlayers()
-                    self.setTurn()
-                    self.setHits()  
-                    self.setGrids()     
+                    if(self.gameState == 'WAITING_OPPONENT_TO_JOIN'){
+                        $('#waiting-div h1').addClass('bounceOutDown')
+                        $('#waiting-div h1').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                            self.setAll(datazo)
+                        });
+                    }else{
+                        self.setAll(datazo)
+                    }      
                 }
             })
             .fail(function(response){
                 alert(JSON.parse(response.responseText).error);
             })
 
+        },
+
+        setAll: function(datazo){
+            $("#initial-grid-cont").removeClass('d-none')
+            this.datos = datazo;
+            this.gameState = datazo.gamestate
+            this.setPlayers()
+            this.setTurn()
+            this.setHits()
+            this.setGrids() 
         },
 
         setHits: function(){
@@ -273,9 +285,6 @@ var app = new Vue({
 
                 loc.sort(function (x, y) {
                     if (x.charCodeAt(0) == y.charCodeAt(0)) {
-
-                        console.log(parseInt(x.slice(1)), parseInt(y.slice(1)))
-
                         if(parseInt(x.slice(1)) > parseInt(y.slice(1))){
                             return 1
                         }else{
@@ -289,8 +298,6 @@ var app = new Vue({
                         }
                     }
                 })
-
-                console.log(loc)
                      
                 var firstCell = loc[0]                      //La primera de estas cells
                 var lastCell = loc[loc.length - 1]          //La ultima de las mismas
@@ -319,7 +326,7 @@ var app = new Vue({
                     orientacion = "Vertical"
                 }
 
-                grid.addWidget($(`<div id="${ship.type}" class="ship2"><div class="grid-stack-item-content ship ship${orientacion} ${ship.type}${orientacion}"></div><div/>`),
+                grid.addWidget($(`<div id="${ship.type}" class="ship2"><div class="grid-stack-item-content ship ship${orientacion} ${ship.type}${orientacion} animated fadeIn delay-3s"></div><div/>`),
                     x, y, w, h); //element,x,y,width,height
 
             })

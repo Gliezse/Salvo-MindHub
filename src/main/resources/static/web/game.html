@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="dist/mdb.min.css" rel="stylesheet">
 
     <!--CSS-->
     <link rel="stylesheet" href="dist/gridstack.css" />
@@ -20,18 +21,130 @@
 <body id="game-body">
     <main id="app">
         <div class="giant-div">
-            <div class="go-back" @click="back()">
+            <button class="btn go-back" @click="back()">
                 <h5><i class="fas fa-caret-square-left"></i> Go back to games list</h5>
-            </div>
+            </button>
             
             <div v-show = "gameState == 'WAITING_OPPONENT_TO_JOIN'">
-                <div class="centro">
-                    <h1>Waiting for an opponent to join</h1>
+                <div class="text-white info" data-target="#infoModal" data-toggle="modal"> 
+                    <i class="fas fa-question-circle"></i>
+                </div>
+
+                <div class="modal fade text-dark text-center" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="container-fluid">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Game Information</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <span>
+                                        <h5>Hello <b>{{player1.name}}!</b></h5>
+                                    </span>
+                                    <p>
+                                        You are waiting for an opponent to join your game.
+                                        <br>
+                                        Please be patient! Once they join, you can place your ships
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn" data-dismiss="modal">OK!</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="waiting-div" class="centro">
+                    <h1 class="animated bounceIn">Waiting for an opponent to join</h1>
                 </div> 
             </div>
+            <div class="centro">
+                <div id="initial-grid-cont" class="d-none " v-show="gameState != 'WAITING_OPPONENT_TO_JOIN'">
+                    <h3 class="mb-4 animated fadeIn delay-1s">This is your grid</h3>
+                    <div class="grid-ships m-auto animated bounceIn"></div>
+                    <h3 class="mt-4 animated fadeIn delay-2s">Place your pets as your will!</h3>
+                    <h4 class="animated fadeIn delay-2s">When you are ready click "place"</h4>
+                    <button class="btn animated fadeIn delay-4s" id="addShips" @click="placeShips()">
+                        <h4>Place</h4>
+                    </button>
+                </div>
+            </div>
+            
+
+            
                
         </div>
-        <!--
+        <div class="d-none">
+            <div id="grids-cont" class="row d-none animated bounceIn" v-show="gameState != 'WAITING_OPPONENT_TO_JOIN'">
+            
+                <div id="ally-grid-cont" class="col-lg-6 col-md-12 mb-4">
+                    <div class="grid-ships m-auto">
+            
+                    </div>
+            
+                    <table class="table table-bordered text-center table-sm table-hover table-dark mt-4">
+                        <tr>
+                            <th colspan="3">Opponent Hits</th>
+                        </tr>
+                        <tr>
+                            <th>Turn</th>
+                            <th>Ship Hit</th>
+                            <th>Location Hit</th>
+                        </tr>
+                        <tbody v-if="enemyHits.length != 0">
+                            <tr v-for="hit in enemyHits">
+                                <td>{{hit.turn}}</td>
+                                <td>{{hit.shipHit}}</td>
+                                <td>{{hit.locHit}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td colspan="3">Your opponent hasn't hit any of your ships yet!</td>
+                            </tr>
+                        </tbody>
+            
+            
+                    </table>
+            
+                </div>
+            
+                <div class="col-lg-6 col-md-12">
+            
+                    <div class="enemy-grid m-auto">
+                    </div>
+            
+                    <table class="table table-bordered text-center table-sm table-hover table-dark mt-4">
+                        <tr>
+                            <th colspan="3">Player Hits</th>
+                        </tr>
+                        <tr>
+                            <th>Turn</th>
+                            <th>Ship Hit</th>
+                            <th>Location Hit</th>
+                        </tr>
+                        <tbody v-if="playerHits != 0">
+                            <tr v-for="hit in playerHits">
+                                <td>{{hit.turn}}</td>
+                                <td>{{hit.shipHit}}</td>
+                                <td>{{hit.locHit}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td colspan="3">You haven't hit an opponent ship yet!</td>
+                            </tr>
+                        </tbody>
+            
+                    </table>
+                </div>
+            
+            </div>
         <div id="game-data">
                 <button id="logout" @click="logout()">Logout</button>
                 <button id="back" @click="back()">Back to games list</button>
@@ -137,14 +250,25 @@
                     <span>Submarine: <span v-if="playerShipsLeft.submarine != 0">{{playerShipsLeft.submarine}} cells left</span><span v-else>Sunk!</span></span><br>
                     <span>Patrol: <span v-if="playerShipsLeft.patrol != 0">{{playerShipsLeft.patrol}} cells left</span><span v-else>Sunk!</span></span><br>
                 </div>
-            </div>-->
+            </div>
+        </div>
         
     </main>
 
 
     <!--Scripts-->
     <script src="dist/vue.js"></script>
+    
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <script src="dist/mdb.min.js"></script>
+        
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
     <script src="dist/jquery-ui.min.js"></script>
     <script src="dist/gridstack.js"></script>
