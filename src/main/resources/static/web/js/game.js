@@ -833,6 +833,24 @@ var app = new Vue({
                 }
             }
             
+        },
+        
+        
+        currPlayer:function(){
+            if(this.player1.id == this.gpId){
+                return this.player1
+            }else{
+                return this.player2
+            }
+        
+        },
+
+        enemyPlayer:function(){
+            if(this.player1.id != this.gpId){
+                return this.player1
+            }else{
+                return this.player2
+            }
         }
     },
     computed:{
@@ -853,26 +871,6 @@ var app = new Vue({
                 return "Oh no, you lost!"
             }else if(this.gameState == 'TIED'){
                 return 'Tied game! Both win!'
-            }
-        },
-        
-        currPlayer:function(){
-            if(this.datos.gameplayers.length == 1){
-                return this.player1
-            }else{
-                if(this.player1.id == this.gpId){
-                    return this.player1
-                }else{
-                    return this.player2
-                }
-            }
-        },
-
-        enemyPlayer:function(){
-            if(this.player1.id != this.gpId){
-                return this.player1
-            }else{
-                return this.player2
             }
         },
 
@@ -914,6 +912,24 @@ var app = new Vue({
             })
 
             return hits;
+        },
+
+        enemyHitsOnLastTurn: function(){
+            let self = this;
+
+            let hits = this.enemyHits.filter(eh => {
+                if(self.currPlayer.id == self.player1.id){
+                    if(eh.turn == self.turn-1){
+                        return eh
+                    }
+                }else{
+                    if(eh.turn == self.turn){
+                        return eh
+                    }
+                }
+            })
+
+            return hits
         }
     }
     

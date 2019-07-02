@@ -53,14 +53,16 @@
                                 </div>
                                 <div class="modal-body" v-if="gameState == 'PLACING_SHIPS' || gameState == 'OPPONENT_PLACING_SHIPS'">
                                     <span>
-                                        <h5>Hello <b>{{currPlayer.name}}!</b></h5>
+                                        <h5>Hello <b>{{currPlayer().name}}!</b></h5>
                                     </span>
                                     <p>
-                                        Your opponent is {{enemyPlayer.name}}
+                                        Your opponent is {{enemyPlayer().name}}
                                     </p>
                                 </div>
 
                                 <div class="modal-body" v-if="gameStarted">
+                                    <span>{{currPlayer().name}}  (you) vs {{enemyPlayer().name}}
+                                    </span>
                                     <div class="row">
                                         <div id="ally-grid-cont" class="col-lg-6">
                                             <table class="table table-bordered text-center table-sm table-hover table-dark mt-4">
@@ -165,10 +167,10 @@
                                     Nice! You hit {{allyHitsOnLastTurn.length}} busy enemy cell(s)!
                                 </span>
                             </h2>
-                            <h2>It's {{enemyPlayer.name}}'s turn to shoot...</h2>
+                            <h2>It's {{enemyPlayer().name}}'s turn to shoot...</h2>
                         </div>
                         <div class="enemy-grid m-auto bounceIn"></div>
-                        <h3 class="mt-2">{{enemyPlayer.name}}'s grid</h3>
+                        <h3 class="mt-2">{{enemyPlayer().name}}'s grid</h3>
                         <h4>Ships left: {{oppShipsLeftQ}}</span></h4>
                     </div>
                 </div>
