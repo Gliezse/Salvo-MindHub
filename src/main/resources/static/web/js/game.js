@@ -111,7 +111,7 @@ var app = new Vue({
 
                 this.dotsAux = 0
 
-                $(waitingText).html('Wait until '+this.enemyPlayer.name+' places their ships')
+                $(waitingText).html('Wait until '+this.enemyPlayer().name+' places their ships')
                 $(waitingText).attr('class','animated bounceIn')
 
             }
@@ -130,6 +130,10 @@ var app = new Vue({
 
                         $(waitingText).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                             $(waitingText).attr('class', 'animated bounceOutDown')
+
+                            $(waitingText).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                                $(waitingText).attr('class', 'd-none')
+                            })
                         })
                     }
                 }
@@ -173,6 +177,17 @@ var app = new Vue({
                         
                     }
                 })
+            }
+
+            if(this.gameEnded()){
+                if($('#both-grids-cont').hasClass('d-none')){
+
+                }else{
+                    $('.grid-ships').first().removeClass('small-grid')
+                    $('.enemy-grid').first().removeClass('small-grid')
+                    $('#both-grids-cont').addClass('finished-game-grids')
+
+                }
             }
         },
 
