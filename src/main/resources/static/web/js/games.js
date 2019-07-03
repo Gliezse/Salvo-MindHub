@@ -3,11 +3,72 @@ var app = new Vue({
     data:{
         games:[],
         players:[],
-        status: "Not Logged",
         logged: false,
         user: {}
     },
+    created(){
+        this.load()
+    },
     methods:{
+        load: function(){
+            $.get("/api/games")
+            .done(function(datazo){
+                app.games = datazo.games;
+                app.user = datazo.user;
+        
+                //Si hay alguien loggeado hay que indicarselo al vue
+                if(app.user != "guest"){
+                    app.logged = true
+                }
+        
+                init(datazo.games)
+            })
+        },   
+        login: function(){
+            $.post("/api/login", {
+                email: $("#login-email").val(),
+                password: $("#login-pwd").val()
+            })
+            .done(function () {
+                console.log("Logged in")
+                
+                app.logged = true
+
+                //Se vuelven a traer los datos con el jugador loggeado
+                load()
+            })
+            .fail(function () {
+                alert("Incorrect email or password.")
+            })
+        },
+
+        showSignup: function(){
+            $('#login').removeClass('fadeInDown')
+            $('#login').addClass('fadeOutUp')
+
+            $("#login").one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                $('#login').addClass('d-none')
+
+                $('#signup').removeClass('fadeOutUp')
+                $('#signup').addClass('fadeInDown')
+                $('#signup').removeClass('d-none')                
+            })
+        },
+    //TODO: ADD OFF LISTENER
+        showLogin: function(){
+            $('#signup').removeClass('fadeInDown')
+            $('#signup').addClass('fadeOutUp')
+            
+            $("#signup").one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){ 
+                console.log("asd")
+                $('#signup').addClass('d-none')  
+
+                $('#login').removeClass('fadeOutUp')
+                $('#login').addClass('fadeInDown')
+                $('#login').removeClass('d-none')                
+            })
+        },
+
         isAPlayer: function(gpList){
 
             for(var i in gpList){
@@ -41,23 +102,11 @@ var app = new Vue({
     }    
 })
 
-function load(){
-    $.get("/api/games")
-    .done(function(datazo){
-        app.games = datazo.games;
-        app.user = datazo.user;
-
-        //Si hay alguien loggeado hay que indicarselo al vue
-        if(app.user != "guest"){
-            app.status = "Logged"
-            app.logged = true
-        }
-
-        init(datazo.games)
-    })
-}
-
 function init(games){
+
+    if(!app.logged){
+        $('#login').removeClass('d-none')
+    }
 
     var uniquePlayers = []
     
@@ -120,26 +169,6 @@ function init(games){
 }
 
 //Se cargan los datos desde la base de datos por primera vez
-load();
-
-$('#login-form').submit(function () {
-    $.post("/api/login", {
-        email: $("#login-email").val(),
-        password: $("#login-pwd").val()
-    })
-        .done(function () {
-            console.log("Logged in")
-            
-            app.logged = true
-            app.status = "Logged"
-
-            //Se vuelven a traer los datos con el jugador loggeado
-            load()
-        })
-        .fail(function () {
-            alert("Incorrect email or password.")
-        })
-})
 
 $("#signup-form").submit(function(){
     $.post('/api/players',{

@@ -142,9 +142,16 @@
             </div>
 
             <div class="centro">
+                    <div id="game-ended" class="centro d-none animated fadeIn" style="transform: translate(-50%,-140%)">
+                        <h1 id="game-ended-state">{{state}}</h1>
+                        <h3 id="game-ended-subtext"></h3>
+                        <button class="mt-4 btn gen-button animated bounceIn delay-1s waves-effect waves-light" @click="back()">
+                            <h5 class="m-0">Go back to games list</h5>
+                        </button>
+                    </div>
                 <div id="both-grids-cont" class="d-none row">
                     <div id="ally-grid-cont" class="col-6">
-                        <div id="ally-turn-marker" class="centro turn-marker animated fadeIn d-none">
+                        <div id="ally-turn-marker" class="centro turn-marker animated fadeIn d-none text-above-grids">
                             <h2>It's your turn to shoot!</h2>
                             <h2>Mark down two enemy cells and shoot.</h2>
                             <button id="shoot-button" class="btn gen-button animated bounceIn d-none" @click="shootSalvoes()"><h3 class="m-0">Shoot!</h3></button>
@@ -158,203 +165,27 @@
                     
                     <div id="enemy-grid-cont" class="col-6">
                         <div id="enemy-turn-marker" class="centro turn-marker animated fadeIn d-none">
-                            <h2 id="hit-notif">
-                                <span v-if="turn == 1"></span>
-                                <span v-else-if="allyHitsOnLastTurn.length == 0">
-                                    You didn't hit any enemy ships!
-                                </span>
-                                <span v-else>
-                                    Nice! You hit {{allyHitsOnLastTurn.length}} busy enemy cell(s)!
-                                </span>
-                            </h2>
-                            <h2>It's {{enemyPlayer().name}}'s turn to shoot...</h2>
+                            <div class="text-above-grids">
+                                <h2 id="hit-notif">
+                                    <span v-if="turn == 1"></span>
+                                    <span v-else-if="allyHitsOnLastTurn.length == 0">
+                                        You didn't hit any enemy ships!
+                                    </span>
+                                    <span v-else>
+                                        Nice! You hit {{allyHitsOnLastTurn.length}} busy enemy cell(s)!
+                                    </span>
+                                </h2>
+                                <h2>It's {{enemyPlayer().name}}'s turn to shoot...</h2>
+                            </div>
+                            
                         </div>
                         <div class="enemy-grid m-auto bounceIn"></div>
                         <h3 class="mt-2">{{enemyPlayer().name}}'s grid</h3>
                         <h4>Ships left: {{oppShipsLeftQ}}</span></h4>
                     </div>
                 </div>
-               
-            </div>
-            
-
-            
-               
-        </div>
-        <div class="d-none">
-            <div id="grids-cont" class="row d-none animated bounceIn" v-show="gameState != 'WAITING_OPPONENT_TO_JOIN'">
-            
-                <div id="ally-grid-cont" class="col-lg-6 col-md-12 mb-4">
-                    <div class="aux-grid-ships m-auto">
-            
-                    </div>
-            
-                    <table class="table table-bordered text-center table-sm table-hover table-dark mt-4">
-                        <tr>
-                            <th colspan="3">Opponent Hits</th>
-                        </tr>
-                        <tr>
-                            <th>Turn</th>
-                            <th>Ship Hit</th>
-                            <th>Location Hit</th>
-                        </tr>
-                        <tbody v-if="enemyHits.length != 0">
-                            <tr v-for="hit in enemyHits">
-                                <td>{{hit.turn}}</td>
-                                <td>{{hit.shipHit}}</td>
-                                <td>{{hit.locHit}}</td>
-                            </tr>
-                        </tbody>
-                        <tbody v-else>
-                            <tr>
-                                <td colspan="3">Your opponent hasn't hit any of your ships yet!</td>
-                            </tr>
-                        </tbody>
-            
-            
-                    </table>
-            
-                </div>
-            
-                <div class="col-lg-6 col-md-12">
-            
-                    <div class="aux-enemy-grid m-auto">
-                    </div>
-            
-                    <table class="table table-bordered text-center table-sm table-hover table-dark mt-4">
-                        <tr>
-                            <th colspan="3">Player Hits</th>
-                        </tr>
-                        <tr>
-                            <th>Turn</th>
-                            <th>Ship Hit</th>
-                            <th>Location Hit</th>
-                        </tr>
-                        <tbody v-if="playerHits != 0">
-                            <tr v-for="hit in playerHits">
-                                <td>{{hit.turn}}</td>
-                                <td>{{hit.shipHit}}</td>
-                                <td>{{hit.locHit}}</td>
-                            </tr>
-                        </tbody>
-                        <tbody v-else>
-                            <tr>
-                                <td colspan="3">You haven't hit an opponent ship yet!</td>
-                            </tr>
-                        </tbody>
-            
-                    </table>
-                </div>
-            
-            </div>
-        <div id="game-data">
-                <button id="logout" @click="logout()">Logout</button>
-                <button id="back" @click="back()">Back to games list</button>
-                <h1>Game: {{datos.id}}</h1>
-                <div v-if="datos.gameplayers">
-                    <h3>Player 1: <span v-if="player1.name">{{player1.name}} <span v-if="player1.id == gpId">(You)</span></span></h3>
-                    <h3>Player 2: <span v-if="player2.name">{{player2.name}} <span v-if="player2.id == gpId">(You)</span></span><span v-else><i>Waiting...</i></span></h3>
-                </div>
-                
-            </div>
-            
-            <div class="w-100 p-4 status mb-3 mt-3"><h3>{{state}}</h3></div>
-    
-            <button id="addShips" @click="placeShips()" v-if="gameState == 'PLACING_SHIPS'">Add Ships</button>
-        
-            
-            
-            <div id="grids-cont" class="row">
-    
-                <div id="ally-grid-cont" class="col-lg-6 col-md-12 mb-4">
-                    <div class="grid-ships m-auto">
-                        
-                    </div>
-    
-                    <table class="table table-bordered text-center table-sm table-hover table-dark mt-4">
-                        <tr>
-                            <th colspan="3">Opponent Hits</th>
-                        </tr>
-                        <tr>
-                            <th>Turn</th><th>Ship Hit</th><th>Location Hit</th>
-                        </tr>
-                        <tbody v-if="enemyHits.length != 0">
-                            <tr v-for="hit in enemyHits">
-                                <td>{{hit.turn}}</td>
-                                <td>{{hit.shipHit}}</td>
-                                <td>{{hit.locHit}}</td>
-                            </tr>
-                        </tbody>
-                        <tbody v-else>
-                            <tr>
-                                <td colspan="3">Your opponent hasn't hit any of your ships yet!</td>
-                            </tr>
-                        </tbody>
-                        
-                        
-                    </table>
-    
-                </div>
-    
-                <div class="col-lg-6 col-md-12">
-    
-                    <div class="enemy-grid m-auto">
-                    </div>
-    
-                    <table class="table table-bordered text-center table-sm table-hover table-dark mt-4">
-                        <tr>
-                            <th colspan="3">Player Hits</th>
-                        </tr>
-                        <tr>
-                            <th>Turn</th>
-                            <th>Ship Hit</th>
-                            <th>Location Hit</th>
-                        </tr>
-                        <tbody v-if="playerHits != 0">
-                            <tr v-for="hit in playerHits">
-                                <td>{{hit.turn}}</td>
-                                <td>{{hit.shipHit}}</td>
-                                <td>{{hit.locHit}}</td>
-                            </tr>
-                        </tbody>
-                        <tbody v-else>
-                            <tr>
-                                <td colspan="3">You haven't hit an opponent ship yet!</td>
-                            </tr>
-                        </tbody>
-                    
-                    </table>
-                </div>
-                
-            </div>
-            
-            <div id="enemy-grid-cont" v-show="gameStarted()">
-                <div v-if="gameState == 'PLACING_SALVOES'">
-                    <h3>Turn: {{turn}}</h3>
-                    <button @click="shootSalvoes()" v-bind:disabled="selectedCells != 2">Shoot!</button>
-                </div>
-                
-                <h3 v-else>Waiting for your opponent to shoot...</h3>               
-    
-                
-                <div>
-                    <h3>Enemy Ships:</h3>
-                    <span>Carrier: <span v-if="enemyShipsLeft.carrier != 0">{{enemyShipsLeft.carrier}} cells left</span><span v-else>Sunk!</span></span><br>
-                    <span>Battleship: <span v-if="enemyShipsLeft.battleship != 0"> {{enemyShipsLeft.battleship}} cells left</span><span v-else>Sunk!</span></span><br>
-                    <span>Destroyer: <span v-if="enemyShipsLeft.destroyer != 0">{{enemyShipsLeft.destroyer}} cells left</span><span v-else>Sunk!</span></span><br>
-                    <span>Submarine: <span v-if="enemyShipsLeft.submarine != 0">{{enemyShipsLeft.submarine}} cells left</span><span v-else>Sunk!</span></span><br>
-                    <span>Patrol: <span v-if="enemyShipsLeft.patrol != 0">{{enemyShipsLeft.patrol}} cells left</span><span v-else>Sunk!</span></span><br>
-    
-                    <h3>Your Ships:</h3>
-                    <span>Carrier: <span v-if="playerShipsLeft.carrier != 0">{{playerShipsLeft.carrier}} cells left</span><span v-else>Sunk!</span></span><br>
-                    <span>Battleship: <span v-if="playerShipsLeft.battleship != 0"> {{playerShipsLeft.battleship}} cells left</span><span v-else>Sunk!</span></span><br>
-                    <span>Destroyer: <span v-if="playerShipsLeft.destroyer != 0">{{playerShipsLeft.destroyer}} cells left</span><span v-else>Sunk!</span></span><br>
-                    <span>Submarine: <span v-if="playerShipsLeft.submarine != 0">{{playerShipsLeft.submarine}} cells left</span><span v-else>Sunk!</span></span><br>
-                    <span>Patrol: <span v-if="playerShipsLeft.patrol != 0">{{playerShipsLeft.patrol}} cells left</span><span v-else>Sunk!</span></span><br>
-                </div>
-            </div>
-        </div>
-        
+            </div>               
+        </div>        
     </main>
 
 

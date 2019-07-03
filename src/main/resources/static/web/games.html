@@ -5,78 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Salvo duracell</title>
+
+    <script src="https://kit.fontawesome.com/f6a1986fab.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="dist/mdb.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body >
     <main id="app" class="container">
-        <div v-show="!logged">
-                <h4>Login</h4>
-                <form id="login-form" onsubmit="return false">
-                    <label>Email: <input type="text" name="email" id="login-email" required></label><br>
-                    <label>Password: <input type="password" name="password" id="login-pwd" required></label>
-                    <input type="submit" value="Log in">
-                </form>
-                <h4>Or Signup</h4>
-                <form id="signup-form" onsubmit="return false">
-                    <label>Name: <input type="text" name="name" id="signup-name" required></label><br>
-                    <label>Email: <input type="text" name="email" id="signup-email" required></label><br>
-                    <label>Password: <input type="password" name="password" id="signup-pwd" required></label>
-                    <input type="submit" value="Sign up">
-                </form>
+        <div class="centro">
+            <div id="login" class="m-auto shadow bg-white text-dark animated fadeInDown faster d-none">
+                <h1 class="mb-3">Login</h1>
+                <div id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email address:</label> 
+                        <input type="email" class="form-control" name="email" id="login-email" placeholder="Enter mail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-pwd">Password:</label>
+                        <input type="password" class="form-control" name="password" id="login-pwd" placeholder="Enter password" required>
+                    </div>
+                    <button class="btn btn-primary" @click="login()">Log In</button>
+                    <button class="btn btn-secondary" @click="showSignup()">Sign Up</button>                    
+                    <hr class="my-4">
+                    <h6>or</h6>
+                    <button class="btn bg-light" @click="enterAsAGuest()">Enter as a guest</button>                    
+                </div>
+            </div>
+
+            <div id="signup" class="m-auto shadow bg-white text-dark animated fadeInDown faster d-none">
+                <h1 class="mb-3">Sign Up!</h1>
+                <div id="signup-form">
+                    <div class="form-group">
+                        <label for="signup-name">Name:</label>
+                        <input type="text" class="form-control" name="name" id="signup-name" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email address:</label> 
+                        <input type="email" class="form-control" name="email" id="signup-email" placeholder="Enter mail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-pwd">Password:</label>
+                        <input type="password" class="form-control" name="password" id="signup-pwd" placeholder="Enter password" required>
+                    </div>
+                    <button class="btn btn-primary" @click="signup()">Sign Up</button><br>
+                    <span class="small">I already have an account. <a href="#" @click="showLogin()">Log In</a></span>                 
+                </div>
+            </div>
         </div>
         
+    
 
-        <div v-show="logged">
-            <h2>Logged as: <b>{{user.name}}</b></h2>
-            <form id="logout-form" onsubmit="return false">
-                <input type="submit" value="Log out">
-            </form>
-        </div>
-
+    <div class="d-none">
+        <h2>Logged as: <b>{{user.name}}</b></h2>
+        <form id="logout-form" onsubmit="return false">
+            <input type="submit" value="Log out">
+        </form>
         <button v-on:click="createNewGame()">Create new game</button>
+    </div>
 
-       
-        
-        <h1>Games:</h1>
-        <ol>
-            <div v-for="game in games" class="gameDiv">
-                <li class="game">
-                    <b>Game ID:</b> {{game.id}} <br><b>Created:</b> {{game.created}} <br>
-                    <b>Players:</b>
-                    <ul>
-                        <li v-for="(gamePlayer,index) in game.gamePlayers" style="margin-top: 0.6rem;">
-                            <span>Player {{index+1}}: {{gamePlayer.player.name}}</span>
-                        </li>
-                    </ul>
-                </li>
-                <div v-if="logged">
-                    <button v-show="isAPlayer(game.gamePlayers)" v-on:click="enterGame(game.gamePlayers)">Play</button>
-                    <button v-show="!isAPlayer(game.gamePlayers)" v-on:click="joinGame(game.id)">Join Game</button>
+    
+
+    <div id="content" class="d-none">
+            <h1>Games:</h1>
+            <ol>
+                <div v-for="game in games" class="gameDiv">
+                    <li class="game">
+                        <b>Game ID:</b> {{game.id}} <br><b>Created:</b> {{game.created}} <br>
+                        <b>Players:</b>
+                        <ul>
+                            <li v-for="(gamePlayer,index) in game.gamePlayers" style="margin-top: 0.6rem;">
+                                <span>Player {{index+1}}: {{gamePlayer.player.name}}</span>
+                            </li>
+                        </ul>
+                    </li>
+                    <div v-if="logged">
+                        <button v-show="isAPlayer(game.gamePlayers)" v-on:click="enterGame(game.gamePlayers)">Play</button>
+                        <button v-show="!isAPlayer(game.gamePlayers)" v-on:click="joinGame(game.id)">Join Game</button>
+                    </div>
+                    
                 </div>
                 
-            </div>
-            
-        </ol>
-
-        <h1>Score table:</h1>
-
-        <table class="scoreTable">
-            <tr>
-                <th>Player</th>
-                <th>Total</th>
-                <th>Won</th>
-                <th>Lost</th>
-                <th>Tied</th>
-            </tr>
-            <tr v-for="player in players">
-                <td>{{player.name}}</td>
-                <td>{{player.total}}</td>
-                <td>{{player.won}}</td>
-                <td>{{player.lost}}</td>
-                <td>{{player.tied}}</td>
-            </tr>
-            
-        </table>
+            </ol>
+    
+            <h1>Score table:</h1>
+    
+            <table class="scoreTable">
+                <tr>
+                    <th>Player</th>
+                    <th>Total</th>
+                    <th>Won</th>
+                    <th>Lost</th>
+                    <th>Tied</th>
+                </tr>
+                <tr v-for="player in players">
+                    <td>{{player.name}}</td>
+                    <td>{{player.total}}</td>
+                    <td>{{player.won}}</td>
+                    <td>{{player.lost}}</td>
+                    <td>{{player.tied}}</td>
+                </tr>
+                
+            </table>
+        </div>
+        
+        
     </main>
     <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>

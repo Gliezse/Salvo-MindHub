@@ -51,7 +51,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			pRepos.save(p3);
 			pRepos.save(p4);
 
-
+	/*
 
 
 			Game g1 = new Game();
@@ -147,7 +147,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			repository.save(new GamePlayer(g2, p1, shipSet4, salvoSet4));
 			repository.save(new GamePlayer(g3, p4, shipSet5, salvoSet5));
 			repository.save(new GamePlayer(g3, p3, shipSet6, salvoSet6));
-			repository.save(new GamePlayer(g4, p2, shipSet7, salvoSet7));*/
+			repository.save(new GamePlayer(g4, p2, shipSet7, salvoSet7));//
 
 			//Scores
 			scoreRepos.save(new Score(g1, p1,1));
@@ -156,6 +156,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			scoreRepos.save(new Score(g2, p1,0.5));
 			scoreRepos.save(new Score(g3, p4, 0.5));
 			scoreRepos.save(new Score(g3, p3, 0.5));
+			*/
 		};
 	}
 

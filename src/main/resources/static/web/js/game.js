@@ -27,7 +27,8 @@ var app = new Vue({
             patrol:2
         },
         gameState: "",
-        dotsAux: 0
+        dotsAux: 0,
+        firstLoad: true
     },
     //TODO: Add gamestate functions
     created(){
@@ -97,7 +98,7 @@ var app = new Vue({
                         $(initialText).addClass('fadeOut')
                     }else{
                         $(initialText).removeClass('fadeOut')
-                        $(initialText).html("Place your pets as your will! When you are ready click 'Place'")
+                        $(initialText).html("Place your ships as your will! When you are ready click 'Place'")
                         $(initialText).addClass('fadeIn')
                     }
                 })
@@ -122,6 +123,7 @@ var app = new Vue({
                     $("#initial-grid-cont").addClass('fadeOut')
                     
                     $('#initial-grid-cont').html(" ")
+                    this.firstLoad = true
                     this.setAll(this.datos)
                 }else{
                     if(!$(waitingText).hasClass('d-none')){
@@ -180,13 +182,47 @@ var app = new Vue({
             }
 
             if(this.gameEnded()){
-                if($('#both-grids-cont').hasClass('d-none')){
-
+                if ($('#initial-grid-cont').children().length != 0){
+                    $("#initial-grid-cont").addClass('animated')
+                    $("#initial-grid-cont").addClass('fadeOut')
+                    
+                    $('#initial-grid-cont').html(" ")
+                    this.firstLoad = true
+                    this.setAll(this.datos)
                 }else{
-                    $('.grid-ships').first().removeClass('small-grid')
-                    $('.enemy-grid').first().removeClass('small-grid')
-                    $('#both-grids-cont').addClass('finished-game-grids')
+                    if($('#both-grids-cont').hasClass('d-none')){
+                        $('#both-grids-cont').removeClass('d-none')
+                        $('#both-grids-cont').addClass('finished-game-grids')
+                        $('.text-above-grids').addClass('d-none')
 
+                        $('#game-ended-state').html('This game has ended!')
+                        
+                        if(this.gameState == 'WON'){
+                            $('#game-ended-subtext').html("You won! You sunk all your opponent's ships")
+                        }else if(this.gameState == 'LOST'){
+                            $('#game-ended-subtext').html("You lost! Your opponent sunk all your ships")
+                        }else{
+                            $('#game-ended-subtext').html("Tied! Both you and your opponent sunk each other's ships!")
+                        }
+
+                    }else{
+                        $('.text-above-grids').addClass('d-none')
+                        $('.grid-ships').first().removeClass('small-grid')
+                        $('.enemy-grid').first().removeClass('small-grid')
+                        $('#both-grids-cont').addClass('finished-game-grids')
+
+                        if(this.gameState == 'WON'){
+                            $('#game-ended-subtext').html("You sunk all your opponent's ships")
+                        }else if(this.gameState == 'LOST'){
+                            $('#game-ended-subtext').html("Your opponent sunk all your ships")
+                        }else{
+                            $('#game-ended-subtext').html("Both you and your opponent sunk each other's ships!")
+                        }
+                    }
+
+                    $('.go-back').addClass('animated')
+                    $('.go-back').addClass('bounceOut')
+                    $('#game-ended').removeClass('d-none')
                 }
             }
         },
@@ -447,7 +483,28 @@ var app = new Vue({
                 if(self.gameState == 'PLACING_SHIPS'){
                     classes += " fadeIn delay-3s"
                 }else{
-                    classes += " bounceIn delay-1s"
+                    for(let playerShip in self.playerShipsLeft){
+                        if(playerShip == ship.type.toLowerCase()){
+                            if(self.playerShipsLeft[playerShip] != 0){
+                                if(self.firstLoad){
+                                    classes += " bounceIn delay-1s"
+                                }else{
+                                    classes += " bounce delay-1s fast"
+                                }
+                            }else{
+                                if(self.firstLoad){
+                                    classes += " fadeIn delay-1s"
+                                }else{
+                                    classes += " flash delay-1s faster"
+                                }
+                            }
+                            
+                        }
+                    }
+                    
+                    
+                
+                    
                 }
 
 
@@ -455,6 +512,9 @@ var app = new Vue({
                     x, y, w, h); //element,x,y,width,height
 
             })
+            if(self.firstLoad){
+                self.firstLoad = false
+            }
 
             $(".ship2").dblclick(function () {
                 if (app.datos.ships.length != 0) {
