@@ -293,12 +293,6 @@ body{
     cursor: -webkit-grabbing;
 }
 
-
-.container{
-    width: 80vw;
-    margin: auto;
-}
-
 .gameDiv{
     display: block;
     margin: 20px;
@@ -376,6 +370,7 @@ body{
 }
 
 #login, #signup{
+    z-index: 100;
     width: 30rem;
     height: auto;
     padding: 2rem;

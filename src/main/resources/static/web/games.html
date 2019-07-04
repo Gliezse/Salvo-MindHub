@@ -32,7 +32,7 @@
                     <button class="btn btn-secondary" @click="showSignup()">Sign Up</button>                    
                     <hr class="my-4">
                     <h6>or</h6>
-                    <button class="btn bg-light" @click="enterAsAGuest()">Enter as a guest</button>                    
+                    <button class="btn bg-light" @click="showGames()">Enter as a guest</button>                    
                 </div>
             </div>
 
@@ -51,48 +51,60 @@
                         <label for="signup-pwd">Password:</label>
                         <input type="password" class="form-control" name="password" id="signup-pwd" placeholder="Enter password" required>
                     </div>
+                    <div class="form-group">
+                        <label for="signup-pwd">Confirm password:</label>
+                        <input type="password" class="form-control" name="con-password" id="signup-pwd-conf" placeholder="Confirm password" required>
+                    </div>
                     <button class="btn btn-primary" @click="signup()">Sign Up</button><br>
                     <span class="small">I already have an account. <a href="#" @click="showLogin()">Log In</a></span>                 
                 </div>
             </div>
         </div>
-        
-    
 
-    <div class="d-none">
-        <h2>Logged as: <b>{{user.name}}</b></h2>
-        <form id="logout-form" onsubmit="return false">
-            <input type="submit" value="Log out">
-        </form>
-        <button v-on:click="createNewGame()">Create new game</button>
-    </div>
-
-    
-
-    <div id="content" class="d-none">
+        <div id="content" class="animated fadeIn faster d-none">
+            <div v-if="logged">
+                <h3>You are logged as: {{user.name}}</h3>
+                <button @click="logout()" class="btn">Logout</button>
+                <button @click="createNewGame()" class="btn">Create new game</button>
+            </div>
+            <div v-else>
+                <h3>You are logged as a guest</h3>
+                <button @click="logout()" class="btn">Log in</button>
+            </div>
             <h1>Games:</h1>
-            <ol>
-                <div v-for="game in games" class="gameDiv">
-                    <li class="game">
-                        <b>Game ID:</b> {{game.id}} <br><b>Created:</b> {{game.created}} <br>
-                        <b>Players:</b>
-                        <ul>
-                            <li v-for="(gamePlayer,index) in game.gamePlayers" style="margin-top: 0.6rem;">
-                                <span>Player {{index+1}}: {{gamePlayer.player.name}}</span>
-                            </li>
-                        </ul>
-                    </li>
-                    <div v-if="logged">
-                        <button v-show="isAPlayer(game.gamePlayers)" v-on:click="enterGame(game.gamePlayers)">Play</button>
-                        <button v-show="!isAPlayer(game.gamePlayers)" v-on:click="joinGame(game.id)">Join Game</button>
+            <h4>Filters:</h4>
+            <button @click="setFilter('all')" class="btn" v-bind:class="{'bg-primary' : filtro == 'all'}">All games</button>
+            <button @click="setFilter('player')" class="btn" v-bind:class="{'bg-primary' : filtro == 'player'}" v-if="logged">My games</button>
+            <button @click="setFilter('joinable')" class="btn" v-bind:class="{'bg-primary' : filtro == 'joinable'}" v-if="logged">Joinable games</button>
+            <button @click="setFilter('finished')" class="btn" v-bind:class="{'bg-primary' : filtro == 'finished'}">Finished games</button>
+
+            <div id="games" class="animated">
+                <ol>
+                    <div v-for="game in filteredGames" class="gameDiv">
+                        <li class="game">
+                            <b>Game ID:</b> {{game.id}} <br><b>Created:</b> {{game.created}} <br>
+                            <b>Players:</b>
+                            <ul>
+                                <li v-for="(gamePlayer,index) in game.gamePlayers" style="margin-top: 0.6rem;">
+                                    <span>Player {{index+1}}: {{gamePlayer.player.name}}</span>
+                                </li>
+                            </ul>
+                        </li>
+                        <div v-if="logged">
+                            <button v-show="isAPlayer(game.gamePlayers)" v-on:click="enterGame(game.gamePlayers)">Play</button>
+                            <button v-show="!isAPlayer(game.gamePlayers)" v-on:click="joinGame(game.id)">Join Game</button>
+                        </div>
+                        
                     </div>
-                    
+                </ol>
+                <div v-if="filteredGames.length < 1">
+                    <h3>There are no games to show that match with the specified filters</h3>
                 </div>
-                
-            </ol>
-    
+            </div>
+            
+            <!--
             <h1>Score table:</h1>
-    
+
             <table class="scoreTable">
                 <tr>
                     <th>Player</th>
@@ -110,8 +122,9 @@
                 </tr>
                 
             </table>
+            -->
         </div>
-        
+    
         
     </main>
     <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
