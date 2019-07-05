@@ -92,8 +92,8 @@ public class Player {
     }
 
     @JsonIgnore
-    public Score getScore(Game game){
-        return getScores().stream().filter(sc -> sc.getGame() == game).findFirst().orElse(null);
+    public Score getScore(Long id){
+        return getScores().stream().filter(sc -> sc.getGame().getId() == id).findFirst().orElse(null);
     }
 
     @JsonIgnore

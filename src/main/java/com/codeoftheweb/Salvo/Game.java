@@ -82,7 +82,20 @@ public class Game {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
         dto.put("created", this.getDate().format(formatter));
         dto.put("gamePlayers", this.getgPlayers().stream().map(sub -> sub.toDTO()).collect(toList()));
+        dto.put("gameState", this.getGameState());
         return dto;
+    }
+
+    public String getGameState(){
+        Enum<GameState> gstate = this.getgPlayers().stream().findFirst().get().getGameState();
+
+        if(gstate == GameState.WAITING_OPPONENT_TO_JOIN){
+            return "joinable";
+        }else if(gstate == GameState.WON || gstate == GameState.LOST || gstate == GameState.TIED){
+            return "finished";
+        }else{
+            return "in course";
+        }
     }
 
 }

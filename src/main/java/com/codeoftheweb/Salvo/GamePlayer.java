@@ -123,7 +123,7 @@ public class GamePlayer {
     }
 
     public Score getScore(){
-        return getPlayer().getScore(this.getGame());
+        return getPlayer().getScore(this.getGame().getId());
     }
 
     public Set<Map<String,Object>> getHits(){
@@ -276,7 +276,7 @@ public class GamePlayer {
         dtoAUX.remove("scores");
 
         dto.put("player", dtoAUX);
-        dto.put("score", getPlayer().getScore(this.getGame()));
+        dto.put("score", getPlayer().getScore(this.getGame().getId()));
 
         return dto;
     }
