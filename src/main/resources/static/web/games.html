@@ -78,8 +78,63 @@
             <button @click="setFilter('joinable')" class="btn" v-bind:class="{'bg-primary' : filtro == 'joinable'}" v-if="logged">Joinable games</button>
             <button @click="setFilter('finished')" class="btn" v-bind:class="{'bg-primary' : filtro == 'finished'}">Finished games</button>
 
-            <div id="games" class="animated">
-                <ol>
+            <div id="games" class="animated mt-4">
+                <div v-for="game in filteredGames">
+
+                    <div class="gameDiv row mb-3" v-bind:class="{'border' : isAPlayer(game.gamePlayers)}">
+                        <div class="col-2 bg-primary text-right p-3">
+                            <h5>{{game.createdDate}}</h5>
+                            <h6>{{game.createdTime}}</h6>
+                            <h5 class="small">ID: {{game.id}}</h5>
+                        </div>
+                        <div class="col-8 bg-secondary text-center p-3">
+                            <div v-if="game.gameState == 'joinable' && game.player1" class="row">
+                                <div class="col-12">
+                                    <h2>Waiting for an opponent!</h2>
+                                    <h5>{{game.player1.player.name}}'s game</h5>
+                                </div>
+                            </div>
+
+                            <div v-if="game.gameState == 'in course' && game.player1.player && game.player2" class="row">
+                                <div class="col-12">
+                                    <h1>{{game.player1.player.name}} VS {{game.player2.player.name}}</h1>
+                                    <h5>Game on course</h5>
+                                </div>
+                            </div>
+
+                            <div v-if="game.gameState == 'finished'" class="row">
+                                <div class="col-8 text-left">
+                                    <h2>Finished game!</h2>
+                                    <h4>{{game.player1.player.name}} VS {{game.player2.player.name}}</h4>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <div v-if="game.player1.score.score == game.player2.score.score">
+                                        <h2>Tied!</h2>
+                                    </div>
+                                    <div v-else-if="game.player1.score.score == 1">
+                                        <h3>Winner: {{game.player1.player.name}}</h3>
+                                    </div>
+                                    <div v-else>
+                                        <h3>Winner: {{game.player2.player.name}}</h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-2 bg-warning p-3" v-if="game.gameState == 'joinable' && logged">
+                            <div v-if="isAPlayer(game.gamePlayers)">
+                                <button class="btn" @click='enterGame(game.gamePlayers)'>Enter game (Waiting Opponent)</button>
+                            </div>
+                            <div v-else>
+                                <button class="btn" @click="joinGame(game.id)">Join</button>
+                            </div>
+                        </div>
+                        <div class="col-2 bg-danger p-3" v-if="game.gameState == 'in course' && isAPlayer(game.gamePlayers)">
+                            <button class="btn" @click="enterGame(game.gamePlayers)">Enter back</button>
+                        </div>
+                    </div>
+                </div>
+                <!--<ol>
                     <div v-for="game in filteredGames" class="gameDiv">
                         <li class="game">
                             <b>Game ID:</b> {{game.id}} <br><b>Created:</b> {{game.created}} <br>
@@ -96,7 +151,7 @@
                         </div>
                         
                     </div>
-                </ol>
+                </ol>-->
                 <div v-if="filteredGames.length < 1">
                     <h3>There are no games to show that match with the specified filters</h3>
                 </div>
@@ -127,6 +182,9 @@
     
         
     </main>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="js/games.js"></script>

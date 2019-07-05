@@ -14,6 +14,39 @@ var app = new Vue({
         load: function(){
             $.get("/api/games")
             .done(function(datazo){
+
+                datazo.games.forEach(game=>{
+                    let date = game.created.slice(0,10)
+                    let time = game.created.slice(11)
+
+                    date = date.replace(/-/g,'/')
+
+                    game.createdDate = date
+                    game.createdTime = time
+
+
+
+                    if(game.gameState == 'joinable'){
+                        game.player1 = game.gamePlayers[0]
+                    }else{
+                        if(game.gamePlayers[0].id < game.gamePlayers[1].id){
+                            game.player1 = game.gamePlayers[0]
+                            game.player2 = game.gamePlayers[1]
+                        }else{
+                            game.player1 = game.gamePlayers[1]
+                            game.player2 = game.gamePlayers[0]    
+                        }
+                    }
+                })
+
+                datazo.games.sort(function(x,y){
+                    if(x.id < y.id)
+                        return 1
+                    if(x.id > y.id)
+                        return -1
+                })
+
+
                 app.games = datazo.games;
                 app.user = datazo.user;
         
@@ -172,9 +205,7 @@ var app = new Vue({
         },
         enterGame: function(gpList){
             for(var i in gpList){
-                console.log("loop")
                 if(gpList[i].player.id == this.user.id){
-                    console.log("/web/game.html?gp="+gpList[i].id)
                     window.location.href = "/web/game.html?gp="+gpList[i].id
                 }
             }
@@ -225,9 +256,10 @@ var app = new Vue({
         },
 
         joinableGames: function(){
+            let self = this
             return this.games.filter( game =>{
                 if(game.gamePlayers.length == 1){
-                    if(game.gamePlayers[0].player.id != this.user.id){
+                    if(game.gameState == "joinable" && !self.isAPlayer(game.gamePlayers)){
                         return true
                     }
                 }
@@ -238,7 +270,7 @@ var app = new Vue({
 
         finishedGames: function(){
             return this.games.filter( game => {
-                if(game.gamePlayers[0].score != null){
+                if(game.gameState == 'finished'){
                     return true
                 }
             })

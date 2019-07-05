@@ -64,6 +64,14 @@ var app = new Vue({
             this.setHits()
             this.setGrids()
 
+            
+            $('#info').addClass('tada')
+            $('#info').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                $('#info').removeClass('tada')
+            })
+
+
+
             let waitingText = $("#waiting-div h1").get();
             let initialText = $('#initial-text').get()
 
@@ -81,7 +89,7 @@ var app = new Vue({
                     $(waitingText).html("Opponent found!")
                     $(waitingText).addClass('tada')
 
-                    $(waitingText).one('animationend', function(){
+                    $(waitingText).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
                         if($(waitingText).hasClass('tada')){
                             $(waitingText).addClass('bounceOutDown') 
                             $(waitingText).removeClass('tada')
@@ -91,7 +99,7 @@ var app = new Vue({
                     });
                 }
 
-                $(initialText).one('animationend', function(){
+                $(initialText).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
                     if($(initialText).hasClass('fadeIn')){
                         $(initialText).removeClass('delay-1s')
                         $(initialText).removeClass('fadeIn')
@@ -130,10 +138,10 @@ var app = new Vue({
                         $(waitingText).html("Done! <br> Game begins!")
                         $(waitingText).attr('class', 'animated tada')
 
-                        $(waitingText).one('animationend', function () {
+                        $(waitingText).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                             $(waitingText).attr('class', 'animated bounceOutDown')
 
-                            $(waitingText).one('animationend', function () {
+                            $(waitingText).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                                 $(waitingText).attr('class', 'd-none')
                             })
                         })
@@ -142,7 +150,7 @@ var app = new Vue({
 
                 $('#both-grids-cont').removeClass('d-none')
 
-                $('.ship').first().one('animationend', function () {
+                $('.ship').first().one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                     if(self.gameState == 'PLACING_SALVOES'){
 
                         $('#shoot-button').addClass('d-none')
@@ -780,7 +788,7 @@ var app = new Vue({
                 $("#initial-grid-cont").addClass('animated')
                 $("#initial-grid-cont").addClass('fadeOut')
 
-                $("#initial-grid-cont").one('animationend', function(){
+                $("#initial-grid-cont").one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
                     $('#initial-grid-cont').html(" ")
                     app.load()
                 })

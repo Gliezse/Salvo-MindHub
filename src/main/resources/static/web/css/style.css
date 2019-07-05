@@ -294,10 +294,7 @@ body{
 }
 
 .gameDiv{
-    display: block;
-    margin: 20px;
-    padding: auto;
-    
+    max-height: 8rem;
 }
 
 .game{
