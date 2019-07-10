@@ -1,12 +1,30 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins');
 
 body{
-    background-color: #1e2225;
     font-family: 'Poppins', sans-serif;
-    color: white;
-
-    
 }
+
+.bg-vanilla{
+    background-color: #fff3b7;
+}
+
+.bg-vanilla-primary{
+    background-color: #ffe45c;
+}
+
+.bg-vanilla-secondary{
+    background-color: #FFFAE2;
+}
+
+.btn-vanilla-primary{
+    background-color: #ffe45c;
+}
+
+.button-place button{
+    width: 100%;
+    height: 100%
+}
+
 
 #game-body{
     -webkit-user-select: none; /* Safari */        
@@ -81,8 +99,16 @@ body{
     cursor: pointer;
 }
 
-.modal-footer button{
+/*.modal-footer button{
     background-color: rgb(241, 175, 149);
+}*/
+
+.gameDiv{
+    padding: 10px 0;
+}
+
+.separator-right{
+    border-right: solid 1px black
 }
 
 @keyframes bgcolor {
@@ -293,8 +319,19 @@ body{
     cursor: -webkit-grabbing;
 }
 
-.gameDiv{
-    max-height: 8rem;
+#games{
+    padding: 2rem
+}
+
+.dropdown-menu>a:hover{
+    background-color: #ffefa1
+}
+
+.view-scores-btn-cont{
+    z-index: 100;
+    position: fixed;
+    bottom: 10px;
+    right: 20px;
 }
 
 .game{
@@ -373,4 +410,14 @@ body{
     padding: 2rem;
 
     border-radius: 60px;
+}
+
+.team-select-item-cont{
+    background-color: cornsilk;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+.selected-team{
+    border: solid 2px black
 }

@@ -5,7 +5,12 @@ var app = new Vue({
         players:[],
         logged: false,
         user: {},
-        filtro: 'all'
+        filtros:{
+            main: 'all',
+            page: 1,
+            gamesPerPage: 10
+        }
+        //TODO: Add pages
     },
     created(){
         this.load()
@@ -211,9 +216,40 @@ var app = new Vue({
             }
         },
         createNewGame: function(){
-            $.post("/api/games")
+            if($('.selected-team').first().attr('class') == undefined){
+                return alert('Pick a team first!')
+            }
+
+            $.post("/api/games",{
+                team: $('.selected-team').data('team')
+                }
+            )
             .done(function(response){window.location.href = "/web/game.html?gp="+response.gpid})
             .fail(function(){(alert("You must be logged in in order to create a new game!"))})
+        },
+        joinGamePopup: function (game) {
+            let self = this
+
+            let gameId = game.id
+
+            let enemyTeam = game.gamePlayers[0].team
+
+            if(enemyTeam == 'CATS'){
+                $('#team-span').html('DOGS')
+            }else{
+                $('#team-span').html('CATS')
+            }
+
+
+            $('#join-game-btn').one('click', function () {  
+                self.joinGame(gameId)
+            })
+
+            $('#joinConfirmModal').bind('hidden.bs.modal', function () {
+                $('#join-game-btn').off()
+            });
+
+            $('#joinConfirmModal').modal('show')
         },
         joinGame: function(gId){
             $.post("/api/game/"+gId+"/players")
@@ -225,21 +261,30 @@ var app = new Vue({
             $('#games').removeClass('fadeIn')
             $('#games').addClass('fadeOut faster')
             $('#games').one('animationend', function(){
-                self.filtro = param
+                self.filtros.main = param
                 $('#games').addClass('fadeIn')
                 $('#games').removeClass('fadeOut')
             })
+        },
+        selectTeam: function(team){
+            if(team == 'dogs'){
+                $('.dog-team-cont').addClass('selected-team')
+                $('.cat-team-cont').removeClass('selected-team')
+            }else{
+                $('.dog-team-cont').removeClass('selected-team')
+                $('.cat-team-cont').addClass('selected-team')
+            }
         }
     },
     computed:{
         filteredGames: function(){
-            if(this.filtro == 'all'){
+            if(this.filtros.main == 'all'){
                 return this.games
-            }else if(this.filtro == 'player'){
+            }else if(this.filtros.main == 'player'){
                 return this.playerGames
-            }else if(this.filtro == 'joinable'){
+            }else if(this.filtros.main == 'joinable'){
                 return this.joinableGames
-            }else if(this.filtro == 'finished'){
+            }else if(this.filtros.main == 'finished'){
                 return this.finishedGames
             }
         },
@@ -274,6 +319,24 @@ var app = new Vue({
                     return true
                 }
             })
+        },
+
+        rankedPlayers: function(){
+
+            let players = this.players.filter( player => {
+                if ( player.total != 0 ) 
+                    return true
+            })
+
+            players.sort(function(x,y){
+                if(x.won > y.won)
+                    return 1
+                else if(x.won < y.won)
+                    return -1
+                return 0
+            })
+
+            return players
         }
     }    
 })
