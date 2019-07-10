@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="dist/gridstack-extra.css" />
     <link rel="stylesheet" href="css/style.css" />
 </head>
-<body id="game-body">
+<body id="game-body" class="bg-vanilla-secondary">
     <main id="app">
         <div class="giant-div">
             <button class="btn go-back" @click="back()">
@@ -44,6 +44,7 @@
                                 <div class="modal-body" v-if="gameState == 'WAITING_OPPONENT_TO_JOIN'">
                                     <span>
                                         <h5>Hello <b>{{player1.name}}!</b></h5>
+                                        <h6>You are playing as {{team}} <img :src="'img/teams/'+team+'.png'" alt="team logo" style="width: 1rem"></h6>
                                     </span>
                                     <p>
                                         You are waiting for an opponent to join your game.

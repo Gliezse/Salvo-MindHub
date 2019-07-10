@@ -25,6 +25,10 @@ body{
     height: 100%
 }
 
+.pt-10{
+    margin-top: 4.5rem;
+}
+
 
 #game-body{
     -webkit-user-select: none; /* Safari */        
@@ -34,24 +38,67 @@ body{
 
     overflow: hidden;
 
-    -webkit-animation: heartbeat 2s infinite;
-    animation: heartbeat 2s infinite;
+}
+
+.to-cats{
+    -webkit-animation: to-cats-anim 1s;
+    animation: to-cats-anim 1s;
+}
+
+@keyframes to-cats-anim{
+    0%{
+        background-color: #FFFAE2;
+    }
+    100%{
+        background-color: #ffb27e;
+    }
+}
+
+@keyframes to-dogs-anim{
+    0%{
+        background-color: #FFFAE2;
+    }
+    100%{
+        background-color: #fff3b7;
+    }
+}
+
+.team-cats{
+    -webkit-animation: bg-cats 2s infinite;
+    animation: bg-cats 2s infinite;
     animation-direction: alternate;
 }
 
-@keyframes heartbeat{
+.team-dogs{
+    -webkit-animation: bg-dogs 2s infinite;
+    animation: bg-dogs 2s infinite;
+    animation-direction: alternate;
+}
 
+@keyframes bg-dogs{
     0%{
-        background-color: #1e2225;
+        background-color: #fff3b7;
     }
 
     50%{
-        background-color: #2e3438;
+        background-color: #ffe667; 
     }
 
     100%{
-        background-color: #1e2225;
+        background-color: #fff3b7;
+    }    
+}
+
+@keyframes bg-cats{
+
+    0%{
+        background-color: #ffb27e;
     }
+
+    100%{
+        background-color: #f49778;
+    }   
+
 }
 
 .centro{

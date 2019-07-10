@@ -28,7 +28,8 @@ var app = new Vue({
         },
         gameState: "",
         dotsAux: 0,
-        firstLoad: true
+        firstLoad: true,
+        team: 'none'
     },
     //TODO: Add gamestate functions
     created(){
@@ -63,6 +64,28 @@ var app = new Vue({
             this.setTurn()
             this.setHits()
             this.setGrids()
+
+            let body = $('#game-body')
+            if(!body.hasClass('team-cats') || !body.hasClass('team-dogs')){
+                if(this.team == 'CATS'){
+                    body.addClass('to-cats')
+
+                    body.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                        body.removeClass('to-cats')
+                        body.addClass('team-cats')
+
+                    })
+
+                }else{
+                    body.addClass('to-dogs')
+
+                    body.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                        body.removeClass('to-dogs')
+                        body.addClass('team-dogs')
+
+                    })
+                }
+            }
 
             
             $('#info').addClass('tada')
@@ -299,15 +322,22 @@ var app = new Vue({
             if (this.datos.gameplayers.length == 1) {
                 this.player1.name = this.datos.gameplayers[0].player.name
                 this.player1.id = this.datos.gameplayers[0].id
+
+                this.team = this.datos.gameplayers[0].team
             } else {
                 p1n = this.datos.gameplayers[0].player.name
                 p2n = this.datos.gameplayers[1].player.name
                 p1id = this.datos.gameplayers[0].id
                 p2id = this.datos.gameplayers[1].id
+                
+                p1team = this.datos.gameplayers[0].team
+                p2team = this.datos.gameplayers[1].team
+                 
 
                 if (parseInt(this.datos.gameplayers[0].id) < parseInt(this.datos.gameplayers[1].id)) {
                     this.player1.name = p1n
                     this.player2.name = p2n
+                    this.team = p1team
                     this.player1.id = p1id
                     this.player2.id = p2id                
                 }else{
@@ -315,6 +345,7 @@ var app = new Vue({
                     this.player2.name = p1n
                     this.player1.id = p2id
                     this.player2.id = p1id
+                    this.team = p2team
                 }
             }
         },
