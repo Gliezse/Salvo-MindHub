@@ -95,15 +95,25 @@ public class SalvoController {
 
     //POST MAPPINGS
     @PostMapping("/games")
-    public ResponseEntity<Map<String,Object>> createGame(Authentication auth){
+    public ResponseEntity<Map<String,Object>> createGame(Authentication auth, @RequestParam String team){
         //Auth Check
         if(auth==null || auth instanceof AnonymousAuthenticationToken){
             return new ResponseEntity<>(makeMap(ResponseMessages.KEY_ERROR, ResponseMessages.ERR_UNAUTHORIZED), HttpStatus.UNAUTHORIZED);
         }
 
+        Set<String> teams = new HashSet<>();
+
+        for(Team auxTeam : Team.values()){
+            teams.add(auxTeam.name());
+        }
+
+        if (!teams.contains(team)) {
+            return new ResponseEntity<>(makeMap(ResponseMessages.KEY_ERROR, ResponseMessages.ERR_FORBIDDEN), HttpStatus.FORBIDDEN);
+        }
+
         Player player = playerRepository.findByEmail(auth.getName());
         Game game = new Game();
-        game.addGamePlayer(new GamePlayer(game,player));
+        game.addGamePlayer(new GamePlayer(game,player,team));
         gameRepository.save(game);
 
         Map<String, Object> dto = new LinkedHashMap<>();
@@ -258,7 +268,15 @@ public class SalvoController {
             return new ResponseEntity<>(makeMap(ResponseMessages.KEY_ERROR, ResponseMessages.ERR_JOINING_OWN_GAME), HttpStatus.FORBIDDEN);
         }
 
-        GamePlayer gamePlayer = gamePlayerRepository.save(new GamePlayer(game.get(), player));
+        String team;
+
+        if(game.get().getgPlayers().stream().findFirst().get().getTeam().equals("CATS")){
+            team = "DOGS";
+        }else{
+            team = "CATS";
+        }
+
+        GamePlayer gamePlayer = gamePlayerRepository.save(new GamePlayer(game.get(), player, team));
 
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("gpid", gamePlayer.getId());

@@ -39,12 +39,21 @@ public class GamePlayer {
 
     private LocalDateTime joined;
 
+    private String team;
+
 
     public GamePlayer(){}
 
     public GamePlayer(Game game, Player player){
         this.game = game;
         this.player = player;
+        this.joined = LocalDateTime.now();
+    }
+
+    public GamePlayer(Game game, Player player, String team){
+        this.game = game;
+        this.player = player;
+        this.team = team;
         this.joined = LocalDateTime.now();
     }
 
@@ -124,6 +133,14 @@ public class GamePlayer {
 
     public Score getScore(){
         return getPlayer().getScore(this.getGame().getId());
+    }
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
     }
 
     public Set<Map<String,Object>> getHits(){
@@ -274,8 +291,9 @@ public class GamePlayer {
 
         Map<String,Object> dtoAUX = getPlayer().toDTO();
         dtoAUX.remove("scores");
-
         dto.put("player", dtoAUX);
+
+        dto.put("team", this.getTeam());
         dto.put("score", getPlayer().getScore(this.getGame().getId()));
 
         return dto;
