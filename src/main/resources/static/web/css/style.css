@@ -20,6 +20,14 @@ body{
     background-color: #ffe45c;
 }
 
+.bg-darkpink{
+    background-color: #610928;
+}
+
+.bg-darkpink-primary{
+    background-color: #d62060;
+}
+
 .button-place button{
     width: 100%;
     height: 100%

@@ -28,8 +28,8 @@ var app = new Vue({
         },
         gameState: "",
         dotsAux: 0,
-        firstLoad: true,
-        team: 'none'
+        firstLoad: true
+        //uncomment team: 'none'
     },
     //TODO: Add gamestate functions
     created(){
@@ -65,6 +65,8 @@ var app = new Vue({
             this.setHits()
             this.setGrids()
 
+            //uncomment
+            /*
             let body = $('#game-body')
             if(!body.hasClass('team-cats') || !body.hasClass('team-dogs')){
                 if(this.team == 'CATS'){
@@ -86,6 +88,7 @@ var app = new Vue({
                     })
                 }
             }
+            */
 
             
             $('#info').addClass('tada')
@@ -166,12 +169,14 @@ var app = new Vue({
 
                             $(waitingText).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                                 $(waitingText).attr('class', 'd-none')
+                                $('#both-grids-cont').removeClass('d-none')
                             })
                         })
+                    }else{
+                        $('#both-grids-cont').removeClass('d-none')
                     }
                 }
 
-                $('#both-grids-cont').removeClass('d-none')
 
                 $('.ship').first().one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                     if(self.gameState == 'PLACING_SALVOES'){
@@ -323,30 +328,43 @@ var app = new Vue({
                 this.player1.name = this.datos.gameplayers[0].player.name
                 this.player1.id = this.datos.gameplayers[0].id
 
-                this.team = this.datos.gameplayers[0].team
+                //uncomment this.team = this.datos.gameplayers[0].team
             } else {
                 p1n = this.datos.gameplayers[0].player.name
                 p2n = this.datos.gameplayers[1].player.name
                 p1id = this.datos.gameplayers[0].id
                 p2id = this.datos.gameplayers[1].id
                 
-                p1team = this.datos.gameplayers[0].team
-                p2team = this.datos.gameplayers[1].team
+                //uncomment p1team = this.datos.gameplayers[0].team
+                //uncomment p2team = this.datos.gameplayers[1].team
                  
 
-                if (parseInt(this.datos.gameplayers[0].id) < parseInt(this.datos.gameplayers[1].id)) {
+                if (p1id < p2id) {
                     this.player1.name = p1n
-                    this.player2.name = p2n
-                    this.team = p1team
                     this.player1.id = p1id
-                    this.player2.id = p2id                
+                    //uncomment this.player1.team = p1team
+
+                    this.player2.name = p2n
+                    this.player2.id = p2id    
+                    //uncomment this.player2.team = p2team
                 }else{
                     this.player1.name = p2n
-                    this.player2.name = p1n
                     this.player1.id = p2id
+                    //uncomment this.player1.team = p2team
+
+                    this.player2.name = p1n
                     this.player2.id = p1id
-                    this.team = p2team
+                    //uncomment this.player2.team = p1team
                 }
+                /*
+                uncomment
+                if(this.player1.id == this.gpId){
+                    this.team = this.player1.team
+                }else{
+                    this.team = this.player2.team
+                }
+                */
+
             }
         },
 
@@ -395,13 +413,13 @@ var app = new Vue({
             this.grid = $('#grid').data('gridstack');
             this.enemyGrid = $('#enemy-grid').data('gridstack')
 
-            this.loadShips(ships, this.grid)
-
 
             this.createGrid(11, $(".grid-ships"), 1)
             this.createGrid(11, $(".enemy-grid"), 2)
 
             this.loadSalvoes(salvoes, ships)
+            this.loadShips(ships, this.grid)
+
         },
 
         createGrid: function (size, element, gridN) {
@@ -1048,3 +1066,5 @@ var app = new Vue({
     }
     
 })
+
+//TODO: GET LOS DIBUJOS DE LOS PERROS Y DESCOMENTAR TODO LO QUE EMPIEZA CON uncomment

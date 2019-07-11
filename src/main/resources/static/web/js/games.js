@@ -78,8 +78,7 @@ var app = new Vue({
                 console.log("Logged in")
                 
                 self.showGames();
-                self.logged = true
-
+                self.load()
                 //Se vuelven a traer los datos con el jugador loggeado
             })
             .fail(function () {
@@ -192,7 +191,6 @@ var app = new Vue({
                 content.removeClass('fadeOut')
                 content.addClass('fadeIn')
                 content.removeClass('d-none')
-                self.load()
             })
         },
 
@@ -216,6 +214,12 @@ var app = new Vue({
             }
         },
         createNewGame: function(){
+            $.post("/api/games")
+            .done(function(response){window.location.href = "/web/game.html?gp="+response.gpid})
+            .fail(function(){(alert("You must be logged in in order to create a new game!"))})
+        },
+        /* uncomment
+        createNewGameWithTeam: function(){
             if($('.selected-team').first().attr('class') == undefined){
                 return alert('Pick a team first!')
             }
@@ -226,7 +230,23 @@ var app = new Vue({
             )
             .done(function(response){window.location.href = "/web/game.html?gp="+response.gpid})
             .fail(function(){(alert("You must be logged in in order to create a new game!"))})
+        },*/
+        joinGamePopup: function () {
+            let self = this
+
+            let gameId = game.id
+
+            $('#join-game-btn').one('click', function () {  
+                self.joinGame(gameId)
+            })
+
+            $('#joinConfirmModal').bind('hidden.bs.modal', function () {
+                $('#join-game-btn').off()
+            });
+
+            $('#joinConfirmModal').modal('show')
         },
+        /* uncomment
         joinGamePopup: function (game) {
             let self = this
 
@@ -250,7 +270,7 @@ var app = new Vue({
             });
 
             $('#joinConfirmModal').modal('show')
-        },
+        },*/
         joinGame: function(gId){
             $.post("/api/game/"+gId+"/players")
             .done(function(response){window.location.href = "/web/game.html?gp="+response.gpid})
@@ -265,7 +285,8 @@ var app = new Vue({
                 $('#games').addClass('fadeIn')
                 $('#games').removeClass('fadeOut')
             })
-        },
+        }/* uncomment
+        ,
         selectTeam: function(team){
             if(team == 'dogs'){
                 $('.dog-team-cont').addClass('selected-team')
@@ -274,7 +295,7 @@ var app = new Vue({
                 $('.dog-team-cont').removeClass('selected-team')
                 $('.cat-team-cont').addClass('selected-team')
             }
-        }
+        }*/
     },
     computed:{
         filteredGames: function(){

@@ -14,7 +14,7 @@
 
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-vanilla">
+<body class="bg-darkpink">
     <main id="app" class="container">
         <div class="centro">
             <div id="login" class="m-auto shadow bg-white text-dark animated fadeInDown faster d-none">
@@ -28,7 +28,7 @@
                         <label for="login-pwd">Password:</label>
                         <input type="password" class="form-control" name="password" id="login-pwd" placeholder="Enter password" required>
                     </div>
-                    <button class="btn btn-vanilla-primary" @click="login()">Log In</button>
+                    <button class="btn bg-darkpink-primary text-light" @click="login()">Log In</button>
                     <button class="btn btn-secondary" @click="showSignup()">Sign Up</button>                    
                     <hr class="my-4">
                     <h6>or</h6>
@@ -73,13 +73,15 @@
                     Logged as: {{user.name}}
                     </a>
                     <div class="dropdown-menu bg-vanilla-secondary" aria-labelledby="user-dropdown">
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#teamSelectModal">Create new game</a>
+                        <!--uncomment
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#teamSelectModal">Create new game</a>-->
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#createGameModal">Create new game</a>                        
                         <a class="dropdown-item" @click="logout()" href="#">Logout</a>
                     </div>
                 </div>   
 
                 <div v-else>
-                    <button @click="logout()" class="btn bg-vanilla-primary m-0">Log in</button>
+                    <button @click="logout()" class="btn bg-darkpink-primary m-0">Log in</button>
                 </div>                 
                 
             </nav>
@@ -101,10 +103,10 @@
                 </button>
     
                 <div class="collapse" id="filter-collapse">
-                    <button @click="setFilter('all')" class="btn" v-bind:class="{'bg-vanilla-primary' : filtros.main == 'all'}">All games</button>
-                    <button @click="setFilter('player')" class="btn" v-bind:class="{'bg-vanilla-primary' : filtros.main == 'player'}" v-if="logged">My games</button>
-                    <button @click="setFilter('joinable')" class="btn" v-bind:class="{'bg-vanilla-primary' : filtros.main == 'joinable'}" v-if="logged">Joinable games</button>
-                    <button @click="setFilter('finished')" class="btn" v-bind:class="{'bg-vanilla-primary' : filtros.main == 'finished'}">Finished games</button>
+                    <button @click="setFilter('all')" class="btn" v-bind:class="{'bg-darkpink-primary' : filtros.main == 'all'}">All games</button>
+                    <button @click="setFilter('player')" class="btn" v-bind:class="{'bg-darkpink-primary' : filtros.main == 'player'}" v-if="logged">My games</button>
+                    <button @click="setFilter('joinable')" class="btn" v-bind:class="{'bg-darkpink-primary' : filtros.main == 'joinable'}" v-if="logged">Joinable games</button>
+                    <button @click="setFilter('finished')" class="btn" v-bind:class="{'bg-darkpink-primary' : filtros.main == 'finished'}">Finished games</button>
                 </div>
             </div>
             
@@ -125,7 +127,8 @@
                                 <div class="col-12">
                                     <h2>Waiting for an opponent!</h2>
                                     
-                                    <img :src="'img/teams/'+game.player1.team+'.png'" alt="" width="40px" class="mb-3">
+                                    <!--uncomment
+                                        <img :src="'img/teams/'+game.player1.team+'.png'" alt="" width="40px" class="mb-3">-->
                                     <h5>{{game.player1.player.name}}'s game</h5>
                                 </div>
                             </div>
@@ -133,11 +136,13 @@
                             <div v-if="game.gameState == 'in course' && game.player1.player && game.player2" class="row">
                                 <div class="col-12">
                                     <h1>
-                                        <img :src="'img/teams/'+game.player1.team+'.png'" alt="" width="40px" class="mb-3">
+                                        <!--uncomment
+                                            <img :src="'img/teams/'+game.player1.team+'.png'" alt="" width="40px" class="mb-3">-->
                                         {{game.player1.player.name}} 
                                         VS 
                                         {{game.player2.player.name}}
-                                        <img :src="'img/teams/'+game.player2.team+'.png'" alt="" width="40px" class="mb-3">                                    
+                                        <!--uncomment
+                                            <img :src="'img/teams/'+game.player2.team+'.png'" alt="" width="40px" class="mb-3">     -->                               
                                     </h1>
                                     <h5>Game on course</h5>
                                 </div>
@@ -164,7 +169,8 @@
                         </div>
                         <div class="col-2 p-3 button-place" v-if="game.gameState == 'joinable' && logged">
                             <button type="button" class="btn btn-vanilla-primary" @click='enterGame(game.gamePlayers)' v-if="isAPlayer(game.gamePlayers)">Enter game (Waiting Opponent)</button>
-                            <button type="button" class="btn btn-vanilla-primary" @click="joinGamePopup(game)" v-else>Join</button>
+                            <!--<button type="button" class="btn btn-vanilla-primary" @click="joinGamePopup(game)" v-else>Join</button>-->
+                            <button type="button" class="btn btn-vanilla-primary" @click="joinGamePopup()" v-else>Join</button>                            
                         </div>
                         <div class="col-2 p-3 button-place" v-if="game.gameState == 'in course' && isAPlayer(game.gamePlayers)">
                             <button type="button" class="btn btn-vanilla-primary" @click="enterGame(game.gamePlayers)">Enter back</button>
@@ -172,13 +178,34 @@
                     </div>
                 </div>
 
-                <div v-if="filteredGames.length < 1">
+                <div v-if="filteredGames.length < 1" class="text-center">
                     <h3>There are no games to show that match with the specified filters</h3>
                 </div>
             </div>
             
         </div>
 
+        <div class="modal fade text-dark" id="createGameModal" tabindex="-1" role="dialog" aria-labelledby="createGameModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createGameModalLabel">Creating a new game</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <h3>Are you sure you want to create a new game?</h3>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-vanilla-primary" @click="createNewGame()">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--uncomment
         <div class="modal fade text-dark" id="teamSelectModal" tabindex="-1" role="dialog" aria-labelledby="teamSelectModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -209,11 +236,11 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-vanilla-primary" @click="createNewGame()">Create</button>
+                        <button type="button" class="btn btn-vanilla-primary" @click="createNewGameWithTeam()">Create</button>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
 
         <div class="modal fade text-dark" id="joinConfirmModal" tabindex="-1" role="dialog" aria-labelledby="joinConfirmModalLabel" aria-hidden="true">
@@ -227,8 +254,7 @@
                         </div>
                         <div class="modal-body text-center">
                             <div>
-                                <h3>You will be playing as <span id="team-span"></span>, are you okay with that?</h3>
-
+                                <h3>Are you sure you want to join this game?</h3>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -301,3 +327,5 @@
     <script src="js/games.js"></script>
 </body>
 </html>
+
+<!-- TODO: GET LOS DIBUJOS DE LOS PERROS Y DESCOMENTAR TODO LO QUE EMPIEZA CON uncomment -->
