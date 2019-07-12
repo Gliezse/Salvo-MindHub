@@ -277,8 +277,6 @@ body{
 
     cursor: move; /* fallback if grab cursor is unsupported */
     cursor: grab;
-    cursor: -moz-grab;
-    cursor: -webkit-grab;
     text-overflow: clip;
     overflow: hidden;
 }
@@ -310,7 +308,7 @@ body{
 }
 
 .GeorgeHorizontal{
-    background-image: url(../img/cats/horizontal/George.jpg);
+    background-image: url(../img/cats/horizontal/George.png);
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -321,7 +319,7 @@ body{
 }
 
 .CoalyHorizontal{
-    background-image: url(../img/cats/horizontal/Coaly.jpg);
+    background-image: url(../img/cats/horizontal/Coaly.png);
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -331,7 +329,7 @@ body{
     background-repeat: no-repeat;
 }
 .OreoHorizontal{
-    background-image: url(../img/cats/horizontal/Oreo.jpg);
+    background-image: url(../img/cats/horizontal/Oreo.png);
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -365,8 +363,6 @@ body{
 
 .pet:active {
     cursor: grabbing;
-    cursor: -moz-grabbing;
-    cursor: -webkit-grabbing;
 }
 
 #games{
