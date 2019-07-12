@@ -30,12 +30,12 @@ public class SalvoController {
     private PasswordEncoder passwordEncoder;
 
     //GET MAPPINGS
-    @RequestMapping("/gameplayer/{id}")
+    @GetMapping("/gameplayer/{id}")
     public Map<String,Object> getGPInfo(@PathVariable("id") long id){
         return gamePlayerRepository.findById(id).orElse(null).toDTO();
     }
 
-    @RequestMapping("/game_view/{id}")
+    @GetMapping("/game_view/{id}")
     public ResponseEntity<Map<String,Object>> gameView(@PathVariable("id") long id, Authentication authentication){
 
         if(authentication == null || authentication instanceof AnonymousAuthenticationToken){
@@ -57,7 +57,7 @@ public class SalvoController {
         return new ResponseEntity<>(auxgp.get().gameViewDTO(), HttpStatus.OK);
     }
 
-    @RequestMapping("/games")
+    @GetMapping("/games")
     public Map<String,Object> games(Authentication auth){
         Map<String,Object> dto = new LinkedHashMap<>();
 
@@ -71,17 +71,18 @@ public class SalvoController {
         return dto;
     }
 
-    @RequestMapping("/players")
+    @GetMapping("/players")
     public List<Object> players(){
         return playerRepository.findAll().stream().map(sub->sub.toDTO()).collect(toList());
     }
 
-    @RequestMapping("/gameplayers")
+    @GetMapping("/gameplayers")
     public List<Object> gameplayers(){
         return gamePlayerRepository.findAll().stream().map(sub->sub.toDTO()).collect(toList());
     }
 
-    @RequestMapping(value="/players", method= RequestMethod.POST)
+    //POST MAPPINGS
+    @PostMapping(value="/players")
     public ResponseEntity<Map<String,Object>> signup(@RequestParam String email, @RequestParam String name, @RequestParam String password){
         Player auxPlayer = playerRepository.findByEmail(email);
 
@@ -93,15 +94,14 @@ public class SalvoController {
         }
     }
 
-    //POST MAPPINGS
     @PostMapping("/games")
-    public ResponseEntity<Map<String,Object>> createGame(Authentication auth, @RequestParam String team){
+    public ResponseEntity<Map<String,Object>> createGame(Authentication auth/*, @RequestParam String team*/){
         //Auth Check
         if(auth==null || auth instanceof AnonymousAuthenticationToken){
             return new ResponseEntity<>(makeMap(ResponseMessages.KEY_ERROR, ResponseMessages.ERR_UNAUTHORIZED), HttpStatus.UNAUTHORIZED);
         }
 
-        Set<String> teams = new HashSet<>();
+        /*Set<String> teams = new HashSet<>();
 
         for(Team auxTeam : Team.values()){
             teams.add(auxTeam.name());
@@ -109,11 +109,11 @@ public class SalvoController {
 
         if (!teams.contains(team)) {
             return new ResponseEntity<>(makeMap(ResponseMessages.KEY_ERROR, ResponseMessages.ERR_FORBIDDEN), HttpStatus.FORBIDDEN);
-        }
+        }*/
 
         Player player = playerRepository.findByEmail(auth.getName());
         Game game = new Game();
-        game.addGamePlayer(new GamePlayer(game,player,team));
+        game.addGamePlayer(new GamePlayer(game,player/*,team*/));
         gameRepository.save(game);
 
         Map<String, Object> dto = new LinkedHashMap<>();
@@ -122,8 +122,8 @@ public class SalvoController {
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
-    @PostMapping("/games/players/{gpid}/ships")
-    public ResponseEntity<Map<String,Object>> placeShips(Authentication auth, @PathVariable("gpid") long gpid, @RequestBody Set<Ship> ships){
+    @PostMapping("/games/players/{gpid}/pets")
+    public ResponseEntity<Map<String,Object>> placeShips(Authentication auth, @PathVariable("gpid") long gpid, @RequestBody Set<Pet> pets){
         //Auth Check
         if(auth==null || auth instanceof AnonymousAuthenticationToken){
             return new ResponseEntity<>(makeMap(ResponseMessages.KEY_ERROR, ResponseMessages.ERR_UNAUTHORIZED), HttpStatus.UNAUTHORIZED);
@@ -147,41 +147,41 @@ public class SalvoController {
             return new ResponseEntity<>(makeMap(ResponseMessages.KEY_ERROR, ResponseMessages.ERR_NONEXISTENT_OPPONENT), HttpStatus.FORBIDDEN);
         }
 
-        //Checks if the ships haven't been added yet
-        if (ships.size() != 5){
+        //Checks if the pets haven't been added yet
+        if (pets.size() != 5){
             return new ResponseEntity<>(makeMap(ResponseMessages.KEY_ERROR, ResponseMessages.ERR_WRONG_SHIP_QUANTITY), HttpStatus.FORBIDDEN);
-        }else if(gamePlayer.get().getShips().size()>0){
+        }else if(gamePlayer.get().getPets().size()>0){
             return new ResponseEntity<>(makeMap(ResponseMessages.KEY_ERROR, ResponseMessages.ERR_ALREADY_PLACED_SHIPS), HttpStatus.FORBIDDEN);
         }
 
-        Set<String> shipTypes = new HashSet<>();
+        Set<String> catTypes = new HashSet<>();
 
-        for(ShipTypes sType : ShipTypes.values()){
-            shipTypes.add(sType.name());
+        for(CatTypes sType : CatTypes.values()){
+            catTypes.add(sType.name());
         }
 
-        //Check if all incoming ships' types are valid
-        if(!shipTypes.containsAll(ships.stream().map(Ship::getType).collect(toList()))){
+        //Check if all incoming pets' types are valid
+        if(!catTypes.containsAll(pets.stream().map(Pet::getType).collect(toList()))){
             return new ResponseEntity<>(makeMap(ResponseMessages.KEY_ERROR, ResponseMessages.ERR_NOT_VALID_SHIPS), HttpStatus.FORBIDDEN);
         }
 
-        //Checks the ships are all different
-        if(ships.stream().map(Ship::getType).distinct().count() != 5){
+        //Checks the pets are all different
+        if(pets.stream().map(Pet::getType).distinct().count() != 5){
             return new ResponseEntity<>(makeMap(ResponseMessages.KEY_ERROR, ResponseMessages.ERR_DUPLICATED_SHIPS), HttpStatus.FORBIDDEN);
         }
 
         //Check if all ships have the correct length
-        for(Ship ship : ships){
-            for(ShipTypes sType : ShipTypes.values()){
-                if(sType.name().equals(ship.getType())){
-                    if(sType.getLength() != ship.getLocations().size()){
+        for(Pet pet : pets){
+            for(CatTypes cType : CatTypes.values()){
+                if(cType.name().equals(pet.getType())){
+                    if(cType.getLength() != pet.getLocations().size()){
                         return new ResponseEntity<>(makeMap(ResponseMessages.KEY_ERROR, ResponseMessages.ERR_WRONG_SHIP_LENGTH), HttpStatus.FORBIDDEN);
                     }
                 }
             }
         }
 
-        ships.forEach(ship->gamePlayer.get().addShip(ship));
+        pets.forEach(pet->gamePlayer.get().addPet(pet));
         gamePlayerRepository.save(gamePlayer.get());
         return new ResponseEntity<>(makeMap(ResponseMessages.KEY_OK, ResponseMessages.OK_CREATED), HttpStatus.CREATED);
     }
@@ -268,15 +268,17 @@ public class SalvoController {
             return new ResponseEntity<>(makeMap(ResponseMessages.KEY_ERROR, ResponseMessages.ERR_JOINING_OWN_GAME), HttpStatus.FORBIDDEN);
         }
 
+        /*
+
         String team;
 
         if(game.get().getgPlayers().stream().findFirst().get().getTeam().equals("CATS")){
             team = "DOGS";
         }else{
             team = "CATS";
-        }
+        }*/
 
-        GamePlayer gamePlayer = gamePlayerRepository.save(new GamePlayer(game.get(), player, team));
+        GamePlayer gamePlayer = gamePlayerRepository.save(new GamePlayer(game.get(), player/*, team*/));
 
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("gpid", gamePlayer.getId());

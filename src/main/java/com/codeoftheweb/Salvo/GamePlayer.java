@@ -31,7 +31,7 @@ public class GamePlayer {
 
     //One to many
     @OneToMany(fetch = FetchType.EAGER , mappedBy = "gamePlayer", cascade = CascadeType.ALL)
-    private Set<Ship> ships = new HashSet<>();
+    private Set<Pet> pets = new HashSet<>();
 
 
     @OneToMany(fetch = FetchType.EAGER , mappedBy = "gamePlayer", cascade = CascadeType.ALL)
@@ -39,7 +39,8 @@ public class GamePlayer {
 
     private LocalDateTime joined;
 
-    private String team;
+    //TODO: add teams when cats adquired xd
+    //private String team;
 
 
     public GamePlayer(){}
@@ -50,25 +51,25 @@ public class GamePlayer {
         this.joined = LocalDateTime.now();
     }
 
-    public GamePlayer(Game game, Player player, String team){
+    /*ublic GamePlayer(Game game, Player player, String team){
         this.game = game;
         this.player = player;
         this.team = team;
         this.joined = LocalDateTime.now();
-    }
+    }*/
 
 
-    public GamePlayer(Player player, Set<Ship> ships, Set<Salvo> salvos){
+    public GamePlayer(Player player, Set<Pet> pets, Set<Salvo> salvos){
         this.player = player;
-        ships.forEach(this::addShip);
+        pets.forEach(this::addPet);
         salvos.forEach(this::addSalvo);
         this.joined = LocalDateTime.now();
     }
 
-    public GamePlayer(Game game, Player player, Set<Ship> ships, Set<Salvo> salvos){
+    public GamePlayer(Game game, Player player, Set<Pet> pets, Set<Salvo> salvos){
         this.game = game;
         this.player = player;
-        ships.forEach(this::addShip);
+        pets.forEach(this::addPet);
 
         salvos.forEach(this::addSalvo);
 
@@ -111,15 +112,17 @@ public class GamePlayer {
     }
 
     @JsonIgnore
-    public Set<Ship> getShips(){
-        return ships;
+    public Set<Pet> getPets(){
+        return pets;
     }
 
-    public void setShips(Set<Ship> ships){this.ships = ships;}
+    public void setPets(Set<Pet> pets){
+        this.pets = pets;
+    }
 
-    public void addShip(Ship s){
-        s.setGamePlayer(this);
-        this.ships.add(s);
+    public void addPet(Pet p){
+        p.setGamePlayer(this);
+        this.pets.add(p);
     }
 
     public void addSalvo(Salvo salvo){
@@ -135,13 +138,13 @@ public class GamePlayer {
         return getPlayer().getScore(this.getGame().getId());
     }
 
-    public String getTeam() {
+    /*public String getTeam() {
         return team;
     }
 
     public void setTeam(String team) {
         this.team = team;
-    }
+    }*/
 
     public Set<Map<String,Object>> getHits(){
         Optional<GamePlayer> opponentGamePlayer = this.getGame().getgPlayers().stream().filter(gp -> gp.getId() != this.getId()).findFirst();
@@ -151,15 +154,15 @@ public class GamePlayer {
 
             this.getSalvos().stream().forEach( salvo-> {
                 salvo.getLocations().stream().forEach( loc -> {
-                    opponentGamePlayer.get().getShips().stream().forEach( oppShip -> {
-                        oppShip.getLocations().forEach( oppShipLoc -> {
-                            if (loc.equals(oppShipLoc)){
+                    opponentGamePlayer.get().getPets().stream().forEach( oppPet -> {
+                        oppPet.getLocations().forEach( oppPetLoc -> {
+                            if (loc.equals(oppPetLoc)){
                                 Map<String,Object> dto = new LinkedHashMap<>();
 
                                 dto.put("gpid",this.getId());
                                 dto.put("turn",salvo.getTurn());
-                                dto.put("shipHit",oppShip.getType());
-                                dto.put("locHit",oppShipLoc);
+                                dto.put("petHit",oppPet.getType());
+                                dto.put("locHit",oppPetLoc);
 
                                 set.add(dto);
                             }
@@ -176,7 +179,7 @@ public class GamePlayer {
 
     }
 
-    public Set<Map<String,Object>> getSunkAllyShips(){
+    public Set<Map<String,Object>> getScaredAllyPets(){
         Set<Map<String,Object>> sunkShips = new LinkedHashSet<>();
 
         Optional<GamePlayer> opponentGamePlayer = this.getGame().getgPlayers().stream().filter(gp-> gp.getId() != this.getId()).findFirst();
@@ -188,9 +191,9 @@ public class GamePlayer {
                 salvoes.addAll(salvo.getLocations());
             });
 
-            this.getShips().forEach(allyShip -> {
-                if(salvoes.containsAll(allyShip.getLocations())){
-                    sunkShips.add(allyShip.getShipDTO());
+            this.getPets().forEach(allyPet -> {
+                if(salvoes.containsAll(allyPet.getLocations())){
+                    sunkShips.add(allyPet.getPetDTO());
                 }
 
             });
@@ -203,7 +206,7 @@ public class GamePlayer {
 
     }
 
-    public Set<Map<String,Object>> getSunkEnemyShips(){
+    public Set<Map<String,Object>> getScaredEnemyPets(){
         Set<Map<String,Object>> sunkShips = new HashSet<>();
 
         Optional<GamePlayer> opponentGamePlayer = this.getGame().getgPlayers().stream().filter(gp-> gp.getId() != this.getId()).findFirst();
@@ -215,9 +218,9 @@ public class GamePlayer {
                 salvoes.addAll(salvo.getLocations());
             });
 
-            opponentGamePlayer.get().getShips().forEach(oppShip -> {
-                if(salvoes.containsAll(oppShip.getLocations())){
-                    sunkShips.add(oppShip.getShipDTO());
+            opponentGamePlayer.get().getPets().forEach(oppPets -> {
+                if(salvoes.containsAll(oppPets.getLocations())){
+                    sunkShips.add(oppPets.getPetDTO());
                 }
 
             });
@@ -238,17 +241,17 @@ public class GamePlayer {
             return GameState.WAITING_OPPONENT_TO_JOIN;
         }
 
-        if(this.getShips().size() != 5){
-           return GameState.PLACING_SHIPS;
-        }else if(opponentGamePlayer.get().getShips().size() != 5){
-            return GameState.OPPONENT_PLACING_SHIPS;
+        if(this.getPets().size() != 5){
+           return GameState.PLACING_PETS;
+        }else if(opponentGamePlayer.get().getPets().size() != 5){
+            return GameState.OPPONENT_PLACING_PETS;
         }
 
         int myTurn = this.getSalvos().stream().mapToInt(Salvo::getTurn).max().orElse(0);
         int opponentTurn = opponentGamePlayer.get().getSalvos().stream().mapToInt(Salvo::getTurn).max().orElse(0);
 
         boolean iCreatedThisGame = this.getId() < opponentGamePlayer.get().getId();
-        boolean gameOver = getSunkAllyShips().size() == 5 || getSunkEnemyShips().size() == 5;
+        boolean gameOver = getScaredAllyPets().size() == 5 || getScaredEnemyPets().size() == 5;
 
         if (iCreatedThisGame) {
             if (myTurn == opponentTurn) {
@@ -272,9 +275,9 @@ public class GamePlayer {
     }
 
     public Enum<GameState> getGameResult(){
-        if(getSunkAllyShips().size() < getSunkEnemyShips().size()){
+        if(getScaredAllyPets().size() < getScaredEnemyPets().size()){
             return GameState.WON;
-        }else if(getSunkAllyShips().size() > getSunkEnemyShips().size()){
+        }else if(getScaredAllyPets().size() > getScaredEnemyPets().size()){
             return GameState.LOST;
         }else{
             return GameState.TIED;
@@ -293,7 +296,7 @@ public class GamePlayer {
         dtoAUX.remove("scores");
         dto.put("player", dtoAUX);
 
-        dto.put("team", this.getTeam());
+        //dto.put("team", this.getTeam());
         dto.put("score", getPlayer().getScore(this.getGame().getId()));
 
         return dto;
@@ -316,12 +319,12 @@ public class GamePlayer {
         dto.put("id", getGame().getId());
         dto.put("created", getGame().getDate());
         dto.put("gameplayers", getGame().getgPlayers().stream().map(sub -> sub.toDTO()).collect(toList()));
-        dto.put("ships", getShips().stream().map(ss-> ss.getShipDTO()).collect(toList()));
+        dto.put("pets", getPets().stream().map(p-> p.getPetDTO()).collect(toList()));
         dto.put("salvoes", getGame().getgPlayers().stream().flatMap(gp->gp.getSalvos().stream().map(sub -> sub.toDTO())));
         if(this.getGame().getgPlayers().size()>1){
             dto.put("hits",getGame().getgPlayers().stream().map(gp -> gp.getHits()).collect(toList()));
-            dto.put("sunkEnemyShips", this.getSunkEnemyShips());
-            dto.put("sunkAllyShips", this.getSunkAllyShips());
+            dto.put("scaredEnemyPets", this.getScaredEnemyPets());
+            dto.put("scaredAllyPets", this.getScaredAllyPets());
         }
         dto.put("gamestate",this.getGameState());
 

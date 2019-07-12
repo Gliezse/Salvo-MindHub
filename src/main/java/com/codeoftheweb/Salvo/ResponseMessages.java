@@ -19,11 +19,11 @@ public final class ResponseMessages {
     public static String OK_CREATED = "created";
 
     //Ships Errors
-    public static String ERR_WRONG_SHIP_QUANTITY = "Wrong ship quantity";
-    public static String ERR_NOT_VALID_SHIPS = "Not valid ship types";
-    public static String ERR_DUPLICATED_SHIPS = "Duplicated ships";
-    public static String ERR_WRONG_SHIP_LENGTH = "Wrong ship length";
-    public static String ERR_ALREADY_PLACED_SHIPS = "Already placed ships";
+    public static String ERR_WRONG_SHIP_QUANTITY = "Wrong pets quantity";
+    public static String ERR_NOT_VALID_SHIPS = "Not valid pet types";
+    public static String ERR_DUPLICATED_SHIPS = "Duplicated pets";
+    public static String ERR_WRONG_SHIP_LENGTH = "Wrong pet length";
+    public static String ERR_ALREADY_PLACED_SHIPS = "Already placed pets";
 
     //Salvo Errors
     public static String ERR_NOT_YOUR_TURN = "Not your turn";

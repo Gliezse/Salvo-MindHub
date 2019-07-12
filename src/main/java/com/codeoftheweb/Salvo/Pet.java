@@ -3,10 +3,13 @@ package com.codeoftheweb.Salvo;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 @Entity
-public class Ship {
+public class Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name="native", strategy = "native")
@@ -22,9 +25,9 @@ public class Ship {
     @ElementCollection
     private Set<String> locations = new HashSet<>();
 
-    public Ship(){}
+    public Pet(){}
 
-    public Ship(String type, Set<String> locations){
+    public Pet(String type, Set<String> locations){
         this.type = type;
         this.locations = locations;
     }
@@ -65,7 +68,7 @@ public class Ship {
         this.locations.add(loc);
     }
 
-    public Map<String,Object> getShipDTO(){
+    public Map<String,Object> getPetDTO(){
         Map<String,Object> dto = new LinkedHashMap<String,Object>();
 
         dto.put("id",getId());

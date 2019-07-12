@@ -1,15 +1,16 @@
 package com.codeoftheweb.Salvo;
 
-public enum ShipTypes {
-    Carrier(5),
-    Battleship(4),
-    Destroyer(3),
-    Submarine(3),
-    Patrol(2);
+@SuppressWarnings("ALL")
+public enum CatTypes {
+    Meowrice(5),
+    Nashiro(4),
+    George(3),
+    Coaly(3),
+    Oreo(2);
 
     private int length;
 
-    ShipTypes(int length){
+    CatTypes(int length){
         this.length = length;
     }
 
