@@ -231,7 +231,10 @@ var app = new Vue({
             .done(function(response){window.location.href = "/web/game.html?gp="+response.gpid})
             .fail(function(){(alert("You must be logged in in order to create a new game!"))})
         },*/
-        joinGamePopup: function () {
+        joinGamePopup: function (game) {
+
+            console.log('ola')
+
             let self = this
 
             let gameId = game.id

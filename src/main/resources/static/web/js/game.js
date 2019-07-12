@@ -12,19 +12,19 @@ var app = new Vue({
         playersTurn:true,
         playerHits: [],
         enemyHits: [],
-        enemyShipsLeft:{
-            carrier:5,
-            battleship:4,
-            destroyer:3,
-            submarine:3,
-            patrol:2
+        enemyPetsLeft:{
+            meowrice:5,
+            nashiro:4,
+            george:3,
+            coaly:3,
+            oreo:2
         },
-        playerShipsLeft:{
-            carrier:5,
-            battleship:4,
-            destroyer:3,
-            submarine:3,
-            patrol:2
+        playerPetsLeft:{
+            meowrice:5,
+            nashiro:4,
+            george:3,
+            coaly:3,
+            oreo:2
         },
         gameState: "",
         dotsAux: 0,
@@ -105,7 +105,7 @@ var app = new Vue({
                 $('#waiting-div h1').removeClass('d-none')
             }
             
-            if(this.gameState == 'PLACING_SHIPS'){
+            if(this.gameState == 'PLACING_PETS'){
                 
                 
                 if($(waitingText).hasClass('d-none')){
@@ -132,21 +132,21 @@ var app = new Vue({
                         $(initialText).addClass('fadeOut')
                     }else{
                         $(initialText).removeClass('fadeOut')
-                        $(initialText).html("Place your ships as your will! When you are ready click 'Place'")
+                        $(initialText).html("Place your pets as your will! When you are ready click 'Place'")
                         $(initialText).addClass('fadeIn')
                     }
                 })
                 
             }
 
-            if(this.gameState == 'OPPONENT_PLACING_SHIPS'){
+            if(this.gameState == 'OPPONENT_PLACING_PETS'){
                 if(!$("#initial-grid-cont").hasClass('d-none')){
                     $('#initial-grid-cont').addClass('d-none')
                 }
 
                 this.dotsAux = 0
 
-                $(waitingText).html('Wait until '+this.enemyPlayer().name+' places their ships')
+                $(waitingText).html('Wait until '+this.enemyPlayer().name+' places their pets')
                 $(waitingText).attr('class','animated bounceIn')
 
             }
@@ -178,13 +178,13 @@ var app = new Vue({
                 }
 
 
-                $('.ship').first().one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                $('.pet').first().one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                     if(self.gameState == 'PLACING_SALVOES'){
 
                         $('#shoot-button').addClass('d-none')
 
                         $('.enemy-grid').first().removeClass('small-grid')
-                        $('.grid-ships').first().addClass('small-grid')
+                        $('.ally-grid').first().addClass('small-grid')
 
                         if($('#ally-turn-marker').hasClass('d-none')){
                             $('#ally-turn-marker').removeClass('d-none')
@@ -199,7 +199,7 @@ var app = new Vue({
                         
                     }else{
 
-                        $('.grid-ships').first().removeClass('small-grid')
+                        $('.ally-grid').first().removeClass('small-grid')
                         $('.enemy-grid').first().addClass('small-grid')
 
                         if ($('#enemy-turn-marker').hasClass('d-none')) {
@@ -234,25 +234,25 @@ var app = new Vue({
                         $('#game-ended-state').html('This game has ended!')
                         
                         if(this.gameState == 'WON'){
-                            $('#game-ended-subtext').html("You won! You sunk all your opponent's ships")
+                            $('#game-ended-subtext').html("You won! You scared all your opponent's pets")
                         }else if(this.gameState == 'LOST'){
-                            $('#game-ended-subtext').html("You lost! Your opponent sunk all your ships")
+                            $('#game-ended-subtext').html("You lost! Your opponent scared all your pets")
                         }else{
-                            $('#game-ended-subtext').html("Tied! Both you and your opponent sunk each other's ships!")
+                            $('#game-ended-subtext').html("Tied! Both you and your opponent scared each other's pets!")
                         }
 
                     }else{
                         $('.text-above-grids').addClass('d-none')
-                        $('.grid-ships').first().removeClass('small-grid')
+                        $('.ally-grid').first().removeClass('small-grid')
                         $('.enemy-grid').first().removeClass('small-grid')
                         $('#both-grids-cont').addClass('finished-game-grids')
 
                         if(this.gameState == 'WON'){
-                            $('#game-ended-subtext').html("You sunk all your opponent's ships")
+                            $('#game-ended-subtext').html("You scared all your opponent's pets")
                         }else if(this.gameState == 'LOST'){
-                            $('#game-ended-subtext').html("Your opponent sunk all your ships")
+                            $('#game-ended-subtext').html("Your opponent scared all your pets")
                         }else{
-                            $('#game-ended-subtext').html("Both you and your opponent sunk each other's ships!")
+                            $('#game-ended-subtext').html("Both you and your opponent scared each other's pets!")
                         }
                     }
 
@@ -369,7 +369,7 @@ var app = new Vue({
         },
 
         setGrids: function () {
-            let gridCont = $(".grid-ships").first().html("")
+            let gridCont = $(".ally-grid").first().html("")
             let enemyGridCont = $(".enemy-grid").first().html("")
 
             let allyAppend = '<div id="grid" class="grid-stack grid-stack-10"></div>'
@@ -378,7 +378,7 @@ var app = new Vue({
             gridCont.append(allyAppend)
             enemyGridCont.append(enemyAppend)
 
-            ships = this.datos.ships
+            pets = this.datos.pets
             salvoes = this.datos.salvoes
 
             var options = {
@@ -401,7 +401,7 @@ var app = new Vue({
                 animate: false
             }
 
-            if (this.gameState != "PLACING_SHIPS") {
+            if (this.gameState != "PLACING_PETS") {
                 options.staticGrid = true
             }
 
@@ -414,11 +414,11 @@ var app = new Vue({
             this.enemyGrid = $('#enemy-grid').data('gridstack')
 
 
-            this.createGrid(11, $(".grid-ships"), 1)
+            this.createGrid(11, $(".ally-grid"), 1)
             this.createGrid(11, $(".enemy-grid"), 2)
 
-            this.loadSalvoes(salvoes, ships)
-            this.loadShips(ships, this.grid)
+            this.loadSalvoes(salvoes, pets)
+            this.loadPets(pets, this.grid)
 
         },
 
@@ -468,29 +468,29 @@ var app = new Vue({
             element.append(wrapper)
         },
 
-        loadShips: function (ships, grid) {
+        loadPets: function (pets, grid) {
             let self = this
-            if (ships.length == 0 && this.datos.gameplayers[1]) {
-                ships = [{
-                    "type": "Carrier",
+            if (pets.length == 0 && this.datos.gameplayers[1]) {
+                pets = [{
+                    "type": "Meowrice",
                     "locations": ["A1", "A2", "A3", "A4", "A5"]
                 }, {
-                    "type": "Battleship",
+                    "type": "Nashiro",
                     "locations": ["C1", "C2", "C3", "C4"]
                 }, {
-                    "type": "Destroyer",
+                    "type": "George",
                     "locations": ["E1", "E2", "E3"]
                 }, {
-                    "type": "Submarine",
+                    "type": "Coaly",
                     "locations": ["G1", "G2", "G3"]
                 }, {
-                    "type": "Patrol",
+                    "type": "Oreo",
                     "locations": ["I1", "I2"]
                 }]
             }
 
-            ships.forEach(function (ship) {
-                var loc = ship.locations                    //Lista de cells donde esta el barco
+            pets.forEach(function (pet) {
+                var loc = pet.locations                    //Lista de cells donde esta el barco
 
                 loc.sort(function (x, y) {
                     if (x.charCodeAt(0) == y.charCodeAt(0)) {
@@ -535,14 +535,14 @@ var app = new Vue({
                     orientacion = "Vertical"
                 }
 
-                let classes = `grid-stack-item-content ship ship${orientacion} ${ship.type}${orientacion} animated`
+                let classes = `grid-stack-item-content pet pet${orientacion} ${pet.type}${orientacion} animated`
 
-                if(self.gameState == 'PLACING_SHIPS'){
+                if(self.gameState == 'PLACING_PETS'){
                     classes += " fadeIn delay-3s"
                 }else{
-                    for(let playerShip in self.playerShipsLeft){
-                        if(playerShip == ship.type.toLowerCase()){
-                            if(self.playerShipsLeft[playerShip] != 0){
+                    for(let playerPet in self.playerPetsLeft){
+                        if(playerPet == pet.type.toLowerCase()){
+                            if(self.playerPetsLeft[playerPet] != 0){
                                 if(self.firstLoad){
                                     classes += " bounceIn delay-1s"
                                 }else{
@@ -558,14 +558,11 @@ var app = new Vue({
                             
                         }
                     }
-                    
-                    
-                
-                    
+                            
                 }
 
 
-                grid.addWidget($(`<div id="${ship.type}" class="ship2"><div class="${classes}"></div><div/>`),
+                grid.addWidget($(`<div id="${pet.type}" class="pet2"><div class="${classes}"></div><div/>`),
                     x, y, w, h); //element,x,y,width,height
 
             })
@@ -573,49 +570,49 @@ var app = new Vue({
                 self.firstLoad = false
             }
 
-            $(".ship2").dblclick(function () {
-                if (app.datos.ships.length != 0) {
+            $(".pet2").dblclick(function () {
+                if (app.datos.pets.length != 0) {
                     return
                 } else {
-                    let shipType = $(this).attr("id")
+                    let petType = $(this).attr("id")
                     let cells = 0
 
-                    if (shipType == "Carrier") {
+                    if (petType == "Meowrice") {
                         cells = 5
-                    } else if (shipType == "Battleship") {
+                    } else if (petType == "Nashiro") {
                         cells = 4
-                    } else if (shipType == "Submarine" || shipType == "Destroyer") {
+                    } else if (petType == "George" || petType == "Coaly") {
                         cells = 3
                     } else {
                         cells = 2
                     }
 
-                    app.rotateShips(shipType, cells)
+                    app.rotatePets(petType, cells)
                 }
 
             })
 
         },
 
-        loadSalvoes: function (salvoes, ships) {
-            this.enemyShipsLeft = {
-                carrier:5,
-                battleship:4,
-                destroyer:3,
-                submarine:3,
-                patrol:2
+        loadSalvoes: function (salvoes, pets) {
+            this.enemyPetsLeft = {
+                meowrice:5,
+                nashiro:4,
+                george:3,
+                coaly:3,
+                oreo:2
             }
-            this.playerShipsLeft = {
-                carrier:5,
-                battleship:4,
-                destroyer:3,
-                submarine:3,
-                patrol:2
+            this.playerPetsLeft = {
+                meowrice:5,
+                nashiro:4,
+                george:3,
+                coaly:3,
+                oreo:2
             }
 
             let self = this
 
-            var locations = ships.map(sh => { return sh.locations })
+            var locations = pets.map(sh => { return sh.locations })
 
             playerSalvoes = salvoes.filter(function (sub) {
                 if (sub.player == self.gpId) {
@@ -656,16 +653,16 @@ var app = new Vue({
                         if(sub.locations[loc] == hit.locHit){
                             cell.addClass('bg-red')
 
-                            if(hit.shipHit == "Carrier"){
-                                self.enemyShipsLeft.carrier -= 1
-                            }else if(hit.shipHit == "Battleship"){
-                                self.enemyShipsLeft.battleship -= 1
-                            }else if(hit.shipHit == "Destroyer"){
-                                self.enemyShipsLeft.destroyer -= 1
-                            }else if(hit.shipHit == "Submarine"){
-                                self.enemyShipsLeft.submarine -= 1
+                            if(hit.petHit == "Meowrice"){
+                                self.enemyPetsLeft.meowrice -= 1
+                            }else if(hit.petHit == "Nashiro"){
+                                self.enemyPetsLeft.nashiro -= 1
+                            }else if(hit.petHit == "George"){
+                                self.enemyPetsLeft.george -= 1
+                            }else if(hit.petHit == "Coaly"){
+                                self.enemyPetsLeft.coaly -= 1
                             }else{
-                                self.enemyShipsLeft.patrol -= 1
+                                self.enemyPetsLeft.oreo -= 1
                             }
                         }
                     })
@@ -695,16 +692,16 @@ var app = new Vue({
 
                     self.enemyHits.forEach(function(enHit){
                         if(enHit.locHit == sub.locations[loc]){
-                            if(enHit.shipHit == "Carrier"){
-                                self.playerShipsLeft.carrier -= 1
-                            }else if(enHit.shipHit == "Battleship"){
-                                self.playerShipsLeft.battleship -= 1
-                            }else if(enHit.shipHit == "Destroyer"){
-                                self.playerShipsLeft.destroyer -= 1
-                            }else if(enHit.shipHit == "Submarine"){
-                                self.playerShipsLeft.submarine -= 1
+                            if(enHit.petHit == "Meowrice"){
+                                self.playerPetsLeft.meowrice -= 1
+                            }else if(enHit.petHit == "Nashiro"){
+                                self.playerPetsLeft.nashiro -= 1
+                            }else if(enHit.petHit == "George"){
+                                self.playerPetsLeft.george -= 1
+                            }else if(enHit.petHit == "Coaly"){
+                                self.playerPetsLeft.coaly -= 1
                             }else{
-                                self.playerShipsLeft.patrol -= 1
+                                self.playerPetsLeft.oreo -= 1
                             }
                         }
                     })
@@ -723,15 +720,15 @@ var app = new Vue({
 
         },
 
-        rotateShips: function (shipType, cells) {
+        rotatePets: function (petType, cells) {
 
-            let ship = $(`#${shipType}`)
+            let pet = $(`#${petType}`)
 
             //Arreglar en base al rodri code
-            let x = +($(ship).attr('data-gs-x'))
-            let y = +($(ship).attr('data-gs-y'))
-            let w = +($(ship).attr('data-gs-width'))
-            let h = +($(ship).attr('data-gs-height'))
+            let x = +($(pet).attr('data-gs-x'))
+            let y = +($(pet).attr('data-gs-y'))
+            let w = +($(pet).attr('data-gs-width'))
+            let h = +($(pet).attr('data-gs-height'))
 
             if (w > h) {
 
@@ -741,24 +738,24 @@ var app = new Vue({
 
                 for (var i = 1; i < w; i++) {
                     if (!this.grid.isAreaEmpty(x, y + i)) {
-                        return alert("You are going to crash another ship if you rotate that way.")
+                        return alert("You are going to crash another pet if you rotate that way.")
                     }
                 }
 
 
                 if (y + cells - 1 < 10) {
-                    this.grid.resize($(ship), 1, cells);
-                    $(ship).children().removeClass(`${shipType}Horizontal`);
-                    $(ship).children().addClass(`${shipType}Vertical`);
-                    $(ship).children().removeClass(`shipHorizontal`);
-                    $(ship).children().addClass(`shipVertical`);
+                    this.grid.resize($(pet), 1, cells);
+                    $(pet).children().removeClass(`${petType}Horizontal`);
+                    $(pet).children().addClass(`${petType}Vertical`);
+                    $(pet).children().removeClass(`petHorizontal`);
+                    $(pet).children().addClass(`petVertical`);
                 } else {
-                    this.grid.update($(ship), null, 10 - cells)
-                    this.grid.resize($(ship), 1, cells);
-                    $(ship).children().removeClass(`${shipType}Horizontal`);
-                    $(ship).children().addClass(`${shipType}Vertical`);
-                    $(ship).children().removeClass(`shipHorizontal`);
-                    $(ship).children().addClass(`shipVertical`);
+                    this.grid.update($(pet), null, 10 - cells)
+                    this.grid.resize($(pet), 1, cells);
+                    $(pet).children().removeClass(`${petType}Horizontal`);
+                    $(pet).children().addClass(`${petType}Vertical`);
+                    $(pet).children().removeClass(`petHorizontal`);
+                    $(pet).children().addClass(`petVertical`);
                 }
             } else {
 
@@ -767,23 +764,23 @@ var app = new Vue({
                 }
                 for (var i = 1; i < h; i++) {
                     if (!this.grid.isAreaEmpty(x + i, y)) {
-                        return alert("You are going to crash another ship if you rotate that way.")
+                        return alert("You are going to crash another pet if you rotate that way.")
                     }
                 }
 
                 if (x + cells - 1 < 10) {
-                    this.grid.resize($(ship), cells, 1);
-                    $(ship).children().addClass(`${shipType}Horizontal`);
-                    $(ship).children().removeClass(`${shipType}Vertical`);
-                    $(ship).children().addClass(`shipHorizontal`);
-                    $(ship).children().removeClass(`shipVertical`);
+                    this.grid.resize($(pet), cells, 1);
+                    $(pet).children().addClass(`${petType}Horizontal`);
+                    $(pet).children().removeClass(`${petType}Vertical`);
+                    $(pet).children().addClass(`petHorizontal`);
+                    $(pet).children().removeClass(`petVertical`);
                 } else {
-                    this.grid.update($(ship), 10 - cells)
-                    this.grid.resize($(ship), cells, 1);
-                    $(ship).children().addClass(`${shipType}Horizontal`);
-                    $(ship).children().removeClass(`${shipType}Vertical`);
-                    $(ship).children().addClass(`shipHorizontal`);
-                    $(ship).children().removeClass(`shipVertical`);
+                    this.grid.update($(pet), 10 - cells)
+                    this.grid.resize($(pet), cells, 1);
+                    $(pet).children().addClass(`${petType}Horizontal`);
+                    $(pet).children().removeClass(`${petType}Vertical`);
+                    $(pet).children().addClass(`petHorizontal`);
+                    $(pet).children().removeClass(`petVertical`);
                 }
 
             }
@@ -791,25 +788,25 @@ var app = new Vue({
 
         },
         
-        placeShips: function(){
+        placePets: function(){
             if(this.datos.gameplayers.length == 1){
-                return alert("You can only place ships after the player 2 joins!")
+                return alert("You can only place pets after the player 2 joins!")
             }
 
             let data = []
 
-            $(".grid-stack-item").get().forEach(function(ship){
+            $(".grid-stack-item").get().forEach(function(pet){
 
                 let cells = []
 
-                let x = parseInt($(ship).attr('data-gs-x'))
-                let y = parseInt($(ship).attr('data-gs-y'))
-                let w = parseInt($(ship).attr('data-gs-width'))
-                let h = parseInt($(ship).attr('data-gs-height'))
+                let x = parseInt($(pet).attr('data-gs-x'))
+                let y = parseInt($(pet).attr('data-gs-y'))
+                let w = parseInt($(pet).attr('data-gs-width'))
+                let h = parseInt($(pet).attr('data-gs-height'))
 
                 let xAux = x+1;
                 let yAux = y+65;
-                let shipType = $(ship).attr('id')
+                let petType = $(pet).attr('id')
 
                 if(w>h){
                     for(var i = 0 ; i < w ; i++){
@@ -821,13 +818,13 @@ var app = new Vue({
                     }
                 }
                 data.push({
-                    "type":shipType,
+                    "type":petType,
                     "locations":cells
                 })
             })
 
             $.post({
-                url:"/api/games/players/"+app.gpId+"/ships",
+                url:"/api/games/players/"+app.gpId+"/pets",
                 data: JSON.stringify(data),
                 dataType: "text",
                 contentType: "application/json"
@@ -884,8 +881,8 @@ var app = new Vue({
                 if(this.gameState == "WAITING_OPPONENT_TO_JOIN"){
                     return alert("You can't place salvoes if there isn't any opponent!")
                 }
-                if(this.gameState == "PLACING_SHIPS"){
-                    return alert("You can't place salvoes if you haven't placed any ship!")
+                if(this.gameState == "PLACING_PETS"){
+                    return alert("You can't place salvoes if you haven't placed any pet!")
                 }
                 return alert("You can't place salvoes if it isn't your turn!")
                 
@@ -941,7 +938,7 @@ var app = new Vue({
             window.location.href = "/web/games.html"
         },
         gameStarted: function(){
-            if (this.gameState != "WAITING_OPPONENT_TO_JOIN" && this.gameState != "PLACING_SHIPS" && this.gameState != "OPPONENT_PLACING_SHIPS") {
+            if (this.gameState != "WAITING_OPPONENT_TO_JOIN" && this.gameState != "PLACING_PETS" && this.gameState != "OPPONENT_PLACING_PETS") {
                 return true
             }
             return false
@@ -955,7 +952,7 @@ var app = new Vue({
 
         dots: function () {
             let text = $(".centro h1").get()
-            if(this.gameState == 'WAITING_OPPONENT_TO_JOIN' || this.gameState == 'OPPONENT_PLACING_SHIPS'){
+            if(this.gameState == 'WAITING_OPPONENT_TO_JOIN' || this.gameState == 'OPPONENT_PLACING_PETS'){
                 if(this.dotsAux < 3){
                     $(text).html($(text).html() + ".")
                     this.dotsAux += 1
@@ -989,10 +986,10 @@ var app = new Vue({
         state: function(){
             if(this.gameState == 'WAITING_OPPONENT_TO_JOIN'){
                 return 'Waiting for an opponent to join the game...'
-            }else if(this.gameState == 'PLACING_SHIPS'){
-                return 'Place your ships!'
-            }else if(this.gameState == 'OPPONENT_PLACING_SHIPS'){
-                return 'Wait until your opponent places their ships!'
+            }else if(this.gameState == 'PLACING_PETS'){
+                return 'Place your pets!'
+            }else if(this.gameState == 'OPPONENT_PLACING_PETS'){
+                return 'Wait until your opponent places their pets!'
             }else if(this.gameState == 'PLACING_SALVOES'){
                 return "It's your turn, place your salvoes in your opponent grid!"
             }else if(this.gameState == 'WAITING_OPPONENT_SALVOES'){
@@ -1006,10 +1003,10 @@ var app = new Vue({
             }
         },
 
-        allyShipsLeftQ: function(){
+        allyPetsLeftQ: function(){
             let aux = 5;
 
-            let values = Object.values(this.playerShipsLeft);
+            let values = Object.values(this.playerPetsLeft);
 
             values.forEach(v => {
                 if (v == 0) {
@@ -1020,10 +1017,12 @@ var app = new Vue({
             return aux
         },
 
-        oppShipsLeftQ: function(){
+        //TODO: both of these two
+
+        oppPetsLeftQ: function(){
             let aux = 5;
 
-            let values = Object.values(this.enemyShipsLeft);
+            let values = Object.values(this.enemyPetsLeft);
 
             values.forEach(v => {
                 if(v == 0){

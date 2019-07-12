@@ -50,10 +50,10 @@
                                     <p>
                                         You are waiting for an opponent to join your game.
                                         <br>
-                                        Please be patient! Once they join, you can place your ships
+                                        Please be patient! Once they join, you can place your pets
                                     </p>
                                 </div>
-                                <div class="modal-body" v-if="gameState == 'PLACING_SHIPS' || gameState == 'OPPONENT_PLACING_SHIPS'">
+                                <div class="modal-body" v-if="gameState == 'PLACING_PETS' || gameState == 'OPPONENT_PLACING_PETS'">
                                     <span>
                                         <h5>Hello <b>{{currPlayer().name}}!</b></h5>
                                     </span>
@@ -78,19 +78,19 @@
                                                     </tr>
                                                     <tr>
                                                         <th>Turn</th>
-                                                        <th>Ship Hit</th>
+                                                        <th>Pet Hit</th>
                                                         <th>Location Hit</th>
                                                     </tr>
                                                     <tbody v-if="enemyHits.length != 0">
                                                         <tr v-for="hit in enemyHits">
                                                             <td>{{hit.turn}}</td>
-                                                            <td>{{hit.shipHit}}</td>
+                                                            <td>{{hit.petHit}}</td>
                                                             <td>{{hit.locHit}}</td>
                                                         </tr>
                                                     </tbody>
                                                     <tbody v-else>
                                                         <tr>
-                                                            <td colspan="3">Your opponent hasn't hit any of your ships yet!</td>
+                                                            <td colspan="3">Your opponent hasn't hit any of your pets yet!</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -105,19 +105,19 @@
                                                 </tr>
                                                 <tr>
                                                     <th>Turn</th>
-                                                    <th>Ship Hit</th>
+                                                    <th>Pet Hit</th>
                                                     <th>Location Hit</th>
                                                 </tr>
                                                 <tbody v-if="playerHits != 0">
                                                     <tr v-for="hit in playerHits">
                                                         <td>{{hit.turn}}</td>
-                                                        <td>{{hit.shipHit}}</td>
+                                                        <td>{{hit.petHit}}</td>
                                                         <td>{{hit.locHit}}</td>
                                                     </tr>
                                                 </tbody>
                                                 <tbody v-else>
                                                     <tr>
-                                                        <td colspan="3">You haven't hit an opponent ship yet!</td>
+                                                        <td colspan="3">You haven't hit an opponent pet yet!</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -136,9 +136,9 @@
 
             <div class="centro">
                 <div id="initial-grid-cont" class="d-none w-auto">       
-                    <div class="grid-ships m-auto animated bounceIn"></div>
+                    <div class="ally-grid m-auto animated bounceIn"></div>
                     <h4 id="initial-text" class="mt-2 animated fadeIn delay-1s">This is your grid</h4>
-                    <button class="btn animated fadeIn delay-4s" id="addShips" @click="placeShips()">
+                    <button class="btn animated fadeIn delay-4s" id="addPets" @click="placePets()">
                         <h6>Place</h6>
                     </button>
                 </div>
@@ -160,9 +160,9 @@
                             <button id="shoot-button" class="btn gen-button animated bounceIn d-none" @click="shootSalvoes()"><h3 class="m-0">Shoot!</h3></button>
                         </div>
                         
-                        <div class="grid-ships m-auto bounceIn"></div>
+                        <div class="ally-grid m-auto bounceIn"></div>
                         <h3 class="mt-2">Your grid</h3>
-                        <h4>Ships left: {{allyShipsLeftQ}}</h4>
+                        <h4>Pets left: {{allyPetsLeftQ}}</h4>
                         
                     </div>
                     
@@ -172,7 +172,7 @@
                                 <h2 id="hit-notif">
                                     <span v-if="turn == 1"></span>
                                     <span v-else-if="allyHitsOnLastTurn.length == 0">
-                                        You didn't hit any enemy ships!
+                                        You didn't hit any enemy pet!
                                     </span>
                                     <span v-else>
                                         Nice! You hit {{allyHitsOnLastTurn.length}} busy enemy cell(s)!
@@ -184,7 +184,7 @@
                         </div>
                         <div class="enemy-grid m-auto bounceIn"></div>
                         <h3 class="mt-2">{{enemyPlayer().name}}'s grid</h3>
-                        <h4>Ships left: {{oppShipsLeftQ}}</span></h4>
+                        <h4>Pets left: {{oppPetsLeftQ}}</span></h4>
                     </div>
                 </div>
             </div>               

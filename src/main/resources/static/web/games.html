@@ -170,7 +170,7 @@
                         <div class="col-2 p-3 button-place" v-if="game.gameState == 'joinable' && logged">
                             <button type="button" class="btn btn-vanilla-primary" @click='enterGame(game.gamePlayers)' v-if="isAPlayer(game.gamePlayers)">Enter game (Waiting Opponent)</button>
                             <!--<button type="button" class="btn btn-vanilla-primary" @click="joinGamePopup(game)" v-else>Join</button>-->
-                            <button type="button" class="btn btn-vanilla-primary" @click="joinGamePopup()" v-else>Join</button>                            
+                            <button type="button" class="btn btn-vanilla-primary" @click="joinGamePopup(game)" v-else>Join</button>                            
                         </div>
                         <div class="col-2 p-3 button-place" v-if="game.gameState == 'in course' && isAPlayer(game.gamePlayers)">
                             <button type="button" class="btn btn-vanilla-primary" @click="enterGame(game.gamePlayers)">Enter back</button>
@@ -244,69 +244,69 @@
 
 
         <div class="modal fade text-dark" id="joinConfirmModal" tabindex="-1" role="dialog" aria-labelledby="joinConfirmModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="joinConfirmModalLabel">Join game</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="joinConfirmModalLabel">Join game</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div>
+                            <h3>Are you sure you want to join this game?</h3>
                         </div>
-                        <div class="modal-body text-center">
-                            <div>
-                                <h3>Are you sure you want to join this game?</h3>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="cancel-join-game-btn" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button id="join-game-btn" type="button" class="btn btn-vanilla-primary">Join</button>
-                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="cancel-join-game-btn" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button id="join-game-btn" type="button" class="btn btn-vanilla-primary">Join</button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="modal fade text-dark" id="scoreboardModal" tabindex="-1" role="dialog" aria-labelledby="scoreboardModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="scoreboardModalLabel">Scoreboard</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body text-center">
-                                <div>
-                                    <table class="table table-bordered" v-if="rankedPlayers != 0">
-                                        <thead class="thead-light">                                            
-                                            <tr>
-                                                <th class="col">Player</th>
-                                                <th class="col">Total</th>
-                                                <th class="col">Won</th>
-                                                <th class="col">Lost</th>
-                                                <th class="col">Tied</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="player in rankedPlayers" >
-                                                <td scope="row">{{player.name}}</td>
-                                                <td>{{player.total}}</td>
-                                                <td>{{player.won}}</td>
-                                                <td>{{player.lost}}</td>
-                                                <td>{{player.tied}}</td>
-                                            </tr>
-                                        </tbody>                                       
-                                    </table>
-                                    <div v-else>
-                                        <h4>There isn't any finished game yet</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <div class="modal fade text-dark" id="scoreboardModal" tabindex="-1" role="dialog" aria-labelledby="scoreboardModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="scoreboardModalLabel">Scoreboard</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div>
+                            <table class="table table-bordered" v-if="rankedPlayers != 0">
+                                <thead class="thead-light">                                            
+                                    <tr>
+                                        <th class="col">Player</th>
+                                        <th class="col">Total</th>
+                                        <th class="col">Won</th>
+                                        <th class="col">Lost</th>
+                                        <th class="col">Tied</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="player in rankedPlayers" >
+                                        <td scope="row">{{player.name}}</td>
+                                        <td>{{player.total}}</td>
+                                        <td>{{player.won}}</td>
+                                        <td>{{player.lost}}</td>
+                                        <td>{{player.tied}}</td>
+                                    </tr>
+                                </tbody>                                       
+                            </table>
+                            <div v-else>
+                                <h4>There isn't any finished game yet</h4>
                             </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
+            </div>
+        </div>
     
         
     </main>

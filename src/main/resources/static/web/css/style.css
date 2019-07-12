@@ -207,7 +207,7 @@ body{
     margin: 0;
 }
 
-.grid-ships, .enemy-grid{
+.ally-grid, .enemy-grid{
     border: solid #1a1e22 10px;
     border-radius: 20px;
     color: white;
@@ -268,12 +268,7 @@ body{
     background-color: #b14100;
 }
 
-.shipCont{
-    overflow-x: hidden;
-    overflow-y: hidden !important;
-}
-
-.ship{
+.pet{
     display: block;
     margin: auto;
     height: 100%;
@@ -288,64 +283,64 @@ body{
     overflow: hidden;
 }
 
-.shipVertical{
+.petVertical{
     writing-mode: vertical-lr;
 }
 
-.CarrierHorizontal{
-    background-image: url(/web/img/ships/CarrierHorizontal.png);
+.MeowriceHorizontal{
+    background-image: url(../img/cats/horizontal/Meowrice.jpg);
     background-size: contain;
     background-repeat: no-repeat;
 }
-.CarrierVertical{
-    background-image: url(/web/img/ships/CarrierVertical.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-.SubmarineHorizontal{
-    background-image: url(/web/img/ships/SubmarineHorizontal.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-.SubmarineVertical{
-    background-image: url(/web/img/ships/SubmarineVertical.png);
+.MeowriceVertical{
+    background-image: url(../img/cats/vertical/Meowrice.jpg);
     background-size: contain;
     background-repeat: no-repeat;
 }
 
-.BattleshipHorizontal{
-    background-image: url(/web/img/ships/BattleshipHorizontal.png);
+.NashiroHorizontal{
+    background-image: url(../img/cats/horizontal/Nashiro.jpg);
     background-size: contain;
     background-repeat: no-repeat;
 }
-.BattleshipVertical{
-    background-image: url(/web/img/ships/BattleshipVertical.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-.DestroyerHorizontal{
-    background-image: url(/web/img/ships/DestroyerHorizontal.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-.DestroyerVertical{
-    background-image: url(/web/img/ships/DestroyerVertical.png);
+.NashiroVertical{
+    background-image: url(../img/cats/vertical/Nashiro.jpg);
     background-size: contain;
     background-repeat: no-repeat;
 }
 
-.PatrolHorizontal{
-    background-image: url(/web/img/ships/PatrolHorizontal.png);
+.GeorgeHorizontal{
+    background-image: url(../img/cats/horizontal/George.jpg);
     background-size: contain;
     background-repeat: no-repeat;
 }
-.PatrolVertical{
-    background-image: url(/web/img/ships/PatrolVertical.png);
+.GeorgeVertical{
+    background-image: url(../img/cats/vertical/George.jpg);
     background-size: contain;
     background-repeat: no-repeat;
 }
+
+.CoalyHorizontal{
+    background-image: url(../img/cats/horizontal/Coaly.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.CoalyVertical{
+    background-image: url(../img/cats/vertical/Coaly.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.OreoHorizontal{
+    background-image: url(../img/cats/horizontal/Oreo.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.OreoVertical{
+    background-image: url(../img/cats/vertical/Oreo.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
 
 .small-grid{
     transform: scale(0.7,0.7) translate(0px,110px);
@@ -368,7 +363,7 @@ body{
 	cursor: pointer;
 }
 
-.ship:active {
+.pet:active {
     cursor: grabbing;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
