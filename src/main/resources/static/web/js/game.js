@@ -218,6 +218,9 @@ var app = new Vue({
             }
 
             if(this.gameEnded()){
+
+                $('.modal').modal('hide')
+
                 if ($('#initial-grid-cont').children().length != 0){
                     $("#initial-grid-cont").addClass('animated')
                     $("#initial-grid-cont").addClass('fadeOut')
@@ -436,6 +439,9 @@ var app = new Vue({
                 for (let j = 0; j < size; j++) {
                     let cell = document.createElement('DIV')
                     cell.classList.add('grid-cell')
+                    if (i == 0 && j == 0){
+                        cell.classList.add('grid-marks')
+                    }
                     if (i > 0 && j > 0){
                         cell.id = `${gridN}-${i - 1}${j - 1}`
 
@@ -651,7 +657,7 @@ var app = new Vue({
 
                     self.playerHits.forEach(function(hit){
                         if(sub.locations[loc] == hit.locHit){
-                            cell.addClass('bg-red')
+                            cell.addClass('bg-hit')
 
                             if(hit.petHit == "Meowrice"){
                                 self.enemyPetsLeft.meowrice -= 1
@@ -685,7 +691,7 @@ var app = new Vue({
 
 
                             if (xAux == x && yAux == y) {
-                                cell.addClass('bg-red')
+                                cell.addClass('bg-hit')
                             }
                         })
                     })
@@ -895,7 +901,7 @@ var app = new Vue({
                 turn: this.turn
             }
             let locations = []
-            let cells = $(".preselected-salvo").get()
+            let cells = $(".enemy-grid .preselected-salvo").get()
 
             cells.forEach(function(cell){
                 let cellId = $(cell).attr("id")
@@ -980,6 +986,11 @@ var app = new Vue({
             }else{
                 return this.player2
             }
+        },
+
+        showHelp:function(){
+            $('#infoModal').modal('hide')
+            $('#helpModal').modal('show')
         }
     },
     computed:{

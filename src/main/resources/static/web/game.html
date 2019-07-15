@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="dist/gridstack-extra.css" />
     <link rel="stylesheet" href="css/style.css" />
 </head>
-<body id="game-body" class="bg-vanilla-secondary">
+<body id="game-body" class="game-bg">
     <main id="app">
         <div class="giant-div">
             <button class="btn go-back" @click="back()">
@@ -30,105 +30,6 @@
                     <i class="fas fa-question-circle"></i>
                 </div>
 
-                <div class="modal fade text-dark text-center" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="container-fluid">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Game Information</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body" v-if="gameState == 'WAITING_OPPONENT_TO_JOIN'">
-                                    <span>
-                                        <h5>Hello <b>{{player1.name}}!</b></h5>
-                                        <!--TODO: uncomment
-                                            <h6>You are playing as {{team}} <img :src="'img/teams/'+team+'.png'" alt="team logo" style="width: 1rem"></h6>-->
-                                    </span>
-                                    <p>
-                                        You are waiting for an opponent to join your game.
-                                        <br>
-                                        Please be patient! Once they join, you can place your pets
-                                    </p>
-                                </div>
-                                <div class="modal-body" v-if="gameState == 'PLACING_PETS' || gameState == 'OPPONENT_PLACING_PETS'">
-                                    <span>
-                                        <h5>Hello <b>{{currPlayer().name}}!</b></h5>
-                                    </span>
-                                    <p>
-                                        Your opponent is {{enemyPlayer().name}}
-                                    </p>
-                                </div>
-
-                                <div class="modal-body" v-if="gameStarted()">
-                                    <span><h4>{{currPlayer().name}}  (you) vs {{enemyPlayer().name}}
-                                        </h4></span>
-                                    <span><h5>Game id: {{datos.id}}</h5></span>
-
-                                    <h3 class="mt-2 mb-3">Hits tables</h3>
-
-                                    <div class="row">
-                                        <div id="ally-grid-cont" class="col-lg-6">
-                                            <div>
-                                                <table class="table table-bordered text-center table-sm table-hover">
-                                                    <tr>
-                                                        <th colspan="3">Opponent Hits</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Turn</th>
-                                                        <th>Pet Hit</th>
-                                                        <th>Location Hit</th>
-                                                    </tr>
-                                                    <tbody v-if="enemyHits.length != 0">
-                                                        <tr v-for="hit in enemyHits">
-                                                            <td>{{hit.turn}}</td>
-                                                            <td>{{hit.petHit}}</td>
-                                                            <td>{{hit.locHit}}</td>
-                                                        </tr>
-                                                    </tbody>
-                                                    <tbody v-else>
-                                                        <tr>
-                                                            <td colspan="3">Your opponent hasn't hit any of your pets yet!</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="col-lg-6">
-                                            <table class="table table-bordered text-center table-sm table-hover">
-                                                <tr>
-                                                    <th colspan="3">Player Hits</th>
-                                                </tr>
-                                                <tr>
-                                                    <th>Turn</th>
-                                                    <th>Pet Hit</th>
-                                                    <th>Location Hit</th>
-                                                </tr>
-                                                <tbody v-if="playerHits != 0">
-                                                    <tr v-for="hit in playerHits">
-                                                        <td>{{hit.turn}}</td>
-                                                        <td>{{hit.petHit}}</td>
-                                                        <td>{{hit.locHit}}</td>
-                                                    </tr>
-                                                </tbody>
-                                                <tbody v-else>
-                                                    <tr>
-                                                        <td colspan="3">You haven't hit an opponent pet yet!</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div id="waiting-div" class="centro">
                     <h1 class="animated bounceIn d-none">Waiting for an opponent to join</h1>
                 </div> 
@@ -138,8 +39,8 @@
                 <div id="initial-grid-cont" class="d-none w-auto">       
                     <div class="ally-grid m-auto animated bounceIn"></div>
                     <h4 id="initial-text" class="mt-2 animated fadeIn delay-1s">This is your grid</h4>
-                    <button class="btn animated fadeIn delay-4s" id="addPets" @click="placePets()">
-                        <h6>Place</h6>
+                    <button class="btn animated fadeIn delay-4s btn-orange-primary text-white" id="addPets" @click="placePets()">
+                        <h6 class="m-0">Place</h6>
                     </button>
                 </div>
             </div>
@@ -188,6 +89,187 @@
                     </div>
                 </div>
             </div>               
+        </div>
+
+        <div class="modal fade text-dark text-center" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="container-fluid">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Game Information</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <h2>Hello <b>{{player1.name}}!</b></h2>
+
+                            <h6>Need help? <a class="text-orange-primary" @click="showHelp()">Click here!</a></h6>
+
+                            <hr>
+                            
+
+                            <div v-if="gameState == 'WAITING_OPPONENT_TO_JOIN'">
+                                <p>
+                                    You are waiting for an opponent to join your game.
+                                    <br>
+                                    Please be patient! Once they join, you can place your pets
+                                </p>
+                            </div>
+
+                            <div v-if="gameState == 'PLACING_PETS' || gameState == 'OPPONENT_PLACING_PETS'">
+                                    <p>
+                                        Your opponent is {{enemyPlayer().name}}
+                                    </p>
+                            </div>
+
+                            <div v-if="gameStarted()">
+                                <span><h4>Your opponent is {{enemyPlayer().name}}!
+                                    </h4></span>
+                                <span><h5>Game id: {{datos.id}}</h5></span>
+
+                                <hr>
+
+                                <h3 class="mt-2 mb-3">Hits tables</h3>
+
+                                <div class="row">
+                                    <div id="ally-grid-cont" class="col-lg-6">
+                                        <div>
+                                            <table class="table table-bordered text-center table-sm table-hover">
+                                                <tr>
+                                                    <th colspan="3">Opponent Hits</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Turn</th>
+                                                    <th>Pet Hit</th>
+                                                    <th>Location Hit</th>
+                                                </tr>
+                                                <tbody v-if="enemyHits.length != 0">
+                                                    <tr v-for="hit in enemyHits">
+                                                        <td>{{hit.turn}}</td>
+                                                        <td>{{hit.petHit}}</td>
+                                                        <td>{{hit.locHit}}</td>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody v-else>
+                                                    <tr>
+                                                        <td colspan="3">Your opponent hasn't hit any of your pets yet!</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <table class="table table-bordered text-center table-sm table-hover">
+                                            <tr>
+                                                <th colspan="3">Player Hits</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Turn</th>
+                                                <th>Pet Hit</th>
+                                                <th>Location Hit</th>
+                                            </tr>
+                                            <tbody v-if="playerHits != 0">
+                                                <tr v-for="hit in playerHits">
+                                                    <td>{{hit.turn}}</td>
+                                                    <td>{{hit.petHit}}</td>
+                                                    <td>{{hit.locHit}}</td>
+                                                </tr>
+                                            </tbody>
+                                            <tbody v-else>
+                                                <tr>
+                                                    <td colspan="3">You haven't hit an opponent pet yet!</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal fade text-dark text-center overflow-auto" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="helpModalTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="container-fluid">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="helpModalTitle">Game Information</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body overflow-auto">
+                            <h3>Game Objective</h3>
+                            <p>Your objective is to wet all your enemy's cats before they wet yours!</p>
+
+                            <hr>
+
+                            <h3>Cell notation</h3>
+                            <div class="container-fluid mt-3">
+                                    <div class="row mb-3">
+                                            <div class="col-2">
+                                                <div class="grid-cell example-cell text-white"></div>
+                                            </div>
+                                            <div class="col-10 text-left">
+                                                <p>This is a normal cell</p>
+                                            </div>
+                                        </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div class="grid-cell example-cell text-white salvoed"><span>1</span></div>
+                                    </div>
+                                    <div class="col-10 text-left">
+                                        <p>The numbers inside the cells indicate in which turn the cell was shot</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div class="grid-cell example-cell text-white salvoed bg-hit"><span>1</span></div>
+                                    </div>
+                                    <div class="col-10 text-left">
+                                        <p>When a shot cell contains a pet, it will turn dark red</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div class="grid-cell example-cell text-white preselected-salvo"><div class="salvo"></div></div>
+                                    </div>
+                                    <div class="col-10 text-left">
+                                        <p>When you pre-select an enemy cell, a water drop will appear inside of it, indicating that you are about to wet that position.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <h3>Who are the cats?</h3>
+                            <h5>Meowrice</h5>
+                            <p>The long one (5 cells)</p>
+                            <h5>Nashiro</h5>
+                            <p>The not so long one (4 cells)</p>
+                            <h5>George</h5>
+                            <p>The not so skinny one (3 cells)</p>
+                            <h5>Coaly</h5>
+                            <p>The coal-colored one (3 cells)</p>
+                            <h5>Oreo</h5>
+                            <p>Doesn't the name say it all? (2 cells)</p>
+                            <!--Cuando tenga reglas lo descomento xd 
+                            <hr>
+
+                            <h4>To get detailed rules, <a href="#" onclick="window.location.href='rules.html'" class="text-orange-primary">click here!</a></h4>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>        
     </main>
 

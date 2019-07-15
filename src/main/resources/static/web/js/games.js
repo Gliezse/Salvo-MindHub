@@ -232,9 +232,6 @@ var app = new Vue({
             .fail(function(){(alert("You must be logged in in order to create a new game!"))})
         },*/
         joinGamePopup: function (game) {
-
-            console.log('ola')
-
             let self = this
 
             let gameId = game.id

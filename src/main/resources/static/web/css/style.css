@@ -13,7 +13,7 @@ body{
 }
 
 .bg-vanilla-secondary{
-    background-color: #FFFAE2;
+    background-color: rgb(255, 245, 226);
 }
 
 .btn-vanilla-primary{
@@ -28,6 +28,26 @@ body{
     background-color: #d62060;
 }
 
+.bg-orange{
+    background-color: rgb(249, 210, 167)
+}
+
+.bg-orange-primary{
+    background-color: rgb(249, 165, 134)
+}
+
+.btn-orange-primary{
+    background-color: rgb(249, 165, 134)
+}
+
+.text-orange-primary{
+    color: rgb(249, 165, 134) !important
+}
+
+.game-bg{
+
+}
+
 .button-place button{
     width: 100%;
     height: 100%
@@ -35,6 +55,16 @@ body{
 
 .pt-10{
     margin-top: 4.5rem;
+}
+
+#example-list{
+    list-style: none;
+}
+
+.example-cell{
+    border-radius: 5px;
+    width: 45px;
+    height: 45px;
 }
 
 
@@ -46,6 +76,19 @@ body{
 
     overflow: hidden;
 
+    -webkit-animation: game-bg-anim 3s infinite;
+    animation: game-bg-anim 3s infinite;
+    animation-direction: alternate;
+}
+
+@keyframes game-bg-anim{
+    0%{
+        background-color: rgb(249, 210, 167);
+    }
+
+    100%{
+        background-color: rgb(255, 201, 143);
+    }
 }
 
 .to-cats{
@@ -208,11 +251,11 @@ body{
 }
 
 .ally-grid, .enemy-grid{
-    border: solid #1a1e22 10px;
+    border: solid #ffa580 20px;
     border-radius: 20px;
     color: white;
     height: auto;
-    max-width: 515px;
+    max-width: 535px;
     min-width: 515px;
     position: relative;
 
@@ -246,26 +289,27 @@ body{
     box-sizing: border-box;
     min-width: 45px;
     min-height: 45px;
-    border: 0.1px solid #373E46;
+    border: 1px solid #ffffff;
     vertical-align: middle;
     font-weight: bold;
     text-align: center;
     align-items: center;
-    background-color: #44505C;
+    background-color: #f7936f;
+    border-radius: 5px;
 }
 .grid-cell span{
     margin: auto
 }
 .grid-marks{
-    background-color: #3A434B;
+    background-color: #ff4502;
 }
 
 .salvoed{
-    background-color: rgb(133, 149, 219);
+    background-color: #ff7e7e;
 }
 
-.bg-red{
-    background-color: #b14100;
+.bg-hit{
+    background-color: #b90000;
 }
 
 .pet{
@@ -342,6 +386,7 @@ body{
 
 .small-grid{
     transform: scale(0.7,0.7) translate(0px,110px);
+    filter: opacity(0.4)
 }
 
 .finished-game-grids{
@@ -370,7 +415,8 @@ body{
 }
 
 .dropdown-menu>a:hover{
-    background-color: #ffefa1
+    background-color: #ffa1ad;
+    color: white;
 }
 
 .view-scores-btn-cont{
@@ -409,22 +455,33 @@ body{
     cursor: pointer;
 }
 .selectable-enemy-cell:hover{
-    background-color: rgb(98, 113, 129);
+    background-color: rgb(255, 97, 91);
 }
 
 .preselected-salvo{
-    background-color: rgb(133, 149, 219);
+    background-color: rgb(255, 107, 107);
 }
 .preselected-salvo:hover{
-    background-color: rgb(133, 149, 219);
+    background-color: rgb(255, 107, 107);
 }
 
 .salvo{
-    width: 30px;
-    height: 30px;
-    background-color: red;
-    border-radius: 100px;
+    width: 20px;
+    height: 20px;
+    border-radius: 0 80% 60% 80%;
+    border: 2px solid black;
+    transform: rotate(45deg);
     margin: auto;
+    margin-top: 12px;
+    background-color: lightblue;
+
+    /*background-image: url(../img/water.png);
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: auto;*/
 }
 
 #ally-grid-cont{
