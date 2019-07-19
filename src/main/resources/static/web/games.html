@@ -151,20 +151,9 @@
                             </div>
 
                             <div v-if="game.gameState == 'finished'" class="row">
-                                <div class="col-8 text-left">
+                                <div class="col-12">
                                     <h2>Finished game!</h2>
                                     <h4>{{game.player1.player.name}} VS {{game.player2.player.name}}</h4>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <div v-if="game.player1.score.score == game.player2.score.score">
-                                        <h2>Tied!</h2>
-                                    </div>
-                                    <div v-else-if="game.player1.score.score == 1">
-                                        <h3>Winner: {{game.player1.player.name}}</h3>
-                                    </div>
-                                    <div v-else>
-                                        <h3>Winner: {{game.player2.player.name}}</h3>
-                                    </div>
                                 </div>
                             </div>
 
@@ -176,6 +165,17 @@
                         </div>
                         <div class="col-2 p-3 button-place" v-if="game.gameState == 'in course' && isAPlayer(game.gamePlayers)">
                             <button type="button" class="btn btn-orange-primary text-white" @click="enterGame(game.gamePlayers)">Enter back</button>
+                        </div>
+                        <div class="col-2 p-2 pt-3 pb-3">
+                            <div v-if="game.player1.score.score == game.player2.score.score">
+                                <h2>Tied!</h2>
+                            </div>
+                            <div v-else-if="game.player1.score.score == 1">
+                                <h3>Winner: {{game.player1.player.name}}</h3>
+                            </div>
+                            <div v-else>
+                                <h3>Winner: {{game.player2.player.name}}</h3>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -320,10 +320,22 @@ var app = new Vue({
                 }
             })
 
+            let enemySalvoes = this.datos.salvoes.filter(function (sub) {
+                if (sub.player != self.gpId){
+                    return sub
+                }  
+            })
+
             if(playerSalvoes.length == 0){
                 this.turn = 1
             }else{
                 this.turn = Math.max(...playerSalvoes.map(salvo => salvo.turn)) + 1
+            }
+
+            if(enemySalvoes.length == 0){
+                this.enTurn = 1
+            }else{
+                this.enTurn = Math.max(...enemySalvoes.map(salvo => salvo.turn)) + 1
             }
 
         },
@@ -665,11 +677,11 @@ var app = new Vue({
                             salvoHit = true
 
                             if (self.player1.id == self.gpId) {
-                                if (sub.turn == self.turn - 1) {
+                                if (sub.turn == self.turn - 1 && self.enTurn == self.turn - 1) {
                                     cell.addClass('hit-anim')
                                 }
                             } else {
-                                if (sub.turn == self.turn) {
+                                if (sub.turn == self.turn - 1 && self.enTurn == self.turn) {
                                     cell.addClass('hit-anim')
                                 }
                             }
@@ -689,12 +701,12 @@ var app = new Vue({
                     })
 
                     if(!salvoHit){
-                        if (self.player1.id == self.gpId) {
+                        if (self.player1.id == self.gpId && self.enTurn == self.turn - 1) {
                             if (sub.turn == self.turn - 1) {
                                 cell.addClass('miss-anim')
                             }
                         } else {
-                            if (sub.turn == self.turn) {
+                            if (sub.turn == self.turn && self.enTurn == self.turn) {
                                 cell.addClass('miss-anim')
                             }
                         }
@@ -725,11 +737,11 @@ var app = new Vue({
                                 salvoHit = true
 
                                 if(self.player1.id == self.gpId){
-                                    if(sub.turn == self.turn - 1){
+                                    if(sub.turn == self.turn - 1 && self.enTurn == self.turn){
                                         cell.addClass('hit-anim')
                                     }
                                 }else{
-                                    if(sub.turn == self.turn){
+                                    if(sub.turn == self.turn && self.enTurn == self.turn + 1){
                                         cell.addClass('hit-anim')
                                     }
                                 }
@@ -739,11 +751,11 @@ var app = new Vue({
 
                     if(!salvoHit){
                         if (self.player1.id == self.gpId) {
-                            if (sub.turn == self.turn - 1) {
+                            if (sub.turn == self.turn - 1 && self.enTurn == self.turn) {
                                 cell.addClass('miss-anim')
                             }
                         } else {
-                            if (sub.turn == self.turn) {
+                            if (sub.turn == self.turn && self.enTurn == self.turn + 1) {
                                 cell.addClass('miss-anim')
                             }
                         }
