@@ -250,13 +250,13 @@ var app = new Vue({
                         $('#both-grids-cont').addClass('finished-game-grids')
 
                         if(this.gameState == 'WON'){
-                            $('#game-ended--state').html("You won!")
+                            $('#game-ended-state').html("You won!")
                             $('#game-ended-subtext').html("You scared all your opponent's pets")
                         }else if(this.gameState == 'LOST'){
-                            $('#game-ended--state').html("You lost!")
+                            $('#game-ended-state').html("You lost!")
                             $('#game-ended-subtext').html("Your opponent scared all your pets")
                         }else{
-                            $('#game-ended--state').html("It's a tie!")
+                            $('#game-ended-state').html("It's a tie!")
                             $('#game-ended-subtext').html("Both you and your opponent scared each other's pets!")
                         }
                     }

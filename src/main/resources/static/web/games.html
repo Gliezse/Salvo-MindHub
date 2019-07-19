@@ -166,7 +166,7 @@
                         <div class="col-2 p-3 button-place" v-if="game.gameState == 'in course' && isAPlayer(game.gamePlayers)">
                             <button type="button" class="btn btn-orange-primary text-white" @click="enterGame(game.gamePlayers)">Enter back</button>
                         </div>
-                        <div class="col-2 p-2 pt-3 pb-3">
+                        <div class="col-2 p-2 pt-3 pb-3" v-if = "game.gameState == 'finished'">
                             <div v-if="game.player1.score.score == game.player2.score.score">
                                 <h2>Tied!</h2>
                             </div>
