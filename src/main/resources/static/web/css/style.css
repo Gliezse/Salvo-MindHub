@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins');
+@import url('https://fonts.googleapis.com/css?family=Delius&display=swap');
 
 body{
     font-family: 'Poppins', sans-serif;
@@ -29,7 +30,7 @@ body{
 }
 
 .bg-orange{
-    background-color: rgb(249, 210, 167)
+    background-color: rgb(255, 186, 158)
 }
 
 .bg-orange-primary{
@@ -41,7 +42,7 @@ body{
 }
 
 .text-orange-primary{
-    color: rgb(249, 165, 134) !important
+    color: rgb(255, 140, 102) !important
 }
 
 .game-bg{
@@ -76,18 +77,18 @@ body{
 
     overflow: hidden;
 
-    -webkit-animation: game-bg-anim 3s infinite;
-    animation: game-bg-anim 3s infinite;
+    -webkit-animation: game-bg-anim 2s infinite;
+    animation: game-bg-anim 2s infinite;
     animation-direction: alternate;
 }
 
 @keyframes game-bg-anim{
     0%{
-        background-color: rgb(249, 210, 167);
+        background-color: rgb(255, 186, 158);
     }
 
     100%{
-        background-color: rgb(255, 201, 143);
+        background-color: rgb(255, 197, 174);
     }
 }
 
@@ -251,12 +252,12 @@ body{
 }
 
 .ally-grid, .enemy-grid{
-    border: solid #ffa580 20px;
+    border: solid #ffa580 10px;
     border-radius: 20px;
     color: white;
     height: auto;
-    max-width: 535px;
-    min-width: 515px;
+    max-width: 515px;
+min-width: 515px;
     position: relative;
 
     transition: all 0.2s ease-in;
@@ -289,9 +290,8 @@ body{
     box-sizing: border-box;
     min-width: 45px;
     min-height: 45px;
-    border: 1px solid #ffffff;
+    border: 1px solid #ffffff3b;
     vertical-align: middle;
-    font-weight: bold;
     text-align: center;
     align-items: center;
     background-color: #f7936f;
@@ -301,11 +301,41 @@ body{
     margin: auto
 }
 .grid-marks{
-    background-color: #ff4502;
+    background-color: rgb(255, 140, 102);
+    font-family: 'Delius', cursive;
+    font-size: 20px;
 }
 
 .salvoed{
-    background-color: #ff7e7e;
+    background-color: #ffb07e;
+}
+
+.hit-anim{
+    animation: hit-animation 0.2s;
+}
+
+.miss-anim{
+    animation: miss-animation 0.2s;
+}
+
+@keyframes hit-animation{
+    0%{
+        background-color: white
+    }
+    
+    100%{
+        background-color: #b90000;
+    }
+
+}
+@keyframes miss-animation{
+    0%{
+        background-color: #ffceaf;
+    }
+
+    100%{
+        background-color: #ffb07e;
+    }
 }
 
 .bg-hit{
@@ -330,23 +360,23 @@ body{
 }
 
 .MeowriceHorizontal{
-    background-image: url(../img/cats/horizontal/Meowrice.jpg);
+    background-image: url(../img/cats/horizontal/Meowrice.png);
     background-size: contain;
     background-repeat: no-repeat;
 }
 .MeowriceVertical{
-    background-image: url(../img/cats/vertical/Meowrice.jpg);
+    background-image: url(../img/cats/vertical/Meowrice.png);
     background-size: contain;
     background-repeat: no-repeat;
 }
 
 .NashiroHorizontal{
-    background-image: url(../img/cats/horizontal/Nashiro.jpg);
+    background-image: url(../img/cats/horizontal/Nashiro.png);
     background-size: contain;
     background-repeat: no-repeat;
 }
 .NashiroVertical{
-    background-image: url(../img/cats/vertical/Nashiro.jpg);
+    background-image: url(../img/cats/vertical/Nashiro.png);
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -357,7 +387,7 @@ body{
     background-repeat: no-repeat;
 }
 .GeorgeVertical{
-    background-image: url(../img/cats/vertical/George.jpg);
+    background-image: url(../img/cats/vertical/George.png);
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -368,7 +398,7 @@ body{
     background-repeat: no-repeat;
 }
 .CoalyVertical{
-    background-image: url(../img/cats/vertical/Coaly.jpg);
+    background-image: url(../img/cats/vertical/Coaly.png);
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -378,7 +408,7 @@ body{
     background-repeat: no-repeat;
 }
 .OreoVertical{
-    background-image: url(../img/cats/vertical/Oreo.jpg);
+    background-image: url(../img/cats/vertical/Oreo.png);
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -415,7 +445,7 @@ body{
 }
 
 .dropdown-menu>a:hover{
-    background-color: #ffa1ad;
+    background-color: rgb(249, 165, 134);
     color: white;
 }
 

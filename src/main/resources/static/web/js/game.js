@@ -618,7 +618,7 @@ var app = new Vue({
 
             let self = this
 
-            var locations = pets.map(sh => { return sh.locations })
+            var petLocations = pets.map(sh => { return sh.locations })
 
             playerSalvoes = salvoes.filter(function (sub) {
                 if (sub.player == self.gpId) {
@@ -654,10 +654,23 @@ var app = new Vue({
                         playersLastTurn=sub.turn
                     }
 
+                    let salvoHit = false
 
                     self.playerHits.forEach(function(hit){
                         if(sub.locations[loc] == hit.locHit){
                             cell.addClass('bg-hit')
+
+                            salvoHit = true
+
+                            if (self.player1.id == self.gpId) {
+                                if (sub.turn == self.turn - 1) {
+                                    cell.addClass('hit-anim')
+                                }
+                            } else {
+                                if (sub.turn == self.turn) {
+                                    cell.addClass('hit-anim')
+                                }
+                            }
 
                             if(hit.petHit == "Meowrice"){
                                 self.enemyPetsLeft.meowrice -= 1
@@ -672,6 +685,18 @@ var app = new Vue({
                             }
                         }
                     })
+
+                    if(!salvoHit){
+                        if (self.player1.id == self.gpId) {
+                            if (sub.turn == self.turn - 1) {
+                                cell.addClass('miss-anim')
+                            }
+                        } else {
+                            if (sub.turn == self.turn) {
+                                cell.addClass('miss-anim')
+                            }
+                        }
+                    }
                 }
             })
             enemySalvoes.forEach(function (sub) {
@@ -684,7 +709,9 @@ var app = new Vue({
 
                     cell.addClass('salvoed')
 
-                    locations.forEach(function (locs) {
+                    let salvoHit = false
+
+                    petLocations.forEach(function (locs) {
                         locs.forEach(function (loc) {
                             xAux = parseInt(loc.slice(1)) - 1
                             yAux = loc.charCodeAt(0) - 65
@@ -692,9 +719,33 @@ var app = new Vue({
 
                             if (xAux == x && yAux == y) {
                                 cell.addClass('bg-hit')
+
+                                salvoHit = true
+
+                                if(self.player1.id == self.gpId){
+                                    if(sub.turn == self.turn - 1){
+                                        cell.addClass('hit-anim')
+                                    }
+                                }else{
+                                    if(sub.turn == self.turn){
+                                        cell.addClass('hit-anim')
+                                    }
+                                }
                             }
                         })
                     })
+
+                    if(!salvoHit){
+                        if (self.player1.id == self.gpId) {
+                            if (sub.turn == self.turn - 1) {
+                                cell.addClass('miss-anim')
+                            }
+                        } else {
+                            if (sub.turn == self.turn) {
+                                cell.addClass('miss-anim')
+                            }
+                        }
+                    }
 
                     self.enemyHits.forEach(function(enHit){
                         if(enHit.locHit == sub.locations[loc]){
