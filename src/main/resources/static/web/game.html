@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="dist/gridstack.css" />
     <link rel="stylesheet" href="dist/gridstack-extra.css" />
     <link rel="stylesheet" href="css/style.css" />
+
+    <link rel="icon" href="./img/icon-cropped.png">
 </head>
 <body id="game-body" class="game-bg">
     <main id="app">
@@ -104,7 +106,7 @@
                         </div>
                         <div class="modal-body">
 
-                            <h2>Hello <b>{{player1.name}}!</b></h2>
+                            <h2>Hello <b>{{currPlayer().name}}!</b></h2>
 
                             <h6>Need help? <a class="text-orange-primary" @click="showHelp()">Click here!</a></h6>
 
